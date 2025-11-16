@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "concurrently \"next dev\" \"ts-node-dev src/server/index.ts --port 4000\"",
     "dev:api": "ts-node-dev src/server/index.ts --port 4000",
     "dev:all": "concurrently \"npm run dev\" \"npm run dev:api\""
   },
