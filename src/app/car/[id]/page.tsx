@@ -2,12 +2,13 @@
 import Image from "next/image";
 import { fetchCars } from "@/services/api";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import { Car } from "@/types";
 
 export const revalidate = 60;
 
 export async function generateStaticParams() {
-  const cars = await fetchCars();
-  return cars.map((car: any) => ({ id: car.id }));
+  const cars: Car[] = await fetchCars();
+  return cars.map((car) => ({ id: car.id })); // no more "any"
 }
 
 export default async function CarDetail({
@@ -15,18 +16,19 @@ export default async function CarDetail({
 }: {
   params: { id: string };
 }) {
-  const cars = await fetchCars();
-  const car = cars.find((c: any) => c.id === params.id);
+  const cars: Car[] = await fetchCars();
+  const car = cars.find((c) => c.id === params.id);
 
   if (!car)
     return (
-      <div className="container mx-auto p-6 text-center">Car not found</div>
+      <div className="container mx-auto p-6 text-center text-xl">
+        Car not found
+      </div>
     );
 
   return (
     <div className="container mx-auto px-6 py-12">
       <div className="grid md:grid-cols-2 gap-10">
-        {/* Image */}
         <div className="relative h-96 md:h-full bg-gray-100 rounded-xl overflow-hidden">
           <Image
             src={car.images[0] || "/placeholder.jpg"}
@@ -36,7 +38,6 @@ export default async function CarDetail({
           />
         </div>
 
-        {/* Details */}
         <div>
           <h1 className="text-4xl font-bold mb-2">
             {car.year} {car.make} {car.model}

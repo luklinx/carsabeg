@@ -6,10 +6,11 @@ export type Car = {
   year: number;
   price: number;
   mileage: number;
-  transmission: "automatic" | "manual";
-  fuel: "petrol" | "diesel" | "hybrid";
+  transmission: string;
+  fuel: string;
   location: string;
-  condition: "brand new" | "foreign used" | "nigerian used";
+  condition: string;
   images: string[];
   featured?: boolean;
+  description?: string;
 };
