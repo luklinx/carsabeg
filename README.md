@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
@@ -34,3 +35,25 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+=======
+# Cars Abeg - No Wahala
+
+Clean foreign used & Nigerian used cars in Nigeria.
+
+## Live Site
+[https://carsabeg.com](https://carsabeg.com)
+
+## Features
+- Full dealership site
+- Offline admin panel
+- WhatsApp integration
+- Search & filter
+- Mobile responsive
+
+## Deploy
+```bash
+git clone https://github.com/luklinx/carsabeg.git
+cd carsabeg
+npm install
+npm run dev
+>>>>>>> 65ee2e835178ef9b814a9163962d41779c52b40d
