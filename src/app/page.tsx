@@ -1,27 +1,28 @@
 // src/app/page.tsx
 import CarCard from "@/components/CarCard";
 import { fetchCars } from "@/services/api";
+import { Car } from "@/types"; // ← This removes all "any" errors
 
 export const revalidate = 60;
 
 export default async function Home() {
   // 1. FETCH CARS FIRST
-  const cars = await fetchCars();
+  const cars: Car[] = await fetchCars();
 
-  // 2. THEN DO FILTERING
+  // 2. THEN DO FILTERING (no more "any" anywhere)
   const searchParams = new URLSearchParams();
   const make = searchParams.get("make") || "";
   const minPrice = searchParams.get("minPrice") || "";
   const maxPrice = searchParams.get("maxPrice") || "";
 
-  const filtered = cars.filter((car: any) => {
+  const filtered = cars.filter((car: Car) => {
     if (make && car.make.toLowerCase() !== make.toLowerCase()) return false;
     if (minPrice && car.price < Number(minPrice)) return false;
     if (maxPrice && car.price > Number(maxPrice)) return false;
     return true;
   });
 
-  const featured = filtered.filter((car: any) => car.featured);
+  const featured = filtered.filter((car: Car) => car.featured);
 
   return (
     <>
@@ -78,12 +79,12 @@ export default async function Home() {
       {/* FEATURED CARS */}
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-6">
-          <h2 className="text-4xl font-bold text-center mb-12">
+          <h2 className="text-4xl font-bold text-center mb-12 text-gray-800/70">
             Featured Rides
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {featured.length > 0 ? (
-              featured.map((car: any) => <CarCard key={car.id} car={car} />)
+              featured.map((car: Car) => <CarCard key={car.id} car={car} />)
             ) : (
               <p className="text-center col-span-full text-gray-600">
                 No cars match your filter.
