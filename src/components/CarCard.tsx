@@ -2,6 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Car } from "@/types"; // ← This kills the "any" forever
+import InquiryForm from "./InquiryForm"; // ← ADD THIS LINE
 
 interface Props {
   car: Car; // ← Now using the real Car type
@@ -63,6 +64,27 @@ export default function CarCard({ car }: Props) {
             WhatsApp
           </a>
         </div>
+        <button
+          onClick={() =>
+            document.getElementById(`inquiry-modal-${car.id}`)?.showModal()
+          }
+          className="flex-1 bg-blue-600 text-white text-center py-3 rounded-lg font-semibold"
+        >
+          Make Inquiry
+        </button>
+
+        {/* Modal */}
+        <dialog
+          id={`inquiry-modal-${car.id}`}
+          className="p-6 rounded-lg max-w-md mx-auto"
+        >
+          <InquiryForm
+            car={car}
+            onClose={() =>
+              document.getElementById(`inquiry-modal-${car.id}`)?.close()
+            }
+          />
+        </dialog>
       </div>
     </div>
   );
