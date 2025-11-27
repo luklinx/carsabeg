@@ -1,6 +1,6 @@
 // src/types/index.ts
 export type Car = {
-  id: string;
+  id: string; // ← REALITY: IDs are strings ("1", "2")
   make: string;
   model: string;
   year: number;

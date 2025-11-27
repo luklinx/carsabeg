@@ -1,4 +1,4 @@
-// src/components/Header.tsx  ← Replace your current Header with this
+// src/components/Header.tsx
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -6,8 +6,9 @@ import { usePathname } from "next/navigation";
 const navItems = [
   { name: "Home", href: "/" },
   { name: "Cars for Sale", href: "/inventory" },
-  { name: "How it Works", href: "/how-it-works" },
+  { name: "Value My Car", href: "/value-my-car", highlight: true }, // NEW + HIGHLIGHT
   { name: "Sell Your Car", href: "/sell" },
+  { name: "How it Works", href: "/how-it-works" },
   { name: "Blog", href: "/blog" },
   { name: "Contact", href: "/contact" },
 ];
@@ -24,13 +25,15 @@ export default function Header() {
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-10">
+          <nav className="hidden lg:flex items-center gap-8">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`text-lg font-medium transition ${
-                  pathname === item.href
+                className={`text-lg font-medium transition whitespace-nowrap ${
+                  item.highlight
+                    ? "bg-green-600 text-white px-5 py-2 rounded-full hover:bg-green-700 shadow-md"
+                    : pathname === item.href
                     ? "text-green-600"
                     : "text-gray-600 hover:text-green-600"
                 }`}

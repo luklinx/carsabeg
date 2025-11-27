@@ -1,112 +1,92 @@
 // src/app/car/[id]/page.tsx
+import Link from "next/link";
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import { fetchCars } from "@/services/api";
 import { Car } from "@/types";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import CarGallery from "@/components/CarGallery";
 import SimilarCars from "@/components/SimilarCars";
 
-// This removes the source map bug completely
 export const dynamicParams = true;
 export const revalidate = 60;
 
+// Keep this — pre-renders known IDs
 export async function generateStaticParams() {
-  try {
-    const cars: Car[] = await fetchCars();
-    return cars.map((car) => ({
-      id: car.id,
-    }));
-  } catch (error) {
-    return [];
-  }
+  const cars = await fetchCars();
+  return cars.map((car) => ({ id: car.id }));
 }
 
+// THIS IS THE ONLY CHANGE THAT MATTERS
 export default async function CarDetail({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>; // ← params is now a Promise!
 }) {
-  const cars: Car[] = await fetchCars();
-  const car = cars.find((c) => c.id === params.id);
+  // MUST AWAIT params
+  const { id } = await params;
+
+  const cars = await fetchCars();
+  const car = cars.find((c) => c.id === id);
 
   if (!car) {
-    notFound(); // This is the correct way instead of manual return
+    notFound();
   }
 
   return (
-    <div className="container mx-auto px-6 py-12">
+    <div className="container mx-auto px-6 py-16 max-w-7xl">
+      {/* Breadcrumb */}
       <nav className="text-sm text-gray-500 mb-6">
-        <a href="/inventory" className="hover:text-green-600">
-          Cars for Sale
-        </a>{" "}
-        / {car.make} {car.model}
+        <Link href="/" className="hover:text-green-600">
+          Home
+        </Link>{" "}
+        →
+        <span className="ml-2">
+          {car.year} {car.make} {car.model}
+        </span>
       </nav>
 
-      <div className="grid lg:grid-cols-2 gap-10">
-        <CarGallery images={car.images} />
+      <div className="grid lg:grid-cols-2 gap-12">
+        <div>
+          <CarGallery images={car.images} />
+        </div>
 
         <div>
-          <h1 className="text-4xl font-bold mb-2">
+          <h1 className="text-5xl font-bold mb-4">
             {car.year} {car.make} {car.model}
           </h1>
-          <div className="flex items-center gap-2 mb-6">
-            <p className="text-4xl font-bold text-green-600">
-              ₦{(car.price / 1000000).toFixed(1)}M
-            </p>
-            <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">
-              Negotiable
-            </span>
-          </div>
+          <p className="text-5xl font-bold text-green-600 mb-8">
+            ₦{(car.price / 1000000).toFixed(1)}M
+          </p>
 
-          <div className="bg-gray-50 p-4 rounded-lg mb-6">
-            <h3 className="font-semibold mb-2">Seller: Verified Dealer</h3>
-            <p className="text-sm text-gray-600">Rating: 4.8/5 • Lagos</p>
+          <div className="bg-green-50 p-6 rounded-2xl mb-8">
+            <p className="text-xl font-bold mb-2">Verified Dealer • Lagos</p>
             <WhatsAppButton car={car} />
           </div>
 
-          <div className="mb-6">
-            <h3 className="text-xl font-bold mb-4 text-gray-800/70">
-              Quick Specs
-            </h3>
-            <table className="w-full text-sm">
-              <tbody>
-                <tr className="border-b">
-                  <td className="py-2 font-medium">Mileage</td>
-                  <td className="py-2">{car.mileage.toLocaleString()} km</td>
-                </tr>
-                <tr className="border-b">
-                  <td className="py-2 font-medium">Transmission</td>
-                  <td className="py-2">{car.transmission}</td>
-                </tr>
-                <tr className="border-b">
-                  <td className="py-2 font-medium">Fuel</td>
-                  <td className="py-2">{car.fuel}</td>
-                </tr>
-                <tr className="border-b">
-                  <td className="py-2 font-medium">Condition</td>
-                  <td className="py-2">{car.condition}</td>
-                </tr>
-                <tr className="border-b">
-                  <td className="py-2 font-medium">Location</td>
-                  <td className="py-2">{car.location}</td>
-                </tr>
-              </tbody>
-            </table>
+          <div className="grid grid-cols-2 gap-6 text-lg">
+            <div className="bg-gray-50 p-4 rounded-xl">
+              <span className="text-gray-500">Mileage</span>
+              <p className="font-bold">{car.mileage.toLocaleString()} km</p>
+            </div>
+            <div className="bg-gray-50 p-4 rounded-xl">
+              <span className="text-gray-500">Condition</span>
+              <p className="font-bold">{car.condition}</p>
+            </div>
           </div>
 
           {car.description && (
-            <div className="mb-6">
-              <h3 className="text-xl font-bold mb-2 text-gray-800/70">
-                Description
-              </h3>
+            <div className="mt-10">
+              <h3 className="text-2xl font-bold mb-4">Description</h3>
               <p className="text-gray-700 leading-relaxed">{car.description}</p>
             </div>
           )}
         </div>
       </div>
 
-      <SimilarCars currentCarId={car.id} cars={cars} />
+      <div className="mt-20">
+        <h2 className="text-4xl font-bold text-center mb-12">Similar Cars</h2>
+        <SimilarCars currentCarId={car.id} cars={cars} />
+      </div>
     </div>
   );
 }

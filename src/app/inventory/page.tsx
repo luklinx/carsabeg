@@ -1,91 +1,78 @@
 // src/app/inventory/page.tsx
+"use client"; // ← Must be client component because of useSearchParams
+
 import { useSearchParams } from "next/navigation";
 import { fetchCars } from "@/services/api";
 import { Car } from "@/types";
-import CarCard from "@/components/CarCard";
+import CarGrid from "@/components/CarGrid";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
-export default async function Inventory({
-  searchParams,
-}: {
-  searchParams: {
-    make?: string;
-    minPrice?: string;
-    maxPrice?: string;
-    condition?: string;
-    year?: string;
-  };
-}) {
-  const cars: Car[] = await fetchCars();
-  const { make, minPrice, maxPrice, condition, year } = searchParams;
+export default function InventoryPage() {
+  const searchParams = useSearchParams();
+  const [cars, setCars] = useState<Car[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadCars() {
+      const serverCars = await fetchCars();
+      const userCars = JSON.parse(
+        localStorage.getItem("userListedCars") || "[]"
+      ) as Car[];
+      setCars([...serverCars, ...userCars]);
+      setLoading(false);
+    }
+    loadCars();
+  }, []);
+
+  const make = searchParams.get("make")?.toLowerCase() || "";
+  const minPrice = searchParams.get("minPrice")
+    ? Number(searchParams.get("minPrice"))
+    : 0;
+  const maxPrice = searchParams.get("maxPrice")
+    ? Number(searchParams.get("maxPrice"))
+    : Infinity;
 
   const filtered = cars.filter((car) => {
-    if (make && car.make.toLowerCase() !== make.toLowerCase()) return false;
-    if (minPrice && car.price < Number(minPrice)) return false;
-    if (maxPrice && car.price > Number(maxPrice)) return false;
-    if (condition && car.condition.toLowerCase() !== condition.toLowerCase())
-      return false;
-    if (year && car.year !== Number(year)) return false;
+    if (make && car.make.toLowerCase() !== make) return false;
+    if (minPrice > 0 && car.price < minPrice) return false;
+    if (maxPrice !== Infinity && car.price > maxPrice) return false;
     return true;
   });
 
-  return (
-    <div className="container mx-auto px-6 py-12">
-      <h1 className="text-4xl font-bold text-gray-800/70 mb-8">
-        Cars for Sale
-      </h1>
-      <div className="grid lg:grid-cols-4 gap-8">
-        {/* Filters Sidebar */}
-        <div className="lg:col-span-1 space-y-6">
-          <h3 className="text-xl font-bold text-gray-800/70">Filters</h3>
-          <div className="space-y-4">
-            <select defaultValue="" className="w-full p-3 border rounded-lg">
-              <option value="">All Makes</option>
-              <option value="Toyota">Toyota</option>
-              <option value="Honda">Honda</option>
-              <option value="Mercedes-Benz">Mercedes</option>
-            </select>
-            <div className="space-y-2">
-              <label className="block text-sm font-medium">Price Range</label>
-              <input
-                type="number"
-                placeholder="Min ₦"
-                defaultValue={minPrice}
-                className="w-full p-2 border rounded"
-              />
-              <input
-                type="number"
-                placeholder="Max ₦"
-                defaultValue={maxPrice}
-                className="w-full p-2 border rounded"
-              />
-            </div>
-            <select defaultValue="" className="w-full p-3 border rounded-lg">
-              <option value="">All Conditions</option>
-              <option value="foreign used">Foreign Used</option>
-              <option value="nigerian used">Nigerian Used</option>
-              <option value="brand new">Brand New</option>
-            </select>
-            <input
-              type="number"
-              placeholder="Year"
-              defaultValue={year}
-              className="w-full p-3 border rounded-lg"
-            />
-            <button className="w-full bg-green-600 text-white py-3 rounded-lg font-bold">
-              Apply Filters
-            </button>
-          </div>
-        </div>
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-3xl font-bold">Loading cars...</p>
+      </div>
+    );
+  }
 
-        {/* Results */}
-        <div className="lg:col-span-3">
-          <p className="mb-6 text-gray-600">{filtered.length} cars found</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filtered.map((car) => (
-              <CarCard key={car.id} car={car} />
-            ))}
+  return (
+    <div className="min-h-screen bg-gray-50 py-16">
+      <div className="container mx-auto px-6">
+        <h1 className="text-5xl md:text-6xl font-black text-center mb-4">
+          All Cars for Sale
+        </h1>
+        <p className="text-2xl text-center text-gray-700 mb-12">
+          {filtered.length} {filtered.length === 1 ? "car" : "cars"} available
+        </p>
+
+        {filtered.length > 0 ? (
+          <CarGrid cars={filtered} />
+        ) : (
+          <div className="text-center py-20">
+            <p className="text-3xl text-gray-500 mb-8">
+              No cars match your search
+            </p>
+            <Link
+              href="/inventory"
+              className="bg-green-600 text-white px-10 py-4 rounded-full text-xl font-bold hover:bg-green-700"
+            >
+              Clear Filters
+            </Link>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

@@ -1,7 +1,11 @@
 // src/services/api.ts
-// OFFLINE MODE — NO API CALLS
-export const fetchCars = async () => {
-  // Mock data — same as your Express server
+import { Car } from "@/types";
+
+// OFFLINE MODE — FULLY TYPED, REALISTIC, SCALABLE
+export const fetchCars = async (): Promise<Car[]> => {
+  // Simulate network delay (feels real)
+  await new Promise((resolve) => setTimeout(resolve, 300));
+
   return [
     {
       id: "1",
@@ -10,14 +14,18 @@ export const fetchCars = async () => {
       year: 2018,
       price: 8500000,
       mileage: 68000,
-      transmission: "automatic",
-      fuel: "petrol",
+      transmission: "Automatic",
+      fuel: "Petrol",
       location: "Lagos",
-      condition: "foreign used",
-      images: ["/camry.jpg"],
+      condition: "Foreign Used",
+      images: [
+        "https://images.unsplash.com/photo-1609520843994-3178a2c5a2df?w=800",
+        "https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=800",
+        "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800",
+      ],
       featured: true,
       description:
-        "Super clean Tokunbo Camry. First body, leather seat, thumbstart.",
+        "Super clean Tokunbo 2018 Toyota Camry. First body, leather seats, thumbstart, reverse camera, accident-free. Duty fully paid.",
     },
     {
       id: "2",
@@ -26,12 +34,17 @@ export const fetchCars = async () => {
       year: 2019,
       price: 9200000,
       mileage: 52000,
-      transmission: "automatic",
-      fuel: "petrol",
+      transmission: "Automatic",
+      fuel: "Petrol",
       location: "Abuja",
-      condition: "foreign used",
-      images: ["/accord.jpg"],
+      condition: "Foreign Used",
+      images: [
+        "https://images.unsplash.com/photo-1550355291-bbee04a92027?w=800",
+        "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=800",
+      ],
       featured: true,
+      description:
+        "Extremely clean 2019 Honda Accord Sport. Full option, panoramic roof, low mileage, Lagos cleared.",
     },
     {
       id: "3",
@@ -40,25 +53,61 @@ export const fetchCars = async () => {
       year: 2020,
       price: 7200000,
       mileage: 92000,
-      transmission: "automatic",
-      fuel: "petrol",
+      transmission: "Automatic",
+      fuel: "Petrol",
       location: "Lagos",
-      condition: "nigerian used",
-      images: ["/corolla.jpg"],
+      condition: "Nigerian Used",
+      images: [
+        "https://images.unsplash.com/photo-1567808291548-fc3ee04dbcf0?w=800",
+        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800",
+      ],
+      description:
+        "Very sharp Nigerian-used Corolla. Engine & gear perfect. AC chilling. Buy and drive.",
     },
     {
       id: "4",
       make: "Mercedes-Benz",
-      model: "C300",
+      model: "C300 4MATIC",
       year: 2017,
       price: 15500000,
       mileage: 45000,
-      transmission: "automatic",
-      fuel: "petrol",
+      transmission: "Automatic",
+      fuel: "Petrol",
       location: "Lagos",
-      condition: "foreign used",
-      images: ["/c300.jpg"],
+      condition: "Foreign Used",
+      images: [
+        "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800",
+        "https://images.unsplash.com/photo-1618843479313-40f8e899fcce?w=800",
+        "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800",
+      ],
       featured: true,
+      description:
+        "2017 Mercedes-Benz C300 4MATIC. Panoramic roof, AMG kit, red interior, extremely clean.",
+    },
+    {
+      id: "5",
+      make: "Lexus",
+      model: "RX 350",
+      year: 2016,
+      price: 18200000,
+      mileage: 71000,
+      transmission: "Automatic",
+      fuel: "Petrol",
+      location: "Port Harcourt",
+      condition: "Foreign Used",
+      images: [
+        "https://images.unsplash.com/photo-1606664515524-ed2a572e11cf?w=800",
+        "https://images.unsplash.com/photo-1618843479313-40f8e899fcce?w=800",
+      ],
+      featured: true,
+      description:
+        "Full option RX350. Thumbstart, reverse camera, leather seats, accident-free.",
     },
   ];
+};
+
+// Optional: fetch single car (useful later)
+export const fetchCarById = async (id: string): Promise<Car | null> => {
+  const cars = await fetchCars();
+  return cars.find((car) => car.id === id) || null;
 };
