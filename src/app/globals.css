@@ -34,3 +34,36 @@ body {
 .sub-heading {
   @apply text-2xl font-semibold text-gray-700/80 mb-6;
 }
+
+/* src/app/globals.css – ADD THIS AT THE BOTTOM */
+::placeholder {
+  @apply text-gray-700 font-bold opacity-100;
+}
+
+select,
+input,
+textarea {
+  @apply text-gray-900 font-bold;
+}
+
+/* Navigation text — always bold & dark */
+nav a,
+nav button {
+  @apply text-gray-900 font-black hover:text-green-600 transition;
+}
+
+/* All headings — never faint again */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply text-gray-900 font-black;
+}
+
+/* Filter form — super visible */
+input::placeholder,
+select {
+  @apply text-gray-700 font-bold;
+}

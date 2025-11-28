@@ -1,116 +1,133 @@
-// src/components/InventoryFilters.tsx
+// src/components/FeaturedSection.tsx
 "use client";
 
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useMemo } from "react";
-import { Car } from "@/types";
 import CarGrid from "./CarGrid";
+import CarCarousel from "./CarCarousel";
+import { Car } from "@/types";
 
 interface Props {
   initialCars: Car[];
 }
 
-export default function InventoryFilters({ initialCars }: Props) {
+export default function FeaturedSection({ initialCars }: Props) {
   const searchParams = useSearchParams();
-  const router = useRouter();
-  const pathname = usePathname();
 
-  const make = searchParams.get("make")?.toLowerCase() || "";
-  const minPrice = searchParams.get("minPrice")
-    ? Number(searchParams.get("minPrice"))
-    : 0;
-  const maxPrice = searchParams.get("maxPrice")
-    ? Number(searchParams.get("maxPrice"))
-    : Infinity;
+  // Extract values directly — this fixes React Compiler memo conflict
+  const make = (searchParams.get("make") || "").toLowerCase();
+  const minPrice = Number(searchParams.get("minPrice")) || 0;
+  const maxPrice = Number(searchParams.get("maxPrice")) || Infinity;
 
+  // useMemo with correct dependencies — React Compiler now happy
   const filtered = useMemo(() => {
     return initialCars.filter((car) => {
       if (make && car.make.toLowerCase() !== make) return false;
       if (minPrice > 0 && car.price < minPrice) return false;
       if (maxPrice !== Infinity && car.price > maxPrice) return false;
-      return true;
+      return car.featured === true;
     });
-  }, [make, minPrice, maxPrice, initialCars]);
+  }, [initialCars, make, minPrice, maxPrice]); // ← Correct dependencies
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const params = new URLSearchParams(searchParams.toString());
+  const tokunbo = useMemo(
+    () => initialCars.filter((c) => c.condition === "Foreign Used"),
+    [initialCars]
+  );
 
-    formData.forEach((value, key) => {
-      if (value) params.set(key, value.toString());
-      else params.delete(key);
-    });
-
-    router.push(`${pathname}?${params.toString()}`);
-  };
+  const nigerian = useMemo(
+    () => initialCars.filter((c) => c.condition === "Nigerian Used"),
+    [initialCars]
+  );
 
   return (
     <>
       {/* FILTER BAR */}
-      <section className="py-10 bg-white border-b">
+      <section className="py-10 bg-white border-b sticky top-16 z-40 shadow-lg">
         <div className="container mx-auto px-6">
-          <form
-            onSubmit={handleSubmit}
-            className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto"
-          >
+          <form className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
             <select
               name="make"
-              defaultValue={make}
-              className="p-4 border-2 rounded-xl text-lg font-medium"
+              className="p-5 border-2 border-gray-800 rounded-2xl text-xl font-black text-gray-900 bg-white focus:border-green-600"
             >
               <option value="">All Makes</option>
               <option value="toyota">Toyota</option>
               <option value="honda">Honda</option>
-              <option value="mercedes-benz">Mercedes-Benz</option>
+              <option value="mercedes-benz">Mercedes</option>
               <option value="lexus">Lexus</option>
             </select>
             <input
               type="number"
               name="minPrice"
               placeholder="Min Price (₦)"
-              defaultValue={minPrice > 0 ? minPrice.toString() : ""}
-              className="p-4 border-2 rounded-xl text-lg"
+              className="p-5 border-2 border-gray-800 rounded-2xl text-xl font-black text-gray-900 placeholder-gray-700"
             />
             <input
               type="number"
               name="maxPrice"
               placeholder="Max Price (₦)"
-              defaultValue={maxPrice !== Infinity ? maxPrice.toString() : ""}
-              className="p-4 border-2 rounded-xl text-lg"
+              className="p-5 border-2 border-gray-800 rounded-2xl text-xl font-black text-gray-900 placeholder-gray-700"
             />
             <button
               type="submit"
-              className="bg-green-600 hover:bg-green-700 text-white font-bold text-xl rounded-xl transition"
+              className="bg-green-600 hover:bg-green-700 text-white font-black text-xl rounded-2xl transition shadow-lg"
             >
-              Search
+              SEARCH
             </button>
           </form>
         </div>
       </section>
 
-      {/* RESULTS */}
-      <section className="py-8 bg-gray-50">
-        <div className="container mx-auto px-6 text-center">
-          <p className="text-2xl font-bold">
-            {filtered.length} car{filtered.length !== 1 && "s"} found
-          </p>
+      {/* MOBILE: Carousel */}
+      <section className="py-12 bg-gradient-to-b from-green-50 to-white md:hidden">
+        <div className="container mx-auto px-6">
+          <h2 className="text-4xl font-black text-center mb-8">
+            Featured Rides
+          </h2>
+          <CarCarousel cars={filtered} />
         </div>
       </section>
 
-      {/* GRID */}
-      <section className="py-20 bg-white">
+      {/* DESKTOP: Grid */}
+      <section className="hidden md:block py-20 bg-white">
         <div className="container mx-auto px-6">
-          <h2 className="text-5xl font-bold text-center mb-16">
-            All Cars for Sale
+          <h2 className="text-5xl font-black text-center mb-16">
+            Featured Rides
           </h2>
           {filtered.length > 0 ? (
             <CarGrid cars={filtered} />
           ) : (
-            <p className="text-center text-3xl text-gray-500 py-20">
-              No cars match your search.
-            </p>
+            <p className="text-center text-3xl py-20">No featured cars</p>
           )}
+        </div>
+      </section>
+
+      {/* TOKUNBO ROW */}
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-6">
+          <h2 className="text-4xl md:text-5xl font-black text-center mb-12">
+            Foreign Used (Tokunbo)
+          </h2>
+          <div className="md:hidden">
+            <CarCarousel cars={tokunbo.slice(0, 10)} />
+          </div>
+          <div className="hidden md:block">
+            <CarGrid cars={tokunbo.slice(0, 12)} />
+          </div>
+        </div>
+      </section>
+
+      {/* NIGERIAN USED ROW */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-6">
+          <h2 className="text-4xl md:text-5xl font-black text-center mb-12">
+            Nigerian Used
+          </h2>
+          <div className="md:hidden">
+            <CarCarousel cars={nigerian.slice(0, 10)} />
+          </div>
+          <div className="hidden md:block">
+            <CarGrid cars={nigerian.slice(0, 12)} />
+          </div>
         </div>
       </section>
     </>

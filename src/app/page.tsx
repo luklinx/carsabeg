@@ -1,4 +1,5 @@
 // src/app/page.tsx
+import Link from "next/link";
 import { Suspense } from "react";
 import { fetchCars } from "@/services/api";
 import { Car } from "@/types";
@@ -12,24 +13,21 @@ export default async function Home() {
   return (
     <>
       {/* HERO */}
-      <section className="bg-gradient-to-r from-green-600 to-blue-800 text-white py-28">
-        <div className="container mx-auto px-6 text-center">
-          <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight">
+      <section className="bg-gradient-to-r from-green-600 to-blue-800 text-white py-20 md:py-32 px-6">
+        <div className="container mx-auto text-center">
+          <h1 className="text-5xl md:text-7xl font-black mb-6">
             Cars <span className="text-yellow-400">Abeg!</span>
-            <br />
-            No Wahala
+            <br className="md:hidden" /> No Wahala
           </h1>
-          <p className="text-2xl md:text-3xl mb-12 font-bold">
-            Clean Tokunbo & Nigerian Used Cars • Best Prices in Nigeria
+          <p className="text-xl md:text-3xl mb-10 font-bold">
+            Clean Cars • Real Prices • Instant Buyers
           </p>
-          <a
-            href="https://wa.me/2348123456789?text=Hello%20Cars%20Abeg!%20I%20saw%20your%20site%20"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block bg-yellow-400 hover:bg-yellow-300 text-black px-14 py-7 rounded-full text-3xl font-black transition shadow-2xl transform hover:scale-105"
+          <Link
+            href="https://wa.me/2348123456789"
+            className="inline-block bg-yellow-400 text-black px-10 py-5 rounded-full text-2xl md:text-3xl font-black"
           >
-            Chat on WhatsApp Now
-          </a>
+            Chat Now
+          </Link>
         </div>
       </section>
 
