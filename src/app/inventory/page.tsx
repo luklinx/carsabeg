@@ -1,23 +1,27 @@
 // src/app/inventory/page.tsx
 import { Suspense } from "react";
+import InventoryClient from "./InventoryClient";
 import { fetchCars } from "@/services/api";
-import { Car } from "@/types";
-import InventoryFilters from "@/components/InventoryFilters";
 
-export const revalidate = 60;
+export const revalidate = 60; // Optional: revalidate every minute
 
-export default async function Inventory() {
-  const cars: Car[] = await fetchCars();
+export default async function InventoryPage() {
+  const cars = await fetchCars();
 
   return (
-    <>
-      <Suspense
-        fallback={
-          <div className="py-20 text-center text-xl">Loading filters...</div>
-        }
-      >
-        <InventoryFilters initialCars={cars} />
+    <div className="min-h-screen bg-gray-50">
+      {/* This Suspense is REQUIRED at page level */}
+      <Suspense fallback={<LoadingSkeleton />}>
+        <InventoryClient initialCars={cars} />
       </Suspense>
-    </>
+    </div>
+  );
+}
+
+function LoadingSkeleton() {
+  return (
+    <div className="container mx-auto px-6 py-20 text-center">
+      <div className="text-3xl font-bold animate-pulse">Loading cars...</div>
+    </div>
   );
 }
