@@ -11,7 +11,7 @@ export default function HowItWorks() {
       {/* HERO */}
       <section className="bg-gradient-to-r from-green-600 to-green-800 text-white py-32">
         <div className="container mx-auto px-6 text-center">
-          <h1 className="text-5xl md:text-7xl font-black mb-8 leading-tight">
+          <h1 className="text-3xl md:text-7xl font-black mb-8 leading-tight">
             How Cars Abeg Works
           </h1>
           <p className="text-2xl md:text-3xl font-bold max-w-4xl mx-auto">
@@ -24,7 +24,7 @@ export default function HowItWorks() {
       {/* BUYING FLOW */}
       <section className="py-20">
         <div className="container mx-auto px-6 max-w-6xl">
-          <h2 className="text-5xl md:text-6xl font-black text-center mb-16 text-gray-900">
+          <h2 className="text-3xl md:text-6xl font-black text-center mb-16 text-gray-900">
             Buying a Car? Done in 3 Steps
           </h2>
 
@@ -74,7 +74,7 @@ export default function HowItWorks() {
       {/* SELLING FLOW */}
       <section className="py-20 bg-gray-100">
         <div className="container mx-auto px-6 max-w-6xl">
-          <h2 className="text-5xl md:text-6xl font-black text-center mb-16 text-gray-900">
+          <h2 className="text-3xl md:text-6xl font-black text-center mb-16 text-gray-900">
             Selling Your Car? Even Easier
           </h2>
 
@@ -131,7 +131,7 @@ export default function HowItWorks() {
       {/* TRUST BADGES */}
       <section className="py-20 bg-black text-white">
         <div className="container mx-auto px-6 text-center">
-          <h2 className="text-4xl md:text-5xl font-black mb-16">
+          <h2 className="text-4xl md:text-3xl font-black mb-16">
             Why Thousands Trust Cars Abeg
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-10 text-2xl font-bold">
@@ -146,7 +146,7 @@ export default function HowItWorks() {
       {/* FINAL CTA */}
       <section className="py-24 bg-green-600 text-white text-center">
         <div className="container mx-auto px-6">
-          <h2 className="text-5xl md:text-6xl font-black mb-10">
+          <h2 className="text-3xl md:text-6xl font-black mb-10">
             Ready to Buy or Sell?
           </h2>
           <div className="flex flex-col sm:flex-row gap-8 justify-center items-center">

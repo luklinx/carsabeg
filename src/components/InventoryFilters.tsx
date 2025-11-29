@@ -52,7 +52,7 @@ export default function InventoryFilters({ initialCars }: Props) {
         <div className="container mx-auto px-6">
           <form
             onSubmit={handleSubmit}
-            className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto"
+            className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto"
           >
             <select
               name="make"
@@ -101,7 +101,7 @@ export default function InventoryFilters({ initialCars }: Props) {
       {/* GRID */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-6">
-          <h2 className="text-5xl font-bold text-center mb-16">
+          <h2 className="text-3xl font-bold text-center mb-16">
             All Cars for Sale
           </h2>
           {filtered.length > 0 ? (

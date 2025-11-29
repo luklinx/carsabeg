@@ -1,116 +1,90 @@
 // src/app/admin/page.tsx
 "use client";
-export const dynamic = "force-dynamic";
 
-import { useState } from "react";
-import { Car } from "@/types";
+import { useState, useEffect } from "react";
+import AdminPanel from "@/components/AdminPanel";
 
-export default function Admin() {
-  const [cars, setCars] = useState<Car[]>([]);
+// CHANGE THIS PASSWORD (make it strong!)
+const ADMIN_PASSWORD = "carsabeg2025";
 
-  // Form state — only strings (what the input gives us)
-  const [form, setForm] = useState({
-    make: "",
-    model: "",
-    year: "", // ← string from input
-    price: "", // ← string from input
-    mileage: "", // ← string from input
-    description: "",
-  });
+export default function AdminLoginPage() {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(false);
 
-  const addCar = () => {
-    const newCar: Car = {
-      id: Date.now().toString(),
-      make: form.make,
-      model: form.model,
-      year: Number(form.year) || 2020, // ← convert to number
-      price: Number(form.price) || 0, // ← convert to number
-      mileage: Number(form.mileage) || 0, // ← convert to number
-      transmission: "automatic",
-      fuel: "petrol",
-      location: "Lagos",
-      condition: "foreign used",
-      images: [""],
-      featured: true,
-      description: form.description || undefined,
-    };
+  // Check auth only on client
+  useEffect(() => {
+    const auth = localStorage.getItem("carsabeg-admin-auth");
+    setIsAuthenticated(auth === "authenticated");
+  }, []);
 
-    const updated = [...cars, newCar];
-    setCars(updated);
-    localStorage.setItem("cars", JSON.stringify(updated));
-
-    // Reset form
-    setForm({
-      make: "",
-      model: "",
-      year: "",
-      price: "",
-      mileage: "",
-      description: "",
-    });
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password === ADMIN_PASSWORD) {
+      localStorage.setItem("carsabeg-admin-auth", "authenticated");
+      setIsAuthenticated(true);
+    } else {
+      setError(true);
+      setTimeout(() => setError(false), 2000);
+    }
   };
 
-  return (
-    <div className="container mx-auto p-6 max-w-4xl">
-      <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">
-        Admin Panel
-      </h1>
-
-      <div className="bg-white p-8 rounded-xl shadow-lg">
-        <h2 className="text-2xl font-bold mb-6 text-green-600">Add New Car</h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <input
-            placeholder="Make"
-            value={form.make}
-            onChange={(e) => setForm({ ...form, make: e.target.value })}
-            className="p-4 border rounded-lg"
-          />
-          <input
-            placeholder="Model"
-            value={form.model}
-            onChange={(e) => setForm({ ...form, model: e.target.value })}
-            className="p-4 border rounded-lg"
-          />
-          <input
-            placeholder="Year (e.g. 2019)"
-            value={form.year}
-            onChange={(e) => setForm({ ...form, year: e.target.value })}
-            className="p-4 border rounded-lg"
-          />
-          <input
-            placeholder="Price (₦)"
-            value={form.price}
-            onChange={(e) => setForm({ ...form, price: e.target.value })}
-            className="p-4 border rounded-lg"
-          />
-          <input
-            placeholder="Mileage"
-            value={form.mileage}
-            onChange={(e) => setForm({ ...form, mileage: e.target.value })}
-            className="p-4 border rounded-lg"
-          />
-          <input
-            placeholder="Description (optional)"
-            value={form.description}
-            onChange={(e) => setForm({ ...form, description: e.target.value })}
-            className="p-4 border rounded-lg md:col-span-2"
-          />
-        </div>
-
-        <button
-          onClick={addCar}
-          className="mt-8 w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-lg text-xl"
-        >
-          Add Car to Inventory
-        </button>
-
-        {cars.length > 0 && (
-          <p className="mt-6 text-center text-green-600 font-semibold">
-            {cars.length} car{cars.length > 1 ? "s" : ""} added successfully!
-          </p>
-        )}
+  // Show loading while checking auth
+  if (isAuthenticated === null) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-600 to-black flex items-center justify-center">
+        <div className="text-white text-4xl font-black">Loading...</div>
       </div>
-    </div>
-  );
+    );
+  }
+
+  // Show login if not authenticated
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-600 to-black flex items-center justify-center px-6">
+        <div className="w-full max-w-md">
+          <div className="text-center mb-12">
+            <h1 className="text-7xl md:text-9xl font-black text-white tracking-tighter">
+              CARS
+            </h1>
+            <h1 className="text-6xl md:text-8xl font-black text-yellow-400 -mt-4">
+              ABEG
+            </h1>
+            <p className="text-2xl font-black text-white/80 mt-6">
+              ADMIN PORTAL
+            </p>
+          </div>
+
+          <form onSubmit={handleLogin} className="space-y-8">
+            <div className={`transition-all ${error ? "animate-pulse" : ""}`}>
+              <input
+                type="password"
+                placeholder="Enter Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full p-6 text-2xl font-black text-center rounded-3xl border-4 border-white focus:border-yellow-400 outline-none shadow-2xl bg-white/10 backdrop-blur-md text-white placeholder-white/50"
+                autoFocus
+              />
+            </div>
+
+            {error && (
+              <p className="text-red-400 text-center text-xl font-black animate-bounce">
+                WRONG PASSWORD!
+              </p>
+            )}
+
+            <button
+              type="submit"
+              className="w-full bg-yellow-400 hover:bg-yellow-300 text-black font-black text-3xl py-6 rounded-3xl shadow-2xl transform hover:scale-105 transition"
+            >
+              ENTER
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  // Authenticated → show full admin panel
+  return <AdminPanel />;
 }

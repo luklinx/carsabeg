@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function Top10TokunboUnder10M() {
   return (
     <article className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-20">
-      <div className="container mx-auto px-6 max-w-5xl">
+      <div className="container mx-auto px-6 max-w-3xl">
         {/* Header */}
         <header className="text-center mb-16">
           <p className="text-green-600 font-black text-lg mb-4 tracking-wider">
@@ -144,7 +144,7 @@ export default function Top10TokunboUnder10M() {
 
         {/* Bonus Section */}
         <section className="bg-green-50 rounded-3xl p-10 md:p-16 mb-16">
-          <h2 className="text-4xl md:text-5xl font-black text-center mb-10">
+          <h2 className="text-4xl md:text-3xl font-black text-center mb-10">
             Hidden Gems Under ₦10M (Bonus)
           </h2>
           <div className="grid md:grid-cols-3 gap-8 text-center">
@@ -167,7 +167,7 @@ export default function Top10TokunboUnder10M() {
 
         {/* Pro Tips */}
         <section className="text-center mb-20">
-          <h2 className="text-4xl md:text-5xl font-black mb-10">
+          <h2 className="text-4xl md:text-3xl font-black mb-10">
             Pro Tips Before You Pay
           </h2>
           <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">

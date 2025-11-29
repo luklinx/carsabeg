@@ -3,14 +3,28 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import MobileNav from "@/components/MobileNav";
+
 import DesktopNav from "@/components/DesktopNav";
+import MobileNav from "@/components/MobileNav";
+import Footer from "@/components/Footer"; // ← Our new clean footer
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Cars Abeg – Clean Cars, No Wahala",
-  description: "Buy & Sell Tokunbo & Nigerian Used Cars in Nigeria",
+  title: {
+    default: "CARS ABEG – Tokunbo & Nigerian Used Cars",
+    template: "%s | CARS ABEG",
+  },
+  description:
+    "No Wahala. Just Quality Cars. Buy & Sell verified cars in Nigeria.",
+  keywords:
+    "tokunbo cars, nigerian used cars, buy car nigeria, sell car lagos, cars abeg",
+  openGraph: {
+    title: "CARS ABEG – Nigeria's #1 Car Marketplace",
+    description: "Clean cars. Trusted sellers. Instant WhatsApp chat.",
+    url: "https://carsabeg.com",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
@@ -19,43 +33,38 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} bg-gray-50`}>
-        {/* HAMBURGER + NAV */}
-        <header className="sticky top-0 z-50 bg-white shadow-lg">
-          <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+    <html lang="en" className="scroll-smooth">
+      <body
+        className={`${inter.className} bg-gray-50 text-gray-900 antialiased`}
+      >
+        {/* STICKY HEADER */}
+        <header className="sticky top-0 z-50 bg-white shadow-md border-b border-gray-100">
+          <div className="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
+            {/* Logo */}
             <Link
               href="/"
-              className="text-2xl md:text-3xl font-black text-green-600"
+              className="text-3xl md:text-4xl font-black tracking-tight"
             >
-              Cars <span className="text-yellow-400">Abeg!</span>
+              CARS <span className="text-green-600">ABEG</span>
             </Link>
 
-            {/* Desktop Nav */}
-            <DesktopNav />
+            {/* Desktop Navigation */}
+            <div className="hidden md:block">
+              <DesktopNav />
+            </div>
 
             {/* Mobile Hamburger */}
-            <MobileNav />
+            <div className="md:hidden">
+              <MobileNav />
+            </div>
           </div>
         </header>
 
+        {/* MAIN CONTENT */}
         <main className="min-h-screen">{children}</main>
 
-        {/* Footer */}
-        <footer className="bg-black text-white py-12 mt-20">
-          <div className="container mx-auto px-6 text-center">
-            <p className="text-2xl font-black mb-4">Cars Abeg • No Wahala</p>
-            <p>
-              WhatsApp:{" "}
-              <a
-                href="https://wa.me/2348123456789"
-                className="text-yellow-400 font-bold"
-              >
-                +234 812 345 6789
-              </a>
-            </p>
-          </div>
-        </footer>
+        {/* CLEAN LIGHT FOOTER */}
+        <Footer />
       </body>
     </html>
   );

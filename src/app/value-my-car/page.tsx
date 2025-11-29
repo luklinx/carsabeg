@@ -87,7 +87,7 @@ export default function ValueMyCar() {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-20">
       <div className="container mx-auto px-6 max-w-4xl">
         <div className="text-center mb-16">
-          <h1 className="text-5xl md:text-7xl font-black text-gray-900 mb-6">
+          <h1 className="text-3xl md:text-7xl font-black text-gray-900 mb-6">
             Value Your Car in 30 Seconds
           </h1>
           <p className="text-2xl md:text-3xl font-bold text-gray-800">

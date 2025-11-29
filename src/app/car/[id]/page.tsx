@@ -1,137 +1,209 @@
 // src/app/car/[id]/page.tsx
+"use client";
+
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { fetchCars } from "@/services/api";
+import { use } from "react";
+import { useState } from "react";
+import { getCars } from "@/lib/cars";
 // import { Car } from "@/types";
-import WhatsAppButton from "@/components/WhatsAppButton";
-import CarGallery from "@/components/CarGallery";
-import SimilarCars from "@/components/SimilarCars";
+import CarCard from "@/components/CarCard";
 
-export const dynamicParams = true;
-export const revalidate = 60;
-
-export async function generateStaticParams() {
-  const cars = await fetchCars();
-  return cars.map((car) => ({ id: car.id }));
+interface Props {
+  params: Promise<{ id: string }>;
 }
 
-export default async function CarDetail({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-  const cars = await fetchCars();
-  const car = cars.find((c) => c.id === id);
-
+export default function CarDetailPage({ params }: Props) {
+  const { id } = use(params);
+  const car = getCars().find((c) => c.id === id);
   if (!car) notFound();
 
+  const [selectedImage, setSelectedImage] = useState(0);
+
+  // ALL OTHER CARS (excluding current)
+  const otherCars = getCars().filter((c) => c.id !== id);
+
+  // 1. Same make + same location → best match
+  let similarCars = otherCars.filter(
+    (c) =>
+      c.make.toLowerCase() === car.make.toLowerCase() &&
+      c.location === car.location
+  );
+
+  let heading = `More ${car.make} in ${car.location}`;
+
+  // 2. Fallback: Same make, any location
+  if (similarCars.length === 0) {
+    similarCars = otherCars.filter(
+      (c) => c.make.toLowerCase() === car.make.toLowerCase()
+    );
+    heading = `More ${car.make} in Nigeria`;
+  }
+
+  // 3. Final fallback: Same location, any make
+  if (similarCars.length === 0) {
+    similarCars = otherCars.filter((c) => c.location === car.location);
+    heading = `More Cars in ${car.location}`;
+  }
+
+  // 4. Ultimate fallback: Most recent premium cars nationwide
+  if (similarCars.length === 0) {
+    similarCars = otherCars
+      .filter((c) => c.featuredPaid)
+      .sort((a, b) => Number(b.id) - Number(a.id))
+      .slice(0, 6);
+    heading = "Premium Listings Across Nigeria";
+  }
+
+  // Always take top 6, sorted by price descending
+  similarCars = similarCars.sort((a, b) => b.price - a.price).slice(0, 6);
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-      <div className="container mx-auto px-6 py-12 md:py-20 max-w-7xl">
-        {/* Breadcrumb – Bold & Clear */}
-        <nav className="mb-8">
-          <Link
-            href="/"
-            className="text-xl font-black text-green-600 hover:underline"
-          >
-            ← Home
-          </Link>
-          <span className="mx-3 text-gray-500 font-bold">/</span>
-          <span className="text-xl font-black text-gray-900">
-            {car.year} {car.make} {car.model}
-          </span>
-        </nav>
+    <div className="min-h-screen bg-gray-50">
+      {/* Back Button */}
+      <div className="max-w-7xl mx-auto px-6 pt-8">
+        <Link
+          href="/inventory"
+          className="inline-flex items-center gap-2 text-gray-600 hover:text-green-600 font-bold text-lg transition"
+        >
+          Back to all cars
+        </Link>
+      </div>
 
-        <div className="grid lg:grid-cols-2 gap-12 xl:gap-20">
-          {/* Gallery */}
-          <div className="order-2 lg:order-1">
-            <CarGallery images={car.images} />
-          </div>
-
-          {/* Details */}
-          <div className="order-1 lg:order-2">
-            {/* Title & Price */}
-            <h1 className="text-4xl md:text-6xl font-black text-gray-900 mb-4 leading-tight">
-              {car.year} {car.make} {car.model}
-            </h1>
-            <p className="text-5xl md:text-7xl font-black text-green-600 mb-8">
-              ₦{(car.price / 1000000).toFixed(1)}M
-            </p>
-
-            {/* WhatsApp CTA */}
-            <div className="bg-gradient-to-r from-green-500 to-green-600 text-white p-8 rounded-3xl shadow-2xl mb-10">
-              <p className="text-2xl font-black mb-4">
-                Ready to Buy? Chat Now!
-              </p>
-              <WhatsAppButton car={car} />
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        {/* Main car details (unchanged) */}
+        <div className="grid lg:grid-cols-3 gap-10">
+          {/* IMAGE GALLERY */}
+          <div className="lg:col-span-2 space-y-6">
+            <div className="relative aspect-[4/3] md:aspect-[16/9] rounded-2xl overflow-hidden bg-black shadow-2xl">
+              <Image
+                src={car.images[selectedImage] || "/placeholder.jpg"}
+                alt={`${car.year} ${car.make} ${car.model}`}
+                fill
+                className="object-contain"
+                priority
+              />
+              <div className="absolute bottom-4 right-4 bg-black/70 text-white px-4 py-2 rounded-full text-sm font-bold">
+                {selectedImage + 1} / {car.images.length}
+              </div>
             </div>
 
-            {/* Key Specs Grid */}
-            <div className="grid grid-cols-2 gap-6 mb-10">
-              {[
-                {
-                  label: "Mileage",
-                  value: `${car.mileage.toLocaleString()} km`,
-                },
-                { label: "Condition", value: car.condition },
-                {
-                  label: "Transmission",
-                  value: car.transmission || "Automatic",
-                },
-                { label: "Fuel Type", value: car.fuel || "Petrol" },
-                { label: "Location", value: car.location || "Lagos" },
-                { label: "Year", value: car.year },
-              ].map((item) => (
-                <div
-                  key={item.label}
-                  className="bg-white border-2 border-gray-800 rounded-2xl p-6 shadow-lg"
+            <div className="grid grid-cols-6 gap-4">
+              {car.images.map((img, i) => (
+                <button
+                  key={i}
+                  onClick={() => setSelectedImage(i)}
+                  className={`relative aspect-square rounded-xl overflow-hidden border-4 transition-all duration-200 ${
+                    selectedImage === i
+                      ? "border-green-600 shadow-xl scale-110 ring-4 ring-green-600/30"
+                      : "border-gray-300 hover:border-gray-500"
+                  }`}
                 >
-                  <p className="text-sm md:text-base text-gray-600 font-bold uppercase tracking-wider">
-                    {item.label}
-                  </p>
-                  <p className="text-2xl md:text-3xl font-black text-gray-900 mt-2">
-                    {item.value}
-                  </p>
-                </div>
+                  <Image src={img} alt="" fill className="object-cover" />
+                </button>
               ))}
             </div>
+          </div>
 
-            {/* Description */}
+          {/* DETAILS + CONTACT */}
+          <div className="space-y-8">
+            <div>
+              <h1 className="text-4xl md:text-3xl font-black text-gray-900 leading-tight">
+                {car.year} {car.make} {car.model}
+              </h1>
+              <p className="text-3xl md:text-6xl font-black text-green-600 mt-4">
+                ₦{(car.price / 1000000).toFixed(1)}M
+              </p>
+            </div>
+
+            {car.featuredPaid && (
+              <div className="inline-flex items-center gap-3 bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-6 py-3 rounded-full font-black text-lg shadow-xl">
+                PREMIUM LISTING
+              </div>
+            )}
+
+            <div className="grid grid-cols-2 gap-6 bg-white p-8 rounded-2xl shadow">
+              <div>
+                <p className="text-gray-600 font-bold uppercase text-sm">
+                  Condition
+                </p>
+                <p className="font-black text-2xl">{car.condition}</p>
+              </div>
+              <div>
+                <p className="text-gray-600 font-bold uppercase text-sm">
+                  Mileage
+                </p>
+                <p className="font-black text-2xl">
+                  {car.mileage.toLocaleString()} km
+                </p>
+              </div>
+              <div>
+                <p className="text-gray-600 font-bold uppercase text-sm">
+                  Location
+                </p>
+                <p className="font-black text-2xl">{car.location}</p>
+              </div>
+              <div>
+                <p className="text-gray-600 font-bold uppercase text-sm">
+                  Seller
+                </p>
+                <p className="font-black text-2xl">
+                  {car.dealerName || "Private"}
+                </p>
+              </div>
+            </div>
+
             {car.description && (
-              <div className="bg-gray-50 rounded-3xl p-8 shadow-xl">
-                <h3 className="text-3xl font-black mb-6 text-gray-900">
-                  Description
-                </h3>
-                <p className="text-xl leading-relaxed text-gray-800 whitespace-pre-line">
+              <div className="bg-white p-8 rounded-2xl shadow">
+                <h3 className="font-black text-2xl mb-4">Description</h3>
+                <p className="text-gray-700 leading-relaxed whitespace-pre-line">
                   {car.description}
                 </p>
               </div>
             )}
 
-            {/* Extra Badges */}
-            <div className="flex flex-wrap gap-4 mt-10">
-              {car.featured && (
-                <span className="bg-yellow-400 text-black px-6 py-3 rounded-full text-lg font-black shadow-lg">
-                  Featured
-                </span>
-              )}
-              {car.condition === "Foreign Used" && (
-                <span className="bg-green-600 text-white px-6 py-3 rounded-full text-lg font-black shadow-lg">
-                  Tokunbo
-                </span>
-              )}
-            </div>
+            {car.dealerPhone && (
+              <div className="space-y-4">
+                <Link
+                  href={`https://wa.me/${car.dealerPhone.replace(/\D/g, "")}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block text-center bg-green-600 hover:bg-green-700 text-white py-6 rounded-2xl font-black text-2xl shadow-2xl transform hover:scale-105 transition"
+                >
+                  Chat on WhatsApp
+                </Link>
+                <Link
+                  href={`tel:${car.dealerPhone}`}
+                  className="block text-center bg-gray-800 hover:bg-black text-white py-6 rounded-2xl font-black text-2xl shadow-2xl"
+                >
+                  Call Seller
+                </Link>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Similar Cars */}
-        <section className="mt-32">
-          <h2 className="text-4xl md:text-6xl font-black text-center mb-16 text-gray-900">
-            Similar Clean Rides
-          </h2>
-          <SimilarCars currentCarId={car.id} cars={cars} />
-        </section>
+        {/* DYNAMIC SIMILAR CARS SECTION */}
+        {similarCars.length > 0 && (
+          <section className="mt-20">
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-4xl font-black text-gray-900">{heading}</h2>
+              <Link
+                href="/inventory"
+                className="text-green-600 hover:text-green-700 font-black text-lg underline"
+              >
+                View all
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              {similarCars.map((similarCar) => (
+                <CarCard key={similarCar.id} car={similarCar} />
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </div>
   );

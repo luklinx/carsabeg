@@ -55,9 +55,9 @@ const posts = [
 export default function BlogHome() {
   return (
     <div className="min-h-screen bg-gray-50 py-20">
-      <div className="container mx-auto px-6 max-w-5xl">
+      <div className="container mx-auto px-6 max-w-3xl">
         <div className="text-center mb-16">
-          <h1 className="text-5xl md:text-7xl font-black text-gray-900 mb-6">
+          <h1 className="text-3xl md:text-7xl font-black text-gray-900 mb-6">
             Cars Abeg Blog
           </h1>
           <p className="text-2xl md:text-3xl font-bold text-gray-700">
