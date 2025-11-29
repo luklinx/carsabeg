@@ -18,7 +18,7 @@ const cars: Car[] = [
     transmission: "automatic",
     fuel: "petrol",
     location: "Lagos",
-    condition: "foreign used",
+    condition: "Foreign Used",
     images: ["/camry.jpg"],
     featured: true,
   },

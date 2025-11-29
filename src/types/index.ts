@@ -1,4 +1,7 @@
 // src/types.ts
+
+export type CarCondition = "Foreign Used" | "Nigerian Used";
+
 export type Car = {
   id: string;
   make: string;
@@ -6,7 +9,7 @@ export type Car = {
   year: number;
   price: number;
   mileage: number;
-  condition: "Foreign Used" | "Nigerian Used";
+  condition: CarCondition;
   images: string[];
   transmission: string;
   fuel: string;
