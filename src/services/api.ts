@@ -63,6 +63,13 @@ export const fetchCars = async (): Promise<Car[]> => {
       ],
       description:
         "Very sharp Nigerian-used Corolla. Engine & gear perfect. AC chilling. Buy and drive.",
+
+      // NEW: Paid Featured Ads (₦50,000)
+      featured: false,
+      featuredPaid: false,
+      featuredUntil: "2025-12-25", // e.g. "2025-12-25"
+      dealerPhone: "09018837909", // WhatsApp number
+      dealerName: "Ashiru Ahmad", // Dealer name
     },
     {
       id: "4",
@@ -83,6 +90,11 @@ export const fetchCars = async (): Promise<Car[]> => {
       featured: true,
       description:
         "2017 Mercedes-Benz C300 4MATIC. Panoramic roof, AMG kit, red interior, extremely clean.",
+      // NEW: Paid Featured Ads (₦50,000)
+      featuredPaid: false,
+      featuredUntil: "2025-12-25", // e.g. "2025-12-25"
+      dealerPhone: "09018837909", // WhatsApp number
+      dealerName: "Ashiru Ahmad", // Dealer name
     },
     {
       id: "5",
@@ -102,6 +114,11 @@ export const fetchCars = async (): Promise<Car[]> => {
       featured: true,
       description:
         "Full option RX350. Thumbstart, reverse camera, leather seats, accident-free.",
+      // NEW: Paid Featured Ads (₦50,000)
+      featuredPaid: false,
+      featuredUntil: "2025-12-25", // e.g. "2025-12-25"
+      dealerPhone: "09018837909", // WhatsApp number
+      dealerName: "Ashiru Ahmad", // Dealer name
     },
   ];
 };

@@ -15,12 +15,13 @@ const cars: Car[] = [
     year: 2018,
     price: 8500000,
     mileage: 68000,
-    transmission: "automatic",
-    fuel: "petrol",
+    transmission: "Automatic",
+    fuel: "Petrol",
     location: "Lagos",
     condition: "Foreign Used",
     images: ["/camry.jpg"],
     featured: true,
+    featuredPaid: false, // ← probably also required now
   },
 ];
 
