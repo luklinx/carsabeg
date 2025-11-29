@@ -26,6 +26,11 @@ export const fetchCars = async (): Promise<Car[]> => {
       featured: true,
       description:
         "Super clean Tokunbo 2018 Toyota Camry. First body, leather seats, thumbstart, reverse camera, accident-free. Duty fully paid.",
+      // NEW: Paid Featured Ads (₦50,000)
+      featuredPaid: false,
+      featuredUntil: "2025-12-25", // e.g. "2025-12-25"
+      dealerPhone: "09018837909", // WhatsApp number
+      dealerName: "Ashiru Ahmad", // Dealer name
     },
     {
       id: "2",
@@ -45,6 +50,11 @@ export const fetchCars = async (): Promise<Car[]> => {
       featured: true,
       description:
         "Extremely clean 2019 Honda Accord Sport. Full option, panoramic roof, low mileage, Lagos cleared.",
+      // NEW: Paid Featured Ads (₦50,000)
+      featuredPaid: false,
+      featuredUntil: "2025-12-25", // e.g. "2025-12-25"
+      dealerPhone: "09018837909", // WhatsApp number
+      dealerName: "Ashiru Ahmad", // Dealer name
     },
     {
       id: "3",
