@@ -4,41 +4,30 @@
 import { useState, useEffect } from "react";
 import AdminPanel from "@/components/AdminPanel";
 
-// CHANGE THIS PASSWORD (make it strong!)
-const ADMIN_PASSWORD = "carsabeg2025";
+const ADMIN_PASSWORD = "carsabeg2025"; // CHANGE THIS!
 
 export default function AdminLoginPage() {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
 
-  // Check auth only on client
-  useEffect(() => {
-    const auth = localStorage.getItem("carsabeg-admin-auth");
-    setIsAuthenticated(auth === "authenticated");
-  }, []);
+  // READ localStorage ONCE on mount — NO setState in effect!
+  const isAuthenticated = (() => {
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem("carsabeg-admin-auth") === "authenticated";
+  })();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (password === ADMIN_PASSWORD) {
       localStorage.setItem("carsabeg-admin-auth", "authenticated");
-      setIsAuthenticated(true);
+      window.location.reload(); // Simple & bulletproof refresh
     } else {
       setError(true);
       setTimeout(() => setError(false), 2000);
     }
   };
 
-  // Show loading while checking auth
-  if (isAuthenticated === null) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-green-600 to-black flex items-center justify-center">
-        <div className="text-white text-4xl font-black">Loading...</div>
-      </div>
-    );
-  }
-
-  // Show login if not authenticated
+  // Show login screen
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-green-600 to-black flex items-center justify-center px-6">
@@ -85,6 +74,6 @@ export default function AdminLoginPage() {
     );
   }
 
-  // Authenticated → show full admin panel
+  // AUTHENTICATED → SHOW ADMIN PANEL
   return <AdminPanel />;
 }
