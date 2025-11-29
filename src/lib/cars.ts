@@ -1,55 +1,39 @@
 // src/lib/cars.ts
-import { Car } from "@/types";
+import { createClient } from "@supabase/supabase-js";
+import type { Car } from "@/types";
 
-let cache: Car[] | null = null;
-let cacheTime = 0;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
-function loadCars(): Car[] {
-  if (typeof window === "undefined") return [];
-
-  if (cache && Date.now() - cacheTime < 1000) return cache;
-
-  try {
-    const saved = localStorage.getItem("cars");
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      if (Array.isArray(parsed)) {
-        cache = parsed as Car[];
-        cacheTime = Date.now();
-        return cache;
-      }
-    }
-  } catch (e) {
-    console.error("Load cars failed", e);
-  }
-
-  cache = [];
-  cacheTime = Date.now();
-  return [];
+// This line throws error if env vars are missing
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error("Missing Supabase environment variables");
 }
 
-// ALL CARS — PAID FIRST → LATEST FIRST
-export function getCars(): Car[] {
-  const cars = loadCars();
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-  return [...cars].sort((a, b) => {
-    // 1. PAID = always on top
-    if (a.featuredPaid && !b.featuredPaid) return -1;
-    if (!a.featuredPaid && b.featuredPaid) return 1;
+// PUBLIC: Only approved + visible cars
+export async function getCars(): Promise<Car[]> {
+  const { data } = await supabase
+    .from("cars")
+    .select("*")
+    .eq("approved", true)
+    .order("created_at", { ascending: false });
 
-    // 2. Newest first (higher ID = newer)
-    return Number(b.id) - Number(a.id);
-  });
+  return (data as Car[]) || [];
 }
 
-// ONLY PAID CARS — for Featured section
-export function getPaidFeaturedCars(): Car[] {
-  return loadCars()
-    .filter((car) => car.featuredPaid)
-    .sort((a, b) => Number(b.id) - Number(a.id)); // newest paid first
-}
+// PREMIUM SECTION on homepage
+export async function getPaidFeaturedCars(): Promise<Car[]> {
+  const today = new Date().toISOString().split("T")[0];
 
-// Count free (non-paid) listings — for 3 free slots
-export function getFreeCarCount(): number {
-  return loadCars().filter((car) => !car.featuredPaid).length;
+  const { data } = await supabase
+    .from("cars")
+    .select("*")
+    .eq("approved", true)
+    .eq("featured_paid", true)
+    .gte("featured_until", today)
+    .order("created_at", { ascending: false });
+
+  return (data as Car[]) || [];
 }

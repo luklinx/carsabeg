@@ -4,60 +4,108 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { use } from "react";
-import { useState } from "react";
-import { getCars } from "@/lib/cars";
-// import { Car } from "@/types";
+import { useEffect, useState } from "react";
 import CarCard from "@/components/CarCard";
+import { supabase } from "@/lib/cars";
+import type { Car } from "@/types";
 
 interface Props {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 }
 
 export default function CarDetailPage({ params }: Props) {
-  const { id } = use(params);
-  const car = getCars().find((c) => c.id === id);
-  if (!car) notFound();
+  const { id } = params;
 
+  const [car, setCar] = useState<Car | null>(null);
+  const [similarCars, setSimilarCars] = useState<Car[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
 
-  // ALL OTHER CARS (excluding current)
-  const otherCars = getCars().filter((c) => c.id !== id);
+  useEffect(() => {
+    async function loadCar() {
+      // Fetch the main car
+      const { data: carData, error: carError } = await supabase
+        .from("cars")
+        .select("*")
+        .eq("id", id)
+        .eq("approved", true)
+        .single();
 
-  // 1. Same make + same location → best match
-  let similarCars = otherCars.filter(
-    (c) =>
-      c.make.toLowerCase() === car.make.toLowerCase() &&
-      c.location === car.location
-  );
+      if (carError || !carData) {
+        notFound();
+      }
 
-  let heading = `More ${car.make} in ${car.location}`;
+      setCar(carData as Car);
 
-  // 2. Fallback: Same make, any location
-  if (similarCars.length === 0) {
-    similarCars = otherCars.filter(
-      (c) => c.make.toLowerCase() === car.make.toLowerCase()
+      // Fetch all approved cars for similar recommendations
+      const { data: allCars } = await supabase
+        .from("cars")
+        .select("*")
+        .eq("approved", true);
+
+      if (!allCars) {
+        setLoading(false);
+        return;
+      }
+
+      const otherCars = allCars.filter((c: Car) => c.id !== id);
+
+      let matches: Car[] = [];
+      let heading = "";
+
+      // 1. Same make + location
+      matches = otherCars.filter(
+        (c: Car) =>
+          c.make.toLowerCase() === carData.make.toLowerCase() &&
+          c.location === carData.location
+      );
+      heading = `More ${carData.make} in ${carData.location}`;
+
+      // 2. Same make only
+      if (matches.length === 0) {
+        matches = otherCars.filter(
+          (c: Car) => c.make.toLowerCase() === carData.make.toLowerCase()
+        );
+        heading = `More ${carData.make} in Nigeria`;
+      }
+
+      // 3. Same location only
+      if (matches.length === 0) {
+        matches = otherCars.filter((c: Car) => c.location === carData.location);
+        heading = `More Cars in ${carData.location}`;
+      }
+
+      // 4. Premium nationwide
+      if (matches.length === 0) {
+        matches = otherCars
+          .filter((c: Car) => c.feature_paid)
+          .sort((a: Car, b: Car) => b.price - a.price);
+        heading = "Premium Listings Across Nigeria";
+      }
+
+      // Final: sort by price desc, take top 6
+      const finalSimilar = matches
+        .sort((a: Car, b: Car) => b.price - a.price)
+        .slice(0, 6);
+
+      setSimilarCars(finalSimilar);
+      setLoading(false);
+    }
+
+    loadCar();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-5xl font-black text-green-600 animate-pulse">
+          LOADING CAR...
+        </div>
+      </div>
     );
-    heading = `More ${car.make} in Nigeria`;
   }
 
-  // 3. Final fallback: Same location, any make
-  if (similarCars.length === 0) {
-    similarCars = otherCars.filter((c) => c.location === car.location);
-    heading = `More Cars in ${car.location}`;
-  }
-
-  // 4. Ultimate fallback: Most recent premium cars nationwide
-  if (similarCars.length === 0) {
-    similarCars = otherCars
-      .filter((c) => c.featuredPaid)
-      .sort((a, b) => Number(b.id) - Number(a.id))
-      .slice(0, 6);
-    heading = "Premium Listings Across Nigeria";
-  }
-
-  // Always take top 6, sorted by price descending
-  similarCars = similarCars.sort((a, b) => b.price - a.price).slice(0, 6);
+  if (!car) notFound();
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -67,12 +115,11 @@ export default function CarDetailPage({ params }: Props) {
           href="/inventory"
           className="inline-flex items-center gap-2 text-gray-600 hover:text-green-600 font-bold text-lg transition"
         >
-          Back to all cars
+          ← Back to all cars
         </Link>
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-8">
-        {/* Main car details (unchanged) */}
         <div className="grid lg:grid-cols-3 gap-10">
           {/* IMAGE GALLERY */}
           <div className="lg:col-span-2 space-y-6">
@@ -94,7 +141,7 @@ export default function CarDetailPage({ params }: Props) {
                 <button
                   key={i}
                   onClick={() => setSelectedImage(i)}
-                  className={`relative aspect-square rounded-xl overflow-hidden border-4 transition-all duration-200 ${
+                  className={`relative aspect-square rounded-xl overflow-hidden border-4 transition-all ${
                     selectedImage === i
                       ? "border-green-600 shadow-xl scale-110 ring-4 ring-green-600/30"
                       : "border-gray-300 hover:border-gray-500"
@@ -109,7 +156,7 @@ export default function CarDetailPage({ params }: Props) {
           {/* DETAILS + CONTACT */}
           <div className="space-y-8">
             <div>
-              <h1 className="text-4xl md:text-3xl font-black text-gray-900 leading-tight">
+              <h1 className="text-4xl md:text-5xl font-black text-gray-900 leading-tight">
                 {car.year} {car.make} {car.model}
               </h1>
               <p className="text-3xl md:text-6xl font-black text-green-600 mt-4">
@@ -117,7 +164,7 @@ export default function CarDetailPage({ params }: Props) {
               </p>
             </div>
 
-            {car.featuredPaid && (
+            {car.feature_paid && (
               <div className="inline-flex items-center gap-3 bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-6 py-3 rounded-full font-black text-lg shadow-xl">
                 PREMIUM LISTING
               </div>
@@ -149,7 +196,7 @@ export default function CarDetailPage({ params }: Props) {
                   Seller
                 </p>
                 <p className="font-black text-2xl">
-                  {car.dealerName || "Private"}
+                  {car.dealer_name || "Private"}
                 </p>
               </div>
             </div>
@@ -163,10 +210,10 @@ export default function CarDetailPage({ params }: Props) {
               </div>
             )}
 
-            {car.dealerPhone && (
+            {car.dealer_phone && (
               <div className="space-y-4">
                 <Link
-                  href={`https://wa.me/${car.dealerPhone.replace(/\D/g, "")}`}
+                  href={`https://wa.me/${car.dealer_phone.replace(/\D/g, "")}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block text-center bg-green-600 hover:bg-green-700 text-white py-6 rounded-2xl font-black text-2xl shadow-2xl transform hover:scale-105 transition"
@@ -174,7 +221,7 @@ export default function CarDetailPage({ params }: Props) {
                   Chat on WhatsApp
                 </Link>
                 <Link
-                  href={`tel:${car.dealerPhone}`}
+                  href={`tel:${car.dealer_phone}`}
                   className="block text-center bg-gray-800 hover:bg-black text-white py-6 rounded-2xl font-black text-2xl shadow-2xl"
                 >
                   Call Seller
@@ -184,11 +231,17 @@ export default function CarDetailPage({ params }: Props) {
           </div>
         </div>
 
-        {/* DYNAMIC SIMILAR CARS SECTION */}
+        {/* SIMILAR CARS */}
         {similarCars.length > 0 && (
           <section className="mt-20">
             <div className="flex items-center justify-between mb-8">
-              <h2 className="text-4xl font-black text-gray-900">{heading}</h2>
+              <h2 className="text-4xl font-black text-gray-900">
+                {`More ${car.make} in ${car.location}`.includes("More")
+                  ? `More ${car.make} in ${car.location}`
+                  : similarCars.length > 0
+                  ? `More ${car.make} in ${car.location}`
+                  : "Premium Listings Across Nigeria"}
+              </h2>
               <Link
                 href="/inventory"
                 className="text-green-600 hover:text-green-700 font-black text-lg underline"

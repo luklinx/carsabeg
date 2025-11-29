@@ -7,14 +7,13 @@ import CarCard from "./CarCard";
 import { getCars, getPaidFeaturedCars } from "@/lib/cars";
 import { Car } from "@/types";
 
-// Swiper
+// Swiper imports
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
-// MOVE CAROUSEL SECTION OUTSIDE — THIS FIXES THE ERROR
 const CarouselSection = ({
   title,
   cars: sectionCars,
@@ -35,17 +34,15 @@ const CarouselSection = ({
     query.set(filterKey, filterValue);
   }
 
-  const href = `/inventory?${query.toString()}`;
-
   return (
     <section className="py-12 px-4 md:px-8 bg-white">
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-8">
-          <h2 className="text-3xl md:text-5xl font-black text-gray-800">
+          <h2 className="text-3xl md:text-4xl font-black text-gray-800">
             {title}
           </h2>
           <Link
-            href={href}
+            href={`/inventory?${query.toString()}`}
             className="text-green-600 hover:text-green-800 font-black text-xl underline"
           >
             View All
@@ -54,7 +51,7 @@ const CarouselSection = ({
 
         <Swiper
           modules={[Navigation, Pagination, Autoplay]}
-          spaceBetween={20}
+          spaceBetween={24}
           slidesPerView={1.2}
           breakpoints={{
             640: { slidesPerView: 2.2 },
@@ -86,28 +83,37 @@ export default function ClientHome() {
   const [paidCars, setPaidCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // FETCH DATA FROM SUPABASE
   useEffect(() => {
-    const load = () => {
-      const all = getCars();
-      setCars(all);
-      setPaidCars(getPaidFeaturedCars());
-      setLoading(false);
-    };
-    load();
-    const interval = setInterval(load, 10000);
-    return () => clearInterval(interval);
+    async function loadCars() {
+      try {
+        const [allCars, featuredCars] = await Promise.all([
+          getCars(),
+          getPaidFeaturedCars(),
+        ]);
+        setCars(allCars);
+        setPaidCars(featuredCars);
+      } catch (err) {
+        console.error("Failed to load cars:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadCars();
   }, []);
 
   if (loading) {
     return (
       <div className="py-32 text-center">
         <div className="text-4xl font-black text-green-600 animate-pulse">
-          LOADING CARS...
+          LOADING FRESH CARS...
         </div>
       </div>
     );
   }
 
+  // NOW SAFE TO FILTER — cars is always an array
   const foreignUsed = cars
     .filter((c) => c.condition === "Foreign Used")
     .slice(0, 10);
@@ -119,7 +125,7 @@ export default function ClientHome() {
 
   return (
     <>
-      {/* PREMIUM PAID LISTINGS — NOW FIXED */}
+      {/* PREMIUM LISTINGS */}
       {paidCars.length > 0 && (
         <section className="py-16 px-4 md:px-8 bg-gradient-to-r from-yellow-50 to-orange-50 overflow-hidden">
           <div className="max-w-7xl mx-auto">
@@ -131,25 +137,23 @@ export default function ClientHome() {
                 Only ₦50,000 paid ads appear here
               </p>
             </div>
-
             <Swiper
               modules={[Autoplay]}
-              spaceBetween={24}
+              spaceBetween={32}
               slidesPerView={1.1}
               centeredSlides={false}
               loop={paidCars.length > 4}
               autoplay={{ delay: 4000, disableOnInteraction: false }}
               breakpoints={{
-                640: { slidesPerView: 2, spaceBetween: 20 },
-                768: { slidesPerView: 2.5, spaceBetween: 24 },
-                1024: { slidesPerView: 3.5, spaceBetween: 28 },
-                1280: { slidesPerView: 4, spaceBetween: 32 },
+                640: { slidesPerView: 2 },
+                1024: { slidesPerView: 3.5 },
+                1280: { slidesPerView: 4 },
               }}
-              className="pb-10 !px-4 md:!px-0"
+              className="pb-10"
             >
               {paidCars.map((car) => (
                 <SwiperSlide key={car.id}>
-                  <div className="px-2">
+                  <div className="px-4">
                     <CarCard car={car} />
                   </div>
                 </SwiperSlide>
@@ -159,7 +163,6 @@ export default function ClientHome() {
         </section>
       )}
 
-      {/* Rest of your sections (unchanged) */}
       <CarouselSection
         title="Foreign Used Cars"
         cars={foreignUsed}
@@ -185,7 +188,7 @@ export default function ClientHome() {
         filterValue="10000000"
       />
 
-      {/* FINAL CTA */}
+      {/* CTA */}
       <section className="py-20 text-center bg-green-600 text-white">
         <h2 className="text-3xl md:text-7xl font-black mb-6">
           SELL YOUR CAR TODAY

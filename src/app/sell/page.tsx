@@ -2,310 +2,240 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
-import { getFreeCarCount, getCars } from "@/lib/cars";
+import Link from "next/link";
+import { supabase } from "@/lib/cars";
 
 export default function SellCarPage() {
-  const freeSlotsLeft = Math.max(0, 3 - getFreeCarCount());
-  const isFree = freeSlotsLeft > 0;
+  const [submitting, setSubmitting] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
 
-  const [images, setImages] = useState<string[]>([]);
-  const [form, setForm] = useState({
-    make: "",
-    model: "",
-    year: "",
-    price: "",
-    mileage: "",
-    condition: "Nigerian Used",
-    location: "Lagos",
-    description: "",
-    name: "",
-    phone: "",
-  });
+  const uploadImages = async (files: FileList | null) => {
+    if (!files || files.length === 0) return [];
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files) return;
-    Array.from(files).forEach((file) => {
-      const reader = new FileReader();
-      reader.onloadend = () =>
-        setImages((prev) => [...prev, reader.result as string]);
-      reader.readAsDataURL(file);
-    });
-    e.target.value = "";
-  };
+    setUploading(true);
+    const urls: string[] = [];
 
-  const removeImage = (i: number) =>
-    setImages((prev) => prev.filter((_, idx) => idx !== i));
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const fileExt = file.name.split(".").pop();
+      const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
+      const filePath = `cars/${fileName}`;
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (
-      !form.make ||
-      !form.model ||
-      !form.year ||
-      !form.price ||
-      !form.name ||
-      !form.phone ||
-      images.length === 0
-    ) {
-      alert(
-        "Please complete all required fields and upload at least one photo"
-      );
-      return;
+      const { error: uploadError, data } = await supabase.storage
+        .from("car-images") // ← CREATE THIS BUCKET IN SUPABASE
+        .upload(filePath, file);
+
+      if (uploadError) {
+        console.error("Upload error:", uploadError);
+        continue;
+      }
+
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from("car-images").getPublicUrl(filePath);
+
+      urls.push(publicUrl);
     }
 
-    const newCar = {
-      id: Date.now().toString(),
-      make: form.make.trim(),
-      model: form.model.trim(),
-      year: Number(form.year),
-      price: Number(form.price),
-      mileage: Number(form.mileage) || 0,
-      condition: form.condition as "Foreign Used" | "Nigerian Used",
-      images: images.length > 0 ? images : ["/placeholder.jpg"],
-      location: form.location,
-      description: form.description.trim() || undefined,
-      featured: !isFree,
-      featuredPaid: !isFree,
-      dealerName: form.name.trim(),
-      dealerPhone: form.phone.trim(),
-    };
-
-    const current = getCars();
-    localStorage.setItem("cars", JSON.stringify([...current, newCar]));
-
-    alert(
-      isFree
-        ? `FREE LISTING SUCCESSFUL! ${freeSlotsLeft - 1} free slot${
-            freeSlotsLeft - 1 === 1 ? "" : "s"
-          } left.`
-        : "₦50,000 PREMIUM LISTING ACTIVATED — Your car is now at the top!"
-    );
-    window.location.href = "/inventory";
+    setUploading(false);
+    return urls;
   };
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Dubizzle-style Top Bar */}
-      <div className="bg-white border-b border-gray-200 py-4">
-        <div className="max-w-6xl mx-auto px-6 flex justify-between items-center">
-          <h1 className="text-3xl font-black text-green-600">Post Your Ad</h1>
-          <div className="text-sm text-gray-600">
-            {isFree ? (
-              <span className="bg-green-100 text-green-800 px-4 py-2 rounded-full font-bold">
-                FREE • {freeSlotsLeft} slot{freeSlotsLeft > 1 ? "s" : ""} left
-              </span>
-            ) : (
-              <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-6 py-2 rounded-full font-black">
-                PREMIUM — ₦50,000 for 30 days
-              </span>
-            )}
-          </div>
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSubmitting(true);
+
+    const formData = new FormData(e.currentTarget);
+    const imageFiles = (
+      e.currentTarget.elements.namedItem("images") as HTMLInputElement
+    ).files;
+
+    let uploadedImages: string[] = [];
+    if (imageFiles && imageFiles.length > 0) {
+      uploadedImages = await uploadImages(imageFiles);
+    }
+
+    const carData = {
+      year: Number(formData.get("year")),
+      make: formData.get("make"),
+      model: formData.get("model"),
+      price: Number(formData.get("price")),
+      condition: formData.get("condition"),
+      location: formData.get("location"),
+      mileage: Number(formData.get("mileage")),
+      transmission: formData.get("transmission"),
+      fuel: formData.get("fuel"),
+      description: formData.get("description") || null,
+      dealer_name: formData.get("dealer_name") || null,
+      dealer_phone: formData.get("dealer_phone") || null,
+      images: uploadedImages,
+      featured_paid: false,
+      approved: false,
+    };
+
+    const { error } = await supabase.from("cars").insert(carData);
+
+    if (error) {
+      console.error("Submit error:", error);
+      alert(`Error: ${error.message}`);
+    } else {
+      setSuccess(true);
+      e.currentTarget.reset();
+      setImageUrls([]);
+    }
+    setSubmitting(false);
+  };
+
+  if (success) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-6">
+        <div className="text-center max-w-2xl">
+          <h1 className="text-6xl font-black text-green-600 mb-8">SUCCESS!</h1>
+          <p className="text-3xl font-black text-gray-800 mb-6">
+            Car submitted!
+          </p>
+          <p className="text-xl text-gray-600 mb-12">
+            We’ll approve it in 24hrs. You’ll get a WhatsApp when live!
+          </p>
+          <Link
+            href="/"
+            className="inline-block bg-green-600 hover:bg-green-700 text-white px-12 py-6 rounded-full font-black text-2xl"
+          >
+            Back Home
+          </Link>
         </div>
       </div>
+    );
+  }
 
-      <div className="max-w-4xl mx-auto px-6 py-12">
-        <form onSubmit={handleSubmit} className="space-y-10">
-          {/* PHOTOS — DUBIZZLE GRID STYLE */}
-          <section className="bg-white p-8 rounded-xl shadow-sm border border-gray-200">
-            <h2 className="text-2xl font-black mb-6">Photos (max 10)</h2>
-            <div className="grid grid-cols-4 gap-4">
-              {images.map((src, i) => (
-                <div
-                  key={i}
-                  className="relative group aspect-square rounded-lg overflow-hidden border-2 border-gray-300"
-                >
-                  <Image src={src} alt="" fill className="object-cover" />
-                  <button
-                    type="button"
-                    onClick={() => removeImage(i)}
-                    className="absolute top-2 right-2 bg-red-600 text-white w-8 h-8 rounded-full opacity-0 group-hover:opacity-100 transition"
-                  >
-                    ×
-                  </button>
-                </div>
-              ))}
-              {images.length < 10 && (
-                <label className="aspect-square border-4 border-dashed border-gray-400 rounded-lg flex items-center justify-center cursor-pointer hover:border-green-600 transition">
-                  <span className="text-4xl text-gray-400">+</span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    onChange={handleImageChange}
-                    className="hidden"
-                  />
-                </label>
-              )}
-            </div>
-            <p className="text-sm text-gray-500 mt-4">
-              First photo will be the main image
-            </p>
-          </section>
+  return (
+    <div className="min-h-screen bg-gray-50 py-16 px-6">
+      <div className="max-w-4xl mx-auto">
+        <div className="text-center mb-16">
+          <h1 className="text-5xl md:text-7xl font-black text-green-600 mb-4">
+            SELL YOUR CAR
+          </h1>
+          <p className="text-2xl text-gray-700">
+            List in 2 mins • First 3 FREE • Premium: ₦50,000
+          </p>
+        </div>
 
-          {/* DETAILS */}
-          <section className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 space-y-8">
-            <h2 className="text-2xl font-black">Car Details</h2>
-
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <label className="block font-bold text-gray-700 mb-2">
-                  Make *
-                </label>
-                <input
-                  required
-                  value={form.make}
-                  onChange={(e) => setForm({ ...form, make: e.target.value })}
-                  className="w-full px-5 py-4 border-2 border-gray-300 rounded-lg focus:border-green-600 outline-none text-lg"
-                  placeholder="Toyota"
-                />
-              </div>
-              <div>
-                <label className="block font-bold text-gray-700 mb-2">
-                  Model *
-                </label>
-                <input
-                  required
-                  value={form.model}
-                  onChange={(e) => setForm({ ...form, model: e.target.value })}
-                  className="w-full px-5 py-4 border-2 border-gray-300 rounded-lg focus:border-green-600 outline-none text-lg"
-                  placeholder="Camry"
-                />
-              </div>
-
-              <div>
-                <label className="block font-bold text-gray-700 mb-2">
-                  Year *
-                </label>
-                <input
-                  required
-                  type="number"
-                  value={form.year}
-                  onChange={(e) => setForm({ ...form, year: e.target.value })}
-                  className="w-full px-5 py-4 border-2 border-gray-300 rounded-lg focus:border-green-600 outline-none text-lg"
-                  placeholder="2018"
-                />
-              </div>
-              <div>
-                <label className="block font-bold text-gray-700 mb-2">
-                  Price (₦) *
-                </label>
-                <input
-                  required
-                  type="number"
-                  value={form.price}
-                  onChange={(e) => setForm({ ...form, price: e.target.value })}
-                  className="w-full px-5 py-4 border-2 border-gray-300 rounded-lg focus:border-green-600 outline-none text-lg"
-                  placeholder="8500000"
-                />
-              </div>
-
-              <div>
-                <label className="block font-bold text-gray-700 mb-2">
-                  Mileage (km)
-                </label>
-                <input
-                  type="number"
-                  value={form.mileage}
-                  onChange={(e) =>
-                    setForm({ ...form, mileage: e.target.value })
-                  }
-                  className="w-full px-5 py-4 border-2 border-gray-300 rounded-lg focus:border-green-600 outline-none text-lg"
-                  placeholder="85000"
-                />
-              </div>
-              <div>
-                <label className="block font-bold text-gray-700 mb-2">
-                  Condition *
-                </label>
-                <select
-                  value={form.condition}
-                  onChange={(e) =>
-                    setForm({ ...form, condition: e.target.value })
-                  }
-                  className="w-full px-5 py-4 border-2 border-gray-300 rounded-lg focus:border-green-600 outline-none text-lg"
-                >
-                  <option>Foreign Used</option>
-                  <option>Nigerian Used</option>
-                </select>
-              </div>
-
-              <div className="md:col-span-2">
-                <label className="block font-bold text-gray-700 mb-2">
-                  Location *
-                </label>
-                <select
-                  required
-                  value={form.location}
-                  onChange={(e) =>
-                    setForm({ ...form, location: e.target.value })
-                  }
-                  className="w-full px-5 py-4 border-2 border-gray-300 rounded-lg focus:border-green-600 outline-none text-lg"
-                >
-                  <option value="">Select City</option>
-                  <option value="Lagos">Lagos</option>
-                  <option value="Abuja">Abuja</option>
-                  <option value="Port Harcourt">Port Harcourt</option>
-                  <option value="Ibadan">Ibadan</option>
-                  <option value="Kano">Kano</option>
-                  {/* Add more */}
-                </select>
-              </div>
-
-              <div className="md:col-span-2">
-                <label className="block font-bold text-gray-700 mb-2">
-                  Description (optional)
-                </label>
-                <textarea
-                  rows={6}
-                  value={form.description}
-                  onChange={(e) =>
-                    setForm({ ...form, description: e.target.value })
-                  }
-                  className="w-full px-5 py-4 border-2 border-gray-300 rounded-lg focus:border-green-600 outline-none text-lg"
-                  placeholder="Clean title, accident-free, full options..."
-                />
-              </div>
-            </div>
-          </section>
-
-          {/* CONTACT */}
-          <section className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 space-y-6">
-            <h2 className="text-2xl font-black">Contact Details</h2>
-            <div className="grid md:grid-cols-2 gap-6">
-              <input
-                required
-                placeholder="Your Name *"
-                value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className="px-5 py-4 border-2 border-gray-300 rounded-lg focus:border-green-600 outline-none text-lg"
-              />
-              <input
-                required
-                placeholder="WhatsApp Number *"
-                value={form.phone}
-                onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                className="px-5 py-4 border-2 border-gray-300 rounded-lg focus:border-green-600 outline-none text-lg"
-              />
-            </div>
-          </section>
-
-          {/* SUBMIT — DUBIZZLE GREEN BUTTON */}
-          <div className="text-center">
-            <button
-              type="submit"
-              className={`px-16 py-6 text-2xl font-black rounded-xl shadow-xl transform hover:scale-105 transition ${
-                isFree
-                  ? "bg-green-600 hover:bg-green-700 text-white"
-                  : "bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black"
-              }`}
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white rounded-3xl shadow-2xl p-10 space-y-8"
+        >
+          <div className="grid md:grid-cols-2 gap-8">
+            <input
+              name="year"
+              type="number"
+              placeholder="Year"
+              required
+              className="p-5 border-2 rounded-2xl text-xl font-bold"
+            />
+            <input
+              name="make"
+              placeholder="Make (Toyota)"
+              required
+              className="p-5 border-2 rounded-2xl text-xl font-bold"
+            />
+            <input
+              name="model"
+              placeholder="Model (Camry)"
+              required
+              className="p-5 border-2 rounded-2xl text-xl font-bold"
+            />
+            <input
+              name="price"
+              type="number"
+              placeholder="Price (₦)"
+              required
+              className="p-5 border-2 rounded-2xl text-xl font-bold"
+            />
+            <select
+              name="condition"
+              required
+              className="p-5 border-2 rounded-2xl text-xl font-bold"
             >
-              {isFree
-                ? `POST AD FOR FREE (${freeSlotsLeft} LEFT)`
-                : "POST PREMIUM AD — ₦50,000"}
-            </button>
+              <option value="">Condition</option>
+              <option>Foreign Used</option>
+              <option>Nigerian Used</option>
+            </select>
+            <input
+              name="location"
+              placeholder="Location"
+              required
+              className="p-5 border-2 rounded-2xl text-xl font-bold"
+            />
+            <input
+              name="mileage"
+              type="number"
+              placeholder="Mileage (km)"
+              required
+              className="p-5 border-2 rounded-2xl text-xl font-bold"
+            />
+            <input
+              name="transmission"
+              placeholder="Transmission"
+              required
+              className="p-5 border-2 rounded-2xl text-xl font-bold"
+            />
+            <input
+              name="fuel"
+              placeholder="Fuel"
+              required
+              className="p-5 border-2 rounded-2xl text-xl font-bold"
+            />
+            <input
+              name="dealer_name"
+              placeholder="Your Name"
+              required
+              className="p-5 border-2 rounded-2xl text-xl font-bold"
+            />
+            <input
+              name="dealer_phone"
+              placeholder="WhatsApp Number"
+              required
+              className="p-5 border-2 rounded-2xl text-xl font-bold"
+            />
           </div>
+
+          <textarea
+            name="description"
+            rows={4}
+            placeholder="Description (optional)"
+            className="w-full p-6 border-2 rounded-2xl text-xl"
+          />
+
+          {/* IMAGE UPLOAD */}
+          <div>
+            <label className="block text-2xl font-black text-gray-800 mb-4">
+              Upload Photos (up to 6)
+            </label>
+            <input
+              type="file"
+              name="images"
+              accept="image/*"
+              multiple
+              required
+              disabled={uploading}
+              className="w-full p-4 border-2 border-dashed border-gray-400 rounded-2xl text-lg file:mr-4 file:py-3 file:px-6 file:rounded-full file:border-0 file:bg-green-600 file:text-white file:font-black"
+            />
+            {uploading && (
+              <p className="text-green-600 font-bold mt-4">
+                Uploading images...
+              </p>
+            )}
+          </div>
+
+          <button
+            type="submit"
+            disabled={submitting || uploading}
+            className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white py-8 rounded-3xl font-black text-4xl shadow-2xl transform hover:scale-105 transition"
+          >
+            {submitting ? "SUBMITTING..." : "SUBMIT CAR FOR REVIEW"}
+          </button>
         </form>
       </div>
     </div>

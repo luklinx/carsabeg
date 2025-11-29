@@ -14,12 +14,14 @@ export type Car = {
   transmission: string;
   fuel: string;
   location: string;
+  created_at: string;
   description?: string;
   featured: boolean;
+  approved: boolean;
 
   // NEW: Paid Featured Ads (₦50,000)
-  featuredPaid?: boolean;
-  featuredUntil?: string; // e.g. "2025-12-25"
-  dealerPhone?: string; // WhatsApp number
-  dealerName?: string; // Dealer name
+  feature_paid?: boolean;
+  featured_until?: string; // e.g. "2025-12-25"
+  dealer_phone?: string; // WhatsApp number
+  dealer_name?: string; // Dealer name
 };

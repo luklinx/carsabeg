@@ -2,16 +2,35 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import CarCard from "@/components/CarCard";
 import { getCars } from "@/lib/cars";
-// import { Car } from "@/types";
+import { Car } from "@/types";
 
 export default function InventoryClient() {
   const searchParams = useSearchParams();
-  const allCars = getCars();
+  const [allCars, setAllCars] = useState<Car[]>([]);
+  const [loading, setLoading] = useState(true);
 
+  // FETCH CARS FROM SUPABASE
+  useEffect(() => {
+    async function load() {
+      try {
+        const cars = await getCars();
+        setAllCars(cars);
+      } catch (err) {
+        console.error("Failed to load cars:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+  }, []);
+
+  // NOW SAFE TO SPREAD — allCars is always an array
   const cars = useMemo(() => {
+    if (!allCars.length) return [];
+
     let filtered = [...allCars];
 
     const condition = searchParams.get("condition");
@@ -25,6 +44,16 @@ export default function InventoryClient() {
 
     return filtered;
   }, [allCars, searchParams]);
+
+  if (loading) {
+    return (
+      <div className="container mx-auto px-6 py-32 text-center">
+        <div className="text-5xl font-black text-green-600 animate-pulse">
+          LOADING INVENTORY...
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-6 py-16">
