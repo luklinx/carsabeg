@@ -1,18 +1,15 @@
-// next.config.js
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "images.unsplash.com",
+        hostname: "gwoweovqllfzznmidskz.supabase.co",
         port: "",
-        pathname: "/**",
+        pathname: "/storage/v1/object/public/car_images/**",
       },
     ],
   },
-  // Optional: make it faster in dev
-  reactStrictMode: true,
 };
 
 export default nextConfig;
