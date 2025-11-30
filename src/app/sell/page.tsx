@@ -3,74 +3,98 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { supabase } from "@/lib/cars";
+import { Upload, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
 
 export default function SellCarPage() {
   const [submitting, setSubmitting] = useState(false);
-  const [success, setSuccess] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [success, setSuccess] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [previewImages, setPreviewImages] = useState<string[]>([]);
 
-  const uploadImages = async (files: FileList | null) => {
-    if (!files || files.length === 0) return [];
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
 
-    setUploading(true);
+    const previews: string[] = [];
+    for (let i = 0; i < files.length && i < 12; i++) {
+      previews.push(URL.createObjectURL(files[i]));
+    }
+    setPreviewImages(previews);
+  };
+
+  const uploadImages = async (files: FileList): Promise<string[]> => {
     const urls: string[] = [];
 
-    for (let i = 0; i < files.length; i++) {
+    for (let i = 0; i < files.length && i < 12; i++) {
       const file = files[i];
-      const fileExt = file.name.split(".").pop();
-      const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
+      const fileExt = file.name.split(".").pop()?.toLowerCase() || "jpg";
+      const fileName = `${Date.now()}-${Math.random()
+        .toString(36)
+        .substring(2)}.${fileExt}`;
       const filePath = `cars/${fileName}`;
 
-      const { error: uploadError, data } = await supabase.storage
-        .from("car-images") // ← CREATE THIS BUCKET IN SUPABASE
-        .upload(filePath, file);
+      const { error } = await supabase.storage
+        .from("car_images")
+        .upload(filePath, file, { upsert: false });
 
-      if (uploadError) {
-        console.error("Upload error:", uploadError);
+      if (error) {
+        console.error("Upload failed:", error);
         continue;
       }
 
-      const {
-        data: { publicUrl },
-      } = supabase.storage.from("car-images").getPublicUrl(filePath);
-
-      urls.push(publicUrl);
+      const { data } = supabase.storage
+        .from("car_images")
+        .getPublicUrl(filePath);
+      urls.push(data.publicUrl);
     }
-
-    setUploading(false);
     return urls;
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitting(true);
+    setErrorMsg("");
 
     const formData = new FormData(e.currentTarget);
     const imageFiles = (
       e.currentTarget.elements.namedItem("images") as HTMLInputElement
     ).files;
 
-    let uploadedImages: string[] = [];
-    if (imageFiles && imageFiles.length > 0) {
-      uploadedImages = await uploadImages(imageFiles);
+    if (!imageFiles || imageFiles.length === 0) {
+      setErrorMsg("Please upload at least 1 photo");
+      setSubmitting(false);
+      return;
+    }
+
+    setUploading(true);
+    const uploadedUrls = await uploadImages(imageFiles);
+    setUploading(false);
+
+    if (uploadedUrls.length === 0) {
+      setErrorMsg("Failed to upload images. Please try again.");
+      setSubmitting(false);
+      return;
     }
 
     const carData = {
       year: Number(formData.get("year")),
-      make: formData.get("make"),
-      model: formData.get("model"),
+      make: String(formData.get("make")).trim(),
+      model: String(formData.get("model")).trim(),
       price: Number(formData.get("price")),
-      condition: formData.get("condition"),
-      location: formData.get("location"),
-      mileage: Number(formData.get("mileage")),
-      transmission: formData.get("transmission"),
-      fuel: formData.get("fuel"),
-      description: formData.get("description") || null,
-      dealer_name: formData.get("dealer_name") || null,
-      dealer_phone: formData.get("dealer_phone") || null,
-      images: uploadedImages,
+      condition: String(formData.get("condition")),
+      location: String(formData.get("location")).trim(),
+      mileage: Number(formData.get("mileage") || 0),
+      transmission: String(formData.get("transmission")).trim(),
+      fuel: String(formData.get("fuel")).trim(),
+      description: formData.get("description")
+        ? String(formData.get("description")).trim()
+        : null,
+      dealer_name: String(formData.get("dealer_name")).trim(),
+      dealer_phone: String(formData.get("dealer_phone")).trim(),
+      images: uploadedUrls,
       featured_paid: false,
       approved: false,
     };
@@ -78,32 +102,38 @@ export default function SellCarPage() {
     const { error } = await supabase.from("cars").insert(carData);
 
     if (error) {
-      console.error("Submit error:", error);
-      alert(`Error: ${error.message}`);
+      console.error("Insert error:", error);
+      setErrorMsg(error.message || "Something went wrong");
     } else {
       setSuccess(true);
       e.currentTarget.reset();
-      setImageUrls([]);
+      setPreviewImages([]);
     }
+
     setSubmitting(false);
   };
 
   if (success) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-6">
-        <div className="text-center max-w-2xl">
-          <h1 className="text-6xl font-black text-green-600 mb-8">SUCCESS!</h1>
-          <p className="text-3xl font-black text-gray-800 mb-6">
-            Car submitted!
+      <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center px-6 py-20">
+        <div className="text-center max-w-2xl bg-white rounded-3xl shadow-2xl p-16">
+          <CheckCircle className="w-32 h-32 text-green-600 mx-auto mb-8" />
+          <h1 className="text-6xl font-black text-green-600 mb-6">
+            THANK YOU!
+          </h1>
+          <p className="text-3xl font-bold text-gray-800 mb-4">
+            Car Submitted Successfully
           </p>
           <p className="text-xl text-gray-600 mb-12">
-            We’ll approve it in 24hrs. You’ll get a WhatsApp when live!
+            We’ll review and approve within 24 hours.
+            <br />
+            You’ll get a WhatsApp when it’s live!
           </p>
           <Link
             href="/"
-            className="inline-block bg-green-600 hover:bg-green-700 text-white px-12 py-6 rounded-full font-black text-2xl"
+            className="inline-block bg-green-600 hover:bg-green-700 text-white px-12 py-6 rounded-full font-black text-2xl transition transform hover:scale-105"
           >
-            Back Home
+            Back to Homepage
           </Link>
         </div>
       </div>
@@ -111,132 +141,200 @@ export default function SellCarPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-16 px-6">
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-16">
+    <div className="min-h-screen bg-gray-50 py-12 px-6">
+      <div className="max-w-5xl mx-auto">
+        <div className="text-center mb-12">
           <h1 className="text-5xl md:text-7xl font-black text-green-600 mb-4">
-            SELL YOUR CAR
+            SELL YOUR CAR FAST
           </h1>
-          <p className="text-2xl text-gray-700">
-            List in 2 mins • First 3 FREE • Premium: ₦50,000
+          <p className="text-2xl md:text-3xl font-bold text-gray-700">
+            List in 2 minutes • First 3 FREE • Thousands of buyers waiting
           </p>
         </div>
 
         <form
           onSubmit={handleSubmit}
-          className="bg-white rounded-3xl shadow-2xl p-10 space-y-8"
+          className="bg-white rounded-3xl shadow-2xl overflow-hidden"
         >
-          <div className="grid md:grid-cols-2 gap-8">
-            <input
-              name="year"
-              type="number"
-              placeholder="Year"
-              required
-              className="p-5 border-2 rounded-2xl text-xl font-bold"
-            />
-            <input
-              name="make"
-              placeholder="Make (Toyota)"
-              required
-              className="p-5 border-2 rounded-2xl text-xl font-bold"
-            />
-            <input
-              name="model"
-              placeholder="Model (Camry)"
-              required
-              className="p-5 border-2 rounded-2xl text-xl font-bold"
-            />
-            <input
-              name="price"
-              type="number"
-              placeholder="Price (₦)"
-              required
-              className="p-5 border-2 rounded-2xl text-xl font-bold"
-            />
-            <select
-              name="condition"
-              required
-              className="p-5 border-2 rounded-2xl text-xl font-bold"
-            >
-              <option value="">Condition</option>
-              <option>Foreign Used</option>
-              <option>Nigerian Used</option>
-            </select>
-            <input
-              name="location"
-              placeholder="Location"
-              required
-              className="p-5 border-2 rounded-2xl text-xl font-bold"
-            />
-            <input
-              name="mileage"
-              type="number"
-              placeholder="Mileage (km)"
-              required
-              className="p-5 border-2 rounded-2xl text-xl font-bold"
-            />
-            <input
-              name="transmission"
-              placeholder="Transmission"
-              required
-              className="p-5 border-2 rounded-2xl text-xl font-bold"
-            />
-            <input
-              name="fuel"
-              placeholder="Fuel"
-              required
-              className="p-5 border-2 rounded-2xl text-xl font-bold"
-            />
-            <input
-              name="dealer_name"
-              placeholder="Your Name"
-              required
-              className="p-5 border-2 rounded-2xl text-xl font-bold"
-            />
-            <input
-              name="dealer_phone"
-              placeholder="WhatsApp Number"
-              required
-              className="p-5 border-2 rounded-2xl text-xl font-bold"
-            />
-          </div>
-
-          <textarea
-            name="description"
-            rows={4}
-            placeholder="Description (optional)"
-            className="w-full p-6 border-2 rounded-2xl text-xl"
-          />
-
-          {/* IMAGE UPLOAD */}
-          <div>
-            <label className="block text-2xl font-black text-gray-800 mb-4">
-              Upload Photos (up to 6)
-            </label>
-            <input
-              type="file"
-              name="images"
-              accept="image/*"
-              multiple
-              required
-              disabled={uploading}
-              className="w-full p-4 border-2 border-dashed border-gray-400 rounded-2xl text-lg file:mr-4 file:py-3 file:px-6 file:rounded-full file:border-0 file:bg-green-600 file:text-white file:font-black"
-            />
-            {uploading && (
-              <p className="text-green-600 font-bold mt-4">
-                Uploading images...
-              </p>
+          <div className="p-8 md:p-12 space-y-10">
+            {errorMsg && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-2xl flex items-center gap-3">
+                <AlertCircle className="w-6 h-6 flex-shrink-0" />
+                <span className="font-bold">{errorMsg}</span>
+              </div>
             )}
-          </div>
 
-          <button
-            type="submit"
-            disabled={submitting || uploading}
-            className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white py-8 rounded-3xl font-black text-4xl shadow-2xl transform hover:scale-105 transition"
-          >
-            {submitting ? "SUBMITTING..." : "SUBMIT CAR FOR REVIEW"}
-          </button>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <input
+                required
+                name="year"
+                type="number"
+                placeholder="Year (e.g. 2020)"
+                className="p-5 border-2 border-gray-300 rounded-2xl text-lg font-semibold focus:border-green-600 outline-none transition"
+              />
+              <input
+                required
+                name="make"
+                placeholder="Make (Toyota, Mercedes...)"
+                className="p-5 border-2 border-gray-300 rounded-2xl text-lg font-semibold focus:border-green-600 outline-none transition"
+              />
+              <input
+                required
+                name="model"
+                placeholder="Model (Camry, GLE...)"
+                className="p-5 border-2 border-gray-300 rounded-2xl text-lg font-semibold focus:border-green-600 outline-none transition"
+              />
+              <input
+                required
+                name="price"
+                type="number"
+                placeholder="Price in ₦"
+                className="p-5 border-2 border-gray-300 rounded-2xl text-lg font-semibold focus:border-green-600 outline-none transition"
+              />
+              <select
+                required
+                name="condition"
+                className="p-5 border-2 border-gray-300 rounded-2xl text-lg font-semibold focus:border-green-600 outline-none transition"
+              >
+                <option value="">Condition</option>
+                <option>Foreign Used</option>
+                <option>Nigerian Used</option>
+                <option>Brand New</option>
+              </select>
+              <input
+                required
+                name="location"
+                placeholder="Location (Lagos, Abuja...)"
+                className="p-5 border-2 border-gray-300 rounded-2xl text-lg font-semibold focus:border-green-600 outline-none transition"
+              />
+              <input
+                name="mileage"
+                type="number"
+                placeholder="Mileage (km)"
+                className="p-5 border-2 border-gray-300 rounded-2xl text-lg font-semibold focus:border-green-600 outline-none transition"
+              />
+              <input
+                required
+                name="transmission"
+                placeholder="Transmission (Auto/Manual)"
+                className="p-5 border-2 border-gray-300 rounded-2xl text-lg font-semibold focus:border-green-600 outline-none transition"
+              />
+              <input
+                required
+                name="fuel"
+                placeholder="Fuel Type"
+                className="p-5 border-2 border-gray-300 rounded-2xl text-lg font-semibold focus:border-green-600 outline-none transition"
+              />
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-6">
+              <input
+                required
+                name="dealer_name"
+                placeholder="Your Full Name"
+                className="p-5 border-2 border-gray-300 rounded-2xl text-lg font-semibold focus:border-green-600 outline-none transition"
+              />
+              <input
+                required
+                name="dealer_phone"
+                placeholder="WhatsApp Number"
+                className="p-5 border-2 border-gray-300 rounded-2xl text-lg font-semibold focus:border-green-600 outline-none transition"
+              />
+            </div>
+
+            <textarea
+              name="description"
+              rows={5}
+              placeholder="Extra details (optional): accident history, upgrades, etc..."
+              className="w-full p-6 border-2 border-gray-300 rounded-2xl text-lg resize-none focus:border-green-600 outline-none transition"
+            />
+
+            <div>
+              <label className="block text-2xl font-black text-gray-800 mb-6">
+                Upload Photos <span className="text-green-600">(up to 12)</span>
+              </label>
+
+              <div className="relative">
+                <input
+                  type="file"
+                  name="images"
+                  accept="image/*"
+                  multiple
+                  required
+                  disabled={uploading || submitting}
+                  onChange={handleImageChange}
+                  className="absolute inset-0 opacity-0 cursor-pointer z-10"
+                />
+                <div className="border-4 border-dashed border-gray-300 rounded-3xl p-16 text-center hover:border-green-600 transition cursor-pointer">
+                  <Upload className="w-16 h-16 mx-auto mb-4 text-gray-400" />
+                  <p className="text-xl font-bold text-gray-700">
+                    Click or drag photos here
+                  </p>
+                  <p className="text-gray-500 mt-2">
+                    First photo becomes the main image
+                  </p>
+                </div>
+              </div>
+
+              {previewImages.length > 0 && (
+                <div className="grid grid-cols-3 md:grid-cols-6 gap-4 mt-8">
+                  {previewImages.map((src, i) => (
+                    <div key={i} className="relative group">
+                      <Image
+                        src={src}
+                        alt={`Preview ${i + 1}`}
+                        width={400}
+                        height={300}
+                        className="w-full h-32 object-cover rounded-xl shadow-md"
+                      />
+                      {i === 0 && (
+                        <div className="absolute top-2 left-2 bg-green-600 text-white px-3 py-1 rounded-full text-xs font-black">
+                          MAIN
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {(uploading || submitting) && (
+                <div className="mt-8 text-center">
+                  <Loader2 className="w-12 h-12 mx-auto animate-spin text-green-600" />
+                  <p className="mt-4 text-xl font-bold text-green-600">
+                    {uploading
+                      ? "Uploading photos..."
+                      : "Submitting your car..."}
+                  </p>
+                </div>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              disabled={submitting || uploading}
+              className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white py-8 rounded-3xl font-black text-3xl md:text-4xl shadow-2xl transform hover:scale-105 disabled:scale-100 transition flex items-center justify-center gap-3"
+            >
+              {submitting || uploading ? (
+                <>
+                  <Loader2 className="animate-spin" />
+                  PLEASE WAIT...
+                </>
+              ) : (
+                "SUBMIT CAR FOR REVIEW"
+              )}
+            </button>
+          </div>
         </form>
+
+        <p className="text-center mt-12 text-gray-600">
+          Need help? WhatsApp us:{" "}
+          <a
+            href="https://wa.me/2348012345678"
+            className="text-green-600 font-black"
+          >
+            +234 801 234 5678
+          </a>
+        </p>
       </div>
     </div>
   );
