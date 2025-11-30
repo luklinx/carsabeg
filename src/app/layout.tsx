@@ -34,6 +34,26 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="scroll-smooth">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+      // Fix for SES/Lockdown extension breaking Next.js
+      if (window.chrome && window.chrome.runtime) {
+        const originalSend = chrome.runtime.sendMessage;
+        chrome.runtime.sendMessage = function(...args) {
+          try {
+            return originalSend.apply(this, args);
+          } catch (e) {
+            if (e.message.includes("out of scope")) return Promise.resolve();
+            throw e;
+          }
+        };
+      }
+    `,
+          }}
+        />
+      </head>
       <body
         className={`${inter.className} bg-gray-50 text-gray-900 antialiased`}
       >
