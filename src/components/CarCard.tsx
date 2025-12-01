@@ -23,7 +23,7 @@ export default function CarCard({ car }: CarCardProps) {
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-500"
           />
-          {car.feature_paid && (
+          {car.featured_paid && (
             <div className="absolute top-4 left-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-4 py-2 rounded-full font-black text-sm shadow-lg">
               PREMIUM
             </div>

@@ -1,101 +1,140 @@
 // src/components/MobileNav.tsx
 "use client";
+
 import { useState } from "react";
 import Link from "next/link";
+import {
+  X,
+  DollarSign,
+  MessageCircle,
+  Zap,
+  Info,
+  Home,
+  Search,
+} from "lucide-react";
 
 export default function MobileNav() {
   const [open, setOpen] = useState(false);
 
   return (
     <>
+      {/* HAMBURGER BUTTON — Nigerian Green, Smooth AF */}
       <button
         onClick={() => setOpen(!open)}
-        className="md:hidden z-50 relative w-8 h-8 focus:outline-none"
+        className="relative z-50 w-12 h-12 flex items-center justify-center rounded-full bg-green-600 shadow-xl lg:hidden"
+        aria-label="Open menu"
       >
-        <span
-          className={`block absolute h-1 w-8 bg-green-600 rounded transform transition-all duration-300 ${
-            open ? "rotate-45 top-3.5" : "top-1"
-          }`}
-        ></span>
-        <span
-          className={`block absolute h-1 w-8 bg-green-600 rounded top-3.5 transition-all duration-300 ${
-            open ? "opacity-0" : "opacity-100"
-          }`}
-        ></span>
-        <span
-          className={`block absolute h-1 w-8 bg-green-600 rounded transform transition-all duration-300 ${
-            open ? "-rotate-45 top-3.5" : "top-6"
-          }`}
-        ></span>
+        {open ? (
+          <X size={32} className="text-white animate-in spin-in-90" />
+        ) : (
+          <div className="space-y-2">
+            <span className="block w-8 h-1 bg-white rounded-full animate-in slide-in-from-top" />
+            <span className="block w-8 h-1 bg-white rounded-full" />
+            <span className="block w-8 h-1 bg-white rounded-full animate-in slide-in-from-bottom" />
+          </div>
+        )}
       </button>
 
-      {/* Mobile Menu Overlay */}
+      {/* FULL-SCREEN OVERLAY MENU — This is Nigeria, we go BIG */}
       <div
-        className={`fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity md:hidden ${
-          open ? "opacity-100" : "opacity-0 pointer-events-none"
-        }`}
-        onClick={() => setOpen(false)}
-      />
-
-      <nav
-        className={`fixed top-0 right-0 h-full w-80 bg-white shadow-2xl z-40 transform transition-transform duration-300 md:hidden ${
-          open ? "translate-x-0" : "translate-x-full"
+        className={`fixed inset-0 bg-gradient-to-br from-green-600 via-emerald-600 to-teal-700 z-40 transition-all duration-500 ${
+          open
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none"
         }`}
       >
-        <div className="p-8 pt-24">
-          <h2 className="text-3xl font-black text-green-600 mb-10">Menu</h2>
-          <div className="space-y-6 text-2xl font-bold">
+        {/* Close backdrop */}
+        <div
+          className="absolute inset-0 bg-black/40"
+          onClick={() => setOpen(false)}
+        />
+
+        <nav className="relative h-full flex flex-col justify-center items-center px-8 text-white">
+          {/* Logo Top */}
+          <div className="absolute top-8 left-8">
             <Link
               href="/"
               onClick={() => setOpen(false)}
-              className="block hover:text-green-600"
+              className="flex items-center gap-2"
             >
+              <span className="text-5xl font-black">CARS</span>
+              <span className="text-5xl font-black text-yellow-400">ABEG</span>
+            </Link>
+          </div>
+
+          {/* Close Button */}
+          <button
+            onClick={() => setOpen(false)}
+            className="absolute top-8 right-8 p-3 bg-white/20 rounded-full backdrop-blur-sm hover:bg-white/30 transition"
+          >
+            <X size={36} />
+          </button>
+
+          {/* MENU ITEMS — BIG, BOLD, PROUD */}
+          <div className="space-y-10 text-center">
+            <Link
+              href="/"
+              onClick={() => setOpen(false)}
+              className="flex items-center justify-center gap-5 text-4xl font-black hover:text-yellow-400 transition-all hover:scale-110"
+            >
+              <Home size={40} />
               Home
             </Link>
+
             <Link
               href="/inventory"
               onClick={() => setOpen(false)}
-              className="block hover:text-green-600"
+              className="flex items-center justify-center gap-5 text-4xl font-black hover:text-yellow-400 transition-all hover:scale-110"
             >
+              <Search size={40} />
               All Cars
             </Link>
-            <Link
-              href="/sell"
-              onClick={() => setOpen(false)}
-              className="block hover:text-green-600 text-yellow-500"
-            >
-              Sell Your Car
-            </Link>
+
             <Link
               href="/value-my-car"
               onClick={() => setOpen(false)}
-              className="block hover:text-green-600"
+              className="flex items-center justify-center gap-5 text-4xl font-black text-orange-300 hover:text-orange-100 transition-all hover:scale-110"
             >
+              <Zap size={44} className="animate-pulse" />
               Value My Car
             </Link>
+
             <Link
-              href="/blog"
+              href="/sell"
               onClick={() => setOpen(false)}
-              className="block hover:text-green-600"
+              className="flex items-center justify-center gap-5 text-5xl font-black bg-yellow-400 text-black px-12 py-8 rounded-full shadow-2xl hover:shadow-yellow-400/50 transform hover:scale-110 transition-all duration-300"
             >
-              Blog
+              <DollarSign size={48} />
+              SELL YOUR CAR
             </Link>
+
             <Link
               href="/how-it-works"
               onClick={() => setOpen(false)}
-              className="block hover:text-green-600"
+              className="flex items-center justify-center gap-5 text-4xl font-black hover:text-yellow-400 transition-all hover:scale-110"
             >
+              <Info size={40} />
               How It Works
             </Link>
           </div>
+
+          {/* WHATSAPP KING — The Real Star */}
           <a
-            href="https://wa.me/2348123456789"
-            className="block mt-12 bg-green-600 text-white text-center py-6 rounded-full text-2xl font-black"
+            href="https://wa.me/23480022772234"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="fixed bottom-10 left-1/2 -translate-x-1/2 w-80 bg-white text-green-600 px-10 py-8 rounded-full shadow-2xl flex items-center justify-center gap-5 text-4xl font-black hover:bg-gray-100 transform hover:scale-110 transition-all duration-300"
           >
+            <MessageCircle size={48} className="animate-bounce" />
             Chat on WhatsApp
           </a>
-        </div>
-      </nav>
+
+          {/* Nigerian Pride */}
+          <p className="absolute bottom-32 text-yellow-300 font-black text-2xl opacity-80">
+            Made in Nigeria • For Nigerians
+          </p>
+        </nav>
+      </div>
     </>
   );
 }

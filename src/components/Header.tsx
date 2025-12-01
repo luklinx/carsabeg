@@ -1,66 +1,124 @@
 // src/components/Header.tsx
 "use client";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Menu, X, Zap, MessageCircle } from "lucide-react";
+import { useState } from "react";
 
 const navItems = [
   { name: "Home", href: "/" },
-  { name: "Cars for Sale", href: "/inventory" },
-  { name: "Value My Car", href: "/value-my-car", highlight: true }, // NEW + HIGHLIGHT
-  { name: "Sell Your Car", href: "/sell" },
-  { name: "How it Works", href: "/how-it-works" },
-  { name: "Blog", href: "/blog" },
-  { name: "Contact", href: "/contact" },
+  { name: "All Cars", href: "/inventory" },
+  { name: "Value My Car", href: "/value-my-car", highlight: true },
+  { name: "Sell Car", href: "/sell", premium: true },
+  { name: "How It Works", href: "/how-it-works" },
 ];
 
 export default function Header() {
   const pathname = usePathname();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="bg-white shadow-sm sticky top-0 z-50">
-      <div className="container mx-auto px-6 py-5">
-        <div className="flex items-center justify-between">
-          <Link href="/" className="text-3xl font-bold">
-            Cars<span className="text-green-600">Abeg</span>
-          </Link>
+    <>
+      {/* MAIN HEADER — Sticky, Clean, Nigerian Power */}
+      <header className="bg-white shadow-lg sticky top-0 z-50 border-b-4 border-green-600">
+        <div className="px-4 py-4 md:py-5">
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+            {/* LOGO — Unmistakable */}
+            <Link href="/" className="flex items-center gap-2">
+              <span className="text-4xl md:text-5xl font-black text-gray-900">
+                CARS
+              </span>
+              <span className="text-4xl md:text-5xl font-black text-green-600">
+                ABEG
+              </span>
+            </Link>
 
-          {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-8">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`text-lg font-medium transition whitespace-nowrap ${
-                  item.highlight
-                    ? "bg-green-600 text-white px-5 py-2 rounded-full hover:bg-green-700 shadow-md"
-                    : pathname === item.href
-                    ? "text-green-600"
-                    : "text-gray-600 hover:text-green-600"
-                }`}
+            {/* DESKTOP NAV — Clean, Bold, Dubizzle Energy */}
+            <nav className="hidden lg:flex items-center gap-6 xl:gap-10">
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`font-black text-lg transition-all duration-300 ${
+                    item.premium
+                      ? "bg-gradient-to-r from-green-600 to-emerald-600 text-white px-8 py-4 rounded-full shadow-xl hover:shadow-2xl hover:scale-105"
+                      : item.highlight
+                      ? "bg-orange-500 text-white px-7 py-4 rounded-full font-black shadow-lg hover:bg-orange-600 hover:scale-105 flex items-center gap-2"
+                      : pathname === item.href
+                      ? "text-green-600"
+                      : "text-gray-700 hover:text-green-600"
+                  }`}
+                >
+                  {item.highlight && <Zap size={20} className="inline" />}
+                  {item.name}
+                </Link>
+              ))}
+
+              {/* WhatsApp CTA — Impossible to miss */}
+              <a
+                href="https://wa.me/23480022772234"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-green-600 text-white px-8 py-4 rounded-full font-black text-lg shadow-xl hover:shadow-2xl hover:bg-green-700 transform hover:scale-110 transition-all duration-300 flex items-center gap-3"
               >
-                {item.name}
-              </Link>
-            ))}
-          </nav>
+                <MessageCircle size={24} />
+                Chat Now
+              </a>
+            </nav>
 
-          {/* Mobile Menu Button */}
-          <button className="lg:hidden">
-            <svg
-              className="w-8 h-8"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+            {/* MOBILE MENU BUTTON */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="lg:hidden p-3 rounded-xl bg-gray-100 hover:bg-gray-200 transition"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            </svg>
-          </button>
+              {mobileMenuOpen ? <X size={32} /> : <Menu size={32} />}
+            </button>
+          </div>
         </div>
-      </div>
-    </header>
+
+        {/* MOBILE FULL-SCREEN MENU — Nigerian Speed */}
+        {mobileMenuOpen && (
+          <div className="lg:hidden fixed inset-0 bg-white z-50 pt-20 px-6 overflow-y-auto">
+            <div className="space-y-6 py-10">
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`block w-full text-center py-6 py-6 rounded-2xl font-black text-3xl transition-all ${
+                    item.premium
+                      ? "bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-2xl"
+                      : item.highlight
+                      ? "bg-orange-500 text-white shadow-2xl"
+                      : pathname === item.href
+                      ? "bg-green-100 text-green-600"
+                      : "bg-gray-100 text-gray-800 hover:bg-gray-200"
+                  }`}
+                >
+                  {item.highlight && "Value My Car"}
+                  {item.premium && "SELL YOUR CAR"}
+                  {!item.highlight && !item.premium && item.name}
+                </Link>
+              ))}
+
+              {/* Mobile WhatsApp King */}
+              <a
+                href="https://wa.me/23480022772234"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full text-center py-8 bg-green-600 text-white rounded-3xl font-black text-4xl shadow-2xl transform hover:scale-105 transition-all duration-300 mt-10"
+              >
+                Chat on WhatsApp
+              </a>
+
+              <p className="text-center text-gray-500 font-bold mt-16 text-lg">
+                Nigeria’s #1 Car Marketplace
+              </p>
+            </div>
+          </div>
+        )}
+      </header>
+    </>
   );
 }

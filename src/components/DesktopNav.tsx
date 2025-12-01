@@ -1,45 +1,48 @@
 // src/components/DesktopNav.tsx
 import Link from "next/link";
+import { Car, DollarSign, MessageCircle, Info } from "lucide-react";
 
 export default function DesktopNav() {
   return (
-    <nav className="hidden md:flex space-x-8">
-      <Link
-        href="/"
-        className="text-lg font-bold hover:text-green-600 transition"
-      >
-        Home
-      </Link>
+    <nav className="hidden md:flex items-center space-x-10">
+      {/* MAIN LINKS — Only the essentials */}
       <Link
         href="/inventory"
-        className="text-lg font-bold hover:text-green-600 transition"
+        className="group flex items-center gap-2 text-lg font-black text-gray-800 hover:text-green-600 transition-all duration-300"
       >
+        <Car size={20} className="group-hover:scale-110 transition-transform" />
         All Cars
       </Link>
+
       <Link
         href="/sell"
-        className="text-lg font-bold hover:text-green-600 transition"
+        className="group flex items-center gap-2 bg-green-600 text-white px-6 py-3 rounded-full font-black text-lg hover:bg-green-700 hover:shadow-xl transform hover:scale-105 transition-all duration-300"
       >
-        Sell Car
+        <DollarSign size={22} />
+        SELL CAR FAST
       </Link>
+
       <Link
         href="/value-my-car"
-        className="text-lg font-bold hover:text-green-600 transition"
+        className="group flex items-center gap-2 text-lg font-bold text-gray-700 hover:text-green-600 transition-all duration-300"
       >
-        Value Car
+        <Info
+          size={20}
+          className="group-hover:rotate-12 transition-transform"
+        />
+        Value My Car
       </Link>
-      <Link
-        href="/blog"
-        className="text-lg font-bold hover:text-green-600 transition"
+
+      {/* WhatsApp Support — Desktop luxury touch */}
+      <a
+        href="https://wa.me/2348123456789"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group flex items-center gap-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-3 rounded-full font-black text-lg shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
       >
-        Blog
-      </Link>
-      <Link
-        href="/how-it-works"
-        className="text-lg font-bold hover:text-green-600 transition"
-      >
-        How It Works
-      </Link>
+        <MessageCircle size={22} className="group-hover:animate-pulse" />
+        Chat Now
+      </a>
     </nav>
   );
 }

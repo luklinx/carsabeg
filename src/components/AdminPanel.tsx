@@ -3,25 +3,24 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { supabase } from "@/lib/cars";
+import { supabaseBrowser } from "@/lib/supabaseClient"; // ← FIXED: Client-only
 import type { Car } from "@/types";
 
 export default function AdminPanel() {
   const [cars, setCars] = useState<Car[]>([]);
   const [paidCars, setPaidCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
+  const [processing, setProcessing] = useState<string | null>(null); // ← Prevents double-click
 
   useEffect(() => {
     async function loadAdminData() {
       try {
-        // Get ALL cars (approved + pending)
-        const { data: allCars } = await supabase
+        const { data: allCars } = await supabaseBrowser
           .from("cars")
           .select("*")
           .order("created_at", { ascending: false });
 
-        // Get only approved + featured paid (for revenue)
-        const { data: featured } = await supabase
+        const { data: featured } = await supabaseBrowser
           .from("cars")
           .select("*")
           .eq("approved", true)
@@ -36,14 +35,17 @@ export default function AdminPanel() {
         setLoading(false);
       }
     }
-
     loadAdminData();
   }, []);
 
   const approveCar = async (id: string) => {
-    if (!confirm("Approve this car? It will go live immediately.")) return;
-
-    const { error } = await supabase
+    if (
+      processing ||
+      !confirm("Approve this car? It will go live immediately.")
+    )
+      return;
+    setProcessing(id);
+    const { error } = await supabaseBrowser
       .from("cars")
       .update({ approved: true })
       .eq("id", id);
@@ -52,17 +54,18 @@ export default function AdminPanel() {
       setCars(cars.map((c) => (c.id === id ? { ...c, approved: true } : c)));
       alert("Car approved & live!");
     }
+    setProcessing(null);
   };
 
   const makePremium = async (id: string) => {
-    if (!confirm("Mark as PREMIUM (₦50,000 paid)?")) return;
-
+    if (processing || !confirm("Mark as PREMIUM (₦50,000 paid)?")) return;
+    setProcessing(id);
     const today = new Date();
     const expiry = new Date(today.setMonth(today.getMonth() + 1))
       .toISOString()
       .split("T")[0];
 
-    const { error } = await supabase
+    const { error } = await supabaseBrowser
       .from("cars")
       .update({
         featured_paid: true,
@@ -72,6 +75,7 @@ export default function AdminPanel() {
       .eq("id", id);
 
     if (!error) {
+      const updatedCar = cars.find((c) => c.id === id)!;
       setCars(
         cars.map((c) =>
           c.id === id
@@ -84,28 +88,33 @@ export default function AdminPanel() {
             : c
         )
       );
-      setPaidCars([...paidCars, cars.find((c) => c.id === id)!]);
+      setPaidCars([
+        ...paidCars.filter((c) => c.id !== id),
+        { ...updatedCar, featured_paid: true, featured_until: expiry },
+      ]);
       alert("Now PREMIUM for 30 days!");
     }
+    setProcessing(null);
   };
 
   const deleteCar = async (id: string) => {
-    if (!confirm("DELETE this car permanently? Cannot undo.")) return;
-
-    const { error } = await supabase.from("cars").delete().eq("id", id);
-
+    if (processing || !confirm("DELETE this car permanently? Cannot undo."))
+      return;
+    setProcessing(id);
+    const { error } = await supabaseBrowser.from("cars").delete().eq("id", id);
     if (!error) {
       setCars(cars.filter((c) => c.id !== id));
       setPaidCars(paidCars.filter((c) => c.id !== id));
       alert("Car deleted forever.");
     }
+    setProcessing(null);
   };
 
   const totalRevenue = paidCars.length * 50000;
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-5xl font-black text-green-600 animate-pulse">
           LOADING ADMIN DASHBOARD...
         </div>
@@ -115,7 +124,6 @@ export default function AdminPanel() {
 
   const pendingCars = cars.filter((c) => !c.approved);
   const approvedCars = cars.filter((c) => c.approved);
-  const premiumCars = paidCars;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -134,9 +142,7 @@ export default function AdminPanel() {
             <p className="text-5xl font-black text-green-600">
               ₦{totalRevenue.toLocaleString()}
             </p>
-            <p className="text-lg text-gray-500">
-              {premiumCars.length} × ₦50,000
-            </p>
+            <p className="text-lg text-gray-500">{paidCars.length} × ₦50,000</p>
           </div>
         </div>
       </div>
@@ -165,7 +171,7 @@ export default function AdminPanel() {
           <div className="bg-gradient-to-r from-yellow-50 to-orange-50 p-6 rounded-2xl shadow text-center border border-yellow-300">
             <p className="text-yellow-700">Premium</p>
             <p className="text-4xl font-black text-yellow-600 mt-2">
-              {premiumCars.length}
+              {paidCars.length}
             </p>
           </div>
           <div className="bg-purple-50 p-6 rounded-2xl shadow text-center border border-purple-200">
@@ -190,7 +196,7 @@ export default function AdminPanel() {
                 >
                   <Image
                     src={car.images[0] || "/placeholder.jpg"}
-                    alt={car.model}
+                    alt={`${car.year} ${car.make} ${car.model}`}
                     width={600}
                     height={400}
                     className="w-full h-64 object-cover"
@@ -207,28 +213,32 @@ export default function AdminPanel() {
                     </p>
                     <p className="text-sm text-gray-500 mt-2">
                       Submitted:{" "}
-                      {new Date(car.created_at!).toLocaleDateString()}
+                      {car.created_at
+                        ? new Date(car.created_at).toLocaleDateString()
+                        : "Just now"}
                     </p>
-
                     <div className="flex gap-3 mt-6">
                       <button
                         onClick={() => approveCar(car.id)}
-                        className="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-black"
+                        disabled={processing === car.id}
+                        className="flex-1 bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white py-3 rounded-xl font-black transition"
                       >
-                        APPROVE
+                        {processing === car.id ? "..." : "APPROVE"}
                       </button>
                       <button
                         onClick={() => makePremium(car.id)}
-                        className="flex-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-black py-3 rounded-xl font-black"
+                        disabled={processing === car.id}
+                        className="flex-1 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 disabled:opacity-70 text-black py-3 rounded-xl font-black transition"
                       >
-                        MAKE PREMIUM
+                        {processing === car.id ? "..." : "MAKE PREMIUM"}
                       </button>
                     </div>
                     <button
                       onClick={() => deleteCar(car.id)}
-                      className="w-full mt-3 bg-red-600 hover:bg-red-700 text-white py-3 rounded-xl font-black"
+                      disabled={processing === car.id}
+                      className="w-full mt-3 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white py-3 rounded-xl font-black transition"
                     >
-                      DELETE
+                      {processing === car.id ? "DELETING..." : "DELETE"}
                     </button>
                   </div>
                 </div>
@@ -250,27 +260,28 @@ export default function AdminPanel() {
               >
                 <Image
                   src={car.images[0]}
-                  alt=""
+                  alt={`${car.year} ${car.make} ${car.model}`}
                   width={400}
                   height={300}
-                  className="w-full rounded-lg"
+                  className="w-full rounded-lg object-cover h-48"
                 />
-                <p className="font-black mt-3">
+                <p className="font-black mt-3 text-lg">
                   {car.year} {car.make} {car.model}
                 </p>
                 <p className="text-green-600 font-bold">
                   ₦{(car.price / 1000000).toFixed(1)}M
                 </p>
-                {car.feature_paid && (
+                {car.featured_paid && (
                   <span className="inline-block mt-2 px-3 py-1 bg-yellow-400 text-black rounded-full text-sm font-bold">
                     PREMIUM
                   </span>
                 )}
                 <button
                   onClick={() => deleteCar(car.id)}
-                  className="w-full mt-4 bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg font-bold"
+                  disabled={processing === car.id}
+                  className="w-full mt-4 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white py-2 rounded-lg font-bold transition"
                 >
-                  Delete
+                  {processing === car.id ? "DELETING..." : "Delete"}
                 </button>
               </div>
             ))}
@@ -279,7 +290,7 @@ export default function AdminPanel() {
 
         <div className="text-center py-12 text-gray-500">
           <p className="text-lg font-bold">
-            CARS ABEG © 2025 • Nigeria&apos;s #1 • Built by YOU
+            CARS ABEG © 2025 • Nigeria&apos;s #1 • Built by THE KING
           </p>
         </div>
       </div>

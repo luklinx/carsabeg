@@ -4,7 +4,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { supabase } from "@/lib/cars";
+import { supabaseBrowser } from "@/lib/supabaseClient";
 import { Upload, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
 
 export default function SellCarPage() {
@@ -39,7 +39,7 @@ export default function SellCarPage() {
       // NO SUBFOLDER — FLAT UPLOAD (THIS WAS THE BUG)
       const filePath = fileName;
 
-      const { data, error } = await supabase.storage
+      const { error } = await supabaseBrowser.storage
         .from("car_images") // EXACT BUCKET NAME — CHECK YOUR SUPABASE
         .upload(filePath, file, {
           cacheControl: "3600",
@@ -52,7 +52,7 @@ export default function SellCarPage() {
         continue;
       }
 
-      const { data: urlData } = supabase.storage
+      const { data: urlData } = supabaseBrowser.storage
         .from("car_images")
         .getPublicUrl(filePath);
 
@@ -111,7 +111,7 @@ export default function SellCarPage() {
       approved: false,
     };
 
-    const { error } = await supabase.from("cars").insert(carData);
+    const { error } = await supabaseBrowser.from("cars").insert(carData);
 
     if (error) {
       console.error(error);

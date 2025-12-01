@@ -20,7 +20,7 @@ export type Car = {
   approved: boolean;
 
   // NEW: Paid Featured Ads (₦50,000)
-  feature_paid?: boolean;
+  featured_paid?: boolean;
   featured_until?: string; // e.g. "2025-12-25"
   dealer_phone?: string; // WhatsApp number
   dealer_name?: string; // Dealer name
