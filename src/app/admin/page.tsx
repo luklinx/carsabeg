@@ -1,7 +1,7 @@
 // src/app/admin/page.tsx
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import AdminPanel from "@/components/AdminPanel";
 
 const ADMIN_PASSWORD = "carsabeg2025"; // CHANGE THIS!
