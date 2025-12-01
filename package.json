@@ -8,6 +8,8 @@
     "dev:all": "concurrently \"npm run dev\" \"npm run dev:api\""
   },
   "dependencies": {
+    "@supabase/auth-helpers-nextjs": "^0.15.0",
+    "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.86.0",
     "concurrently": "^9.2.1",
     "cors": "^2.8.5",
