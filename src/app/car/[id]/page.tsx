@@ -1,10 +1,10 @@
-// src/app/car/[id]/page.tsx
+// src/app/car/[id]/page.tsx   ← THIS PATH MUST BE EXACT
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { supabase } from "@/lib/cars";
 
-// THESE TWO LINES ARE THE KILL SWITCH FOR CACHING
+// THESE 3 LINES ARE NON-NEGOTIABLE
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 export const dynamicParams = true;
@@ -16,9 +16,7 @@ export default async function CarDetails({
 }) {
   const { id } = params;
 
-  if (!id || id === "undefined") {
-    notFound();
-  }
+  if (!id || id.length < 10) notFound();
 
   const { data: car, error } = await supabase
     .from("cars")
@@ -27,45 +25,66 @@ export default async function CarDetails({
     .eq("approved", true)
     .single();
 
-  if (error || !car) {
-    console.log("Car not found or not approved:", id, error);
+  if (!car || error) {
+    console.log("Car not found →", id, error?.message);
     notFound();
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-6">
-      <div className="max-w-7xl mx-auto">
-        <Link href="/" className="text-green-600 font-bold mb-8 inline-block">
-          ← Back to Cars
+    <div className="min-h-screen bg-gray-50 py-12">
+      <div className="max-w-6xl mx-auto px-6">
+        <Link
+          href="/"
+          className="text-green-600 font-bold text-lg mb-8 inline-block"
+        >
+          ← Back to Home
         </Link>
 
-        <div className="bg-white rounded-3xl shadow-2xl overflow-hidden grid lg:grid-cols-2">
-          <div className="relative aspect-video lg:aspect-auto">
+        <div className="bg-white rounded-3xl shadow-2xl overflow-hidden grid md:grid-cols-2 gap-0">
+          <div className="relative aspect-square md:aspect-auto">
             <Image
               src={car.images[0]}
-              alt={`${car.make} ${car.model}`}
+              alt={`${car.year} ${car.make} ${car.model}`}
               fill
               className="object-cover"
               priority
             />
           </div>
 
-          <div className="p-10 space-y-8">
-            <h1 className="text-5xl font-black text-green-600">
-              {car.year} {car.make} {car.model}
-            </h1>
-            <p className="text-4xl font-bold">₦{car.price.toLocaleString()}</p>
-            <p className="text-2xl">
-              {car.condition} • {car.location}
-            </p>
+          <div className="p-8 md:p-12 space-y-8">
+            <div>
+              <h1 className="text-4xl md:text-6xl font-black text-green-600">
+                {car.year} {car.make} {car.model}
+              </h1>
+              <p className="text-4xl md:text-5xl font-bold mt-4">
+                ₦{Number(car.price).toLocaleString()}
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 text-lg">
+              <div>
+                <span className="font-bold">Condition:</span> {car.condition}
+              </div>
+              <div>
+                <span className="font-bold">Location:</span> {car.location}
+              </div>
+              <div>
+                <span className="font-bold">Mileage:</span>{" "}
+                {(car.mileage || 0).toLocaleString()} km
+              </div>
+              <div>
+                <span className="font-bold">Transmission:</span>{" "}
+                {car.transmission || "N/A"}
+              </div>
+            </div>
 
             <a
               href={`https://wa.me/234${car.dealer_phone.replace(/\D/g, "")}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="block text-center bg-green-600 hover:bg-green-700 text-white py-6 rounded-2xl font-black text-2xl"
+              className="block text-center bg-green-600 hover:bg-green-700 text-white font-black text-2xl py-6 rounded-2xl shadow-xl"
             >
-              Chat on WhatsApp
+              Chat Seller on WhatsApp
             </a>
           </div>
         </div>
