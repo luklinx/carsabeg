@@ -1,10 +1,9 @@
-// src/app/car/[id]/page.tsx   ← THIS PATH MUST BE EXACT
+// src/app/car/[id]/page.tsx
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { supabase } from "@/lib/cars";
 
-// THESE 3 LINES ARE NON-NEGOTIABLE
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 export const dynamicParams = true;
@@ -14,9 +13,23 @@ export default async function CarDetails({
 }: {
   params: { id: string };
 }) {
-  const { id } = params;
+  let id = params.id;
 
-  if (!id || id.length < 10) notFound();
+  // CRITICAL: Decode URL-encoded ID
+  try {
+    id = decodeURIComponent(id);
+  } catch (e) {
+    console.log("Failed to decode ID:", params.id);
+    notFound();
+  }
+
+  // Log for debugging
+  console.log("Attempting to fetch car with ID:", id, "Length:", id.length);
+
+  if (!id || id.length < 10) {
+    console.log("ID too short or missing:", id);
+    notFound();
+  }
 
   const { data: car, error } = await supabase
     .from("cars")
@@ -26,7 +39,12 @@ export default async function CarDetails({
     .single();
 
   if (!car || error) {
-    console.log("Car not found →", id, error?.message);
+    console.log("Car not found →", {
+      requestedId: id,
+      error: error?.message,
+      errorCode: error?.code,
+      errorDetails: error?.details,
+    });
     notFound();
   }
 
