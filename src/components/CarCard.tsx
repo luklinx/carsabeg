@@ -10,6 +10,7 @@ interface CarCardProps {
 }
 
 export default function CarCard({ car }: CarCardProps) {
+  console.log("CarCard received car →", car);
   return (
     <div className="bg-white rounded-2xl shadow-lg overflow-hidden group hover:shadow-2xl transition-all duration-300">
       {/* INTERNAL LINK — Click card to view car details */}
