@@ -7,6 +7,7 @@ import { supabase } from "@/lib/cars";
 // THESE TWO LINES ARE THE KILL SWITCH FOR CACHING
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
+export const dynamicParams = true;
 
 export default async function CarDetails({
   params,
