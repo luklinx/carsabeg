@@ -25,15 +25,14 @@ export default function Header() {
         <div className="px-4 py-4 md:py-5">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             {/* LOGO — Unmistakable */}
-            <Link href="/" className="flex items-center gap-2">
-              <span className="text-4xl md:text-5xl font-black text-gray-900">
+            <Link href="/" className="flex items-center gap-1">
+              <span className="text-3xl md:text-5xl font-black text-gray-900">
                 CARS
               </span>
-              <span className="text-4xl md:text-5xl font-black text-green-600">
+              <span className="text-3xl md:text-5xl font-black text-green-600">
                 ABEG
               </span>
             </Link>
-
             {/* DESKTOP NAV — Clean, Bold, Dubizzle Energy */}
             <nav className="hidden lg:flex items-center gap-6 xl:gap-10">
               {navItems.map((item) => (
@@ -60,10 +59,9 @@ export default function Header() {
                 href="https://wa.me/23480022772234"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-green-600 text-white px-8 py-4 rounded-full font-black text-lg shadow-xl hover:shadow-2xl hover:bg-green-700 transform hover:scale-110 transition-all duration-300 flex items-center gap-3"
+                className="fixed bottom-4 right-4 bg-green-600 text-white p-4 rounded-full shadow-2xl z-50 hover:scale-110 transition"
               >
-                <MessageCircle size={24} />
-                Chat Now
+                <MessageCircle size={32} />
               </a>
             </nav>
 

@@ -3,138 +3,93 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import {
-  X,
-  DollarSign,
-  MessageCircle,
-  Zap,
-  Info,
-  Home,
-  Search,
-} from "lucide-react";
+import { X, Home, Car, MessageCircle, Zap } from "lucide-react";
 
 export default function MobileNav() {
   const [open, setOpen] = useState(false);
 
   return (
     <>
-      {/* HAMBURGER BUTTON — Nigerian Green, Smooth AF */}
-      <button
-        onClick={() => setOpen(!open)}
-        className="relative z-50 w-12 h-12 flex items-center justify-center rounded-full bg-green-600 shadow-xl lg:hidden"
-        aria-label="Open menu"
-      >
-        {open ? (
-          <X size={32} className="text-white animate-in spin-in-90" />
-        ) : (
-          <div className="space-y-2">
-            <span className="block w-8 h-1 bg-white rounded-full animate-in slide-in-from-top" />
-            <span className="block w-8 h-1 bg-white rounded-full" />
-            <span className="block w-8 h-1 bg-white rounded-full animate-in slide-in-from-bottom" />
-          </div>
-        )}
+      {/* Hamburger — Small, Clean, Always Visible */}
+      <button className="lg:hidden z-50 p-2">
+        <div className="space-y-1.5">
+          <span
+            className={`block w-7 h-1 bg-green-600 rounded-full transition-all ${
+              open ? "rotate-45 translate-y-2.5" : ""
+            }`}
+          />
+          <span
+            className={`block w-7 h-1 bg-green-600 rounded-full transition-all ${
+              open ? "opacity-0" : ""
+            }`}
+          />
+          <span
+            className={`block w-7 h-1 bg-green-600 rounded-full transition-all ${
+              open ? "-rotate-45 -translate-y-2.5" : ""
+            }`}
+          />
+        </div>
       </button>
 
-      {/* FULL-SCREEN OVERLAY MENU — This is Nigeria, we go BIG */}
-      <div
-        className={`fixed inset-0 bg-gradient-to-br from-green-600 via-emerald-600 to-teal-700 z-40 transition-all duration-500 ${
-          open
-            ? "opacity-100 pointer-events-auto"
-            : "opacity-0 pointer-events-none"
-        }`}
-      >
-        {/* Close backdrop */}
-        <div
-          className="absolute inset-0 bg-black/40"
-          onClick={() => setOpen(false)}
-        />
-
-        <nav className="relative h-full flex flex-col justify-center items-center px-8 text-white">
-          {/* Logo Top */}
-          <div className="absolute top-8 left-8">
-            <Link
-              href="/"
-              onClick={() => setOpen(false)}
-              className="flex items-center gap-2"
-            >
-              <span className="text-5xl font-black">CARS</span>
-              <span className="text-5xl font-black text-yellow-400">ABEG</span>
-            </Link>
-          </div>
-
-          {/* Close Button */}
-          <button
+      {/* FULL SCREEN MENU — Fast, Direct, Nigerian */}
+      {open && (
+        <>
+          <div
+            className="fixed inset-0 bg-black/70 z-40"
             onClick={() => setOpen(false)}
-            className="absolute top-8 right-8 p-3 bg-white/20 rounded-full backdrop-blur-sm hover:bg-white/30 transition"
-          >
-            <X size={36} />
-          </button>
+          />
+          <nav className="fixed top-0 left-0 right-0 bottom-0 bg-white z-50 flex flex-col">
+            <div className="flex justify-between items-center p-6 border-b">
+              <h2 className="text-3xl font-black text-green-600">CARS ABEG</h2>
+              <button onClick={() => setOpen(false)} className="p-2">
+                <X size={36} />
+              </button>
+            </div>
 
-          {/* MENU ITEMS — BIG, BOLD, PROUD */}
-          <div className="space-y-10 text-center">
-            <Link
-              href="/"
-              onClick={() => setOpen(false)}
-              className="flex items-center justify-center gap-5 text-4xl font-black hover:text-yellow-400 transition-all hover:scale-110"
-            >
-              <Home size={40} />
-              Home
-            </Link>
+            <div className="flex-1 flex flex-col justify-center items-center gap-8 px-8">
+              <Link
+                href="/"
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-4 text-2xl font-black py-4 w-full text-center hover:bg-green-50 rounded-2xl transition"
+              >
+                <Home size={32} /> Home
+              </Link>
+              <Link
+                href="/inventory"
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-4 text-2xl font-black py-4 w-full text-center hover:bg-green-50 rounded-2xl transition"
+              >
+                <Car size={32} /> All Cars
+              </Link>
+              <Link
+                href="/sell"
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-4 text-2xl font-black py-4 w-full text-center bg-green-600 text-white rounded-2xl shadow-xl hover:bg-green-700 transition"
+              >
+                <Zap size={32} /> Sell Your Car
+              </Link>
+              <Link
+                href="/value-my-car"
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-4 text-2xl font-black py-4 w-full text-center hover:bg-green-50 rounded-2xl transition"
+              >
+                <Zap size={32} /> Value My Car
+              </Link>
 
-            <Link
-              href="/inventory"
-              onClick={() => setOpen(false)}
-              className="flex items-center justify-center gap-5 text-4xl font-black hover:text-yellow-400 transition-all hover:scale-110"
-            >
-              <Search size={40} />
-              All Cars
-            </Link>
-
-            <Link
-              href="/value-my-car"
-              onClick={() => setOpen(false)}
-              className="flex items-center justify-center gap-5 text-4xl font-black text-orange-300 hover:text-orange-100 transition-all hover:scale-110"
-            >
-              <Zap size={44} className="animate-pulse" />
-              Value My Car
-            </Link>
-
-            <Link
-              href="/sell"
-              onClick={() => setOpen(false)}
-              className="flex items-center justify-center gap-5 text-5xl font-black bg-yellow-400 text-black px-12 py-8 rounded-full shadow-2xl hover:shadow-yellow-400/50 transform hover:scale-110 transition-all duration-300"
-            >
-              <DollarSign size={48} />
-              SELL YOUR CAR
-            </Link>
-
-            <Link
-              href="/how-it-works"
-              onClick={() => setOpen(false)}
-              className="flex items-center justify-center gap-5 text-4xl font-black hover:text-yellow-400 transition-all hover:scale-110"
-            >
-              <Info size={40} />
-              How It Works
-            </Link>
-          </div>
-
-          {/* WHATSAPP KING — The Real Star */}
-          <a
-            href="https://wa.me/23480022772234"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="fixed bottom-10 left-1/2 -translate-x-1/2 w-80 bg-white text-green-600 px-10 py-8 rounded-full shadow-2xl flex items-center justify-center gap-5 text-4xl font-black hover:bg-gray-100 transform hover:scale-110 transition-all duration-300"
-          >
-            <MessageCircle size={48} className="animate-bounce" />
-            Chat on WhatsApp
-          </a>
-
-          {/* Nigerian Pride */}
-          <p className="absolute bottom-32 text-yellow-300 font-black text-2xl opacity-80">
-            Made in Nigeria • For Nigerians
-          </p>
-        </nav>
-      </div>
+              {/* WhatsApp — King of Mobile */}
+              <a
+                href="https://wa.me/23480022772234"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-10 flex items-center gap-5 bg-green-600 text-white px-16 py-8 rounded-full font-black text-3xl shadow-2xl hover:bg-green-700 transform hover:scale-105 transition"
+              >
+                <MessageCircle size={40} />
+                Chat Now
+              </a>
+            </div>
+          </nav>
+        </>
+      )}
     </>
   );
 }
