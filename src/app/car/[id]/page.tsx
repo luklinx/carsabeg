@@ -17,6 +17,16 @@ interface Car {
   location: string;
   images: string[];
   dealer_phone?: string | null;
+  dealer_name?: string | null;
+  mileage?: number | null;
+  transmission?: string | null;
+  fuel?: string | null;
+  description?: string | null;
+  featured?: boolean;
+  featured_paid?: boolean;
+  featured_until?: string | null;
+  approved?: boolean;
+  created_at?: string;
 }
 
 export default function CarDetails({ params }: { params: { id?: string } }) {
