@@ -14,14 +14,9 @@ interface Car {
   model: string;
   price: number;
   condition: string;
-  fuel: string;
-  transmission: string;
-  description: string;
   location: string;
   images: string[];
   dealer_phone?: string | null;
-  approved?: boolean;
-  approved_paid?: boolean;
 }
 
 export default function CarDetails({ params }: { params: { id?: string } }) {
