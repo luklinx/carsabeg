@@ -191,14 +191,14 @@ export default function CarDetails({ params }: { params: { id: string } }) {
 
               <div className="space-y-5">
                 <WhatsAppButton car={car} size="large" />
-                <a
+                <Link
                   href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block text-center bg-black hover:bg-gray-900 text-white py-8 rounded-3xl font-black text-3xl flex items-center justify-center gap-4 transition-all hover:scale-105 shadow-xl"
                 >
                   <Phone size={48} /> Call Seller
-                </a>
+                </Link>
               </div>
 
               <div className="flex flex-wrap justify-center gap-6 text-green-700 font-bold text-lg">
@@ -221,14 +221,14 @@ export default function CarDetails({ params }: { params: { id: string } }) {
         <SimilarCars currentCarId={car.id} />
 
         {/* FLOATING WHATSAPP */}
-        <a
+        <Link
           href={whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="fixed bottom-6 right-6 bg-green-600 hover:bg-green-700 text-white p-5 rounded-full shadow-2xl z-50 transition-all hover:scale-110 animate-bounce"
         >
           <MessageCircle size={48} />
-        </a>
+        </Link>
       </div>
     </>
   );
