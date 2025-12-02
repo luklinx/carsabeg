@@ -81,7 +81,7 @@ export default function ClientHome() {
     );
   }
 
-  // REUSABLE SECTION — 4 CARS ONLY + VIEW ALL
+  // REUSABLE SECTION — "View All" ONLY SHOWS WHEN 5+ CARS
   const HomeSection = ({
     title,
     cars: sectionCars,
@@ -97,6 +97,8 @@ export default function ClientHome() {
   }) => {
     if (sectionCars.length === 0) return null;
 
+    const showViewAll = sectionCars.length >= 5; // ONLY SHOW IF 5 OR MORE
+
     return (
       <section className={`py-16 md:py-24 ${gradient || "bg-white"}`}>
         <div className="max-w-7xl mx-auto px-6">
@@ -107,15 +109,19 @@ export default function ClientHome() {
                 {title}
               </h2>
             </div>
-            <Link
-              href={href}
-              className="flex items-center gap-3 text-green-600 hover:text-green-700 font-black text-xl underline decoration-4 underline-offset-8 hover:scale-110 transition"
-            >
-              View All
-            </Link>
+
+            {/* CONDITIONAL "VIEW ALL" — ONLY WHEN 5+ CARS */}
+            {showViewAll && (
+              <Link
+                href={href}
+                className="flex items-center gap-3 text-green-600 hover:text-green-700 font-black text-xl underline decoration-4 underline-offset-8 hover:scale-110 transition animate-pulse"
+              >
+                View All →
+              </Link>
+            )}
           </div>
 
-          {/* MOBILE: 4 SWIPES */}
+          {/* MOBILE: 4 SWIPES MAX */}
           <div className="md:hidden">
             <Swiper
               modules={[Autoplay, Navigation]}
@@ -137,9 +143,9 @@ export default function ClientHome() {
             </Swiper>
           </div>
 
-          {/* DESKTOP: 4 GRID */}
+          {/* DESKTOP: SHOW ONLY 4 CARDS */}
           <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-8">
-            {sectionCars.map((car) => (
+            {sectionCars.slice(0, 4).map((car) => (
               <div
                 key={car.id}
                 className="transform hover:-translate-y-4 transition-all duration-300"
@@ -152,7 +158,6 @@ export default function ClientHome() {
       </section>
     );
   };
-
   return (
     <>
       {/* HERO WITH LOGO */}
