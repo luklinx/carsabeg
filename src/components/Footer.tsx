@@ -85,7 +85,7 @@ export default function Footer() {
               <div className="space-y-4 mt-6">
                 <p className="flex items-center justify-center md:justify-start gap-3">
                   <Phone size={20} className="text-green-600" />
-                  +234 800 2277 2234
+                  ++234 901 883 7909
                 </p>
                 <p className="flex items-center justify-center md:justify-start gap-3">
                   <Mail size={20} className="text-green-600" />

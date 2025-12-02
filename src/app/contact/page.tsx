@@ -61,7 +61,7 @@ export default function Contact() {
                 <p className="text-2xl font-bold opacity-90">
                   Fastest Reply • 24/7
                 </p>
-                <p className="text-6xl font-black mt-8">+234 800 2277 2234</p>
+                <p className="text-6xl font-black mt-8">++234 901 883 7909</p>
                 <span className="inline-block mt-6 bg-yellow-400 text-black px-8 py-3 rounded-full font-black text-xl">
                   MOST POPULAR
                 </span>

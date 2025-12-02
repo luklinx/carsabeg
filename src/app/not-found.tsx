@@ -7,7 +7,7 @@ export default function NotFound() {
       <div className="text-center">
         <h1 className="text-9xl font-black text-green-600 mb-8">404</h1>
         <p className="text-4xl font-bold text-gray-800 mb-4">
-          Oops! This car has been sold or never existed
+          Oops! This car has been sold or no more in existence
         </p>
         <p className="text-2xl text-gray-600 mb-12">
           But don’t worry — we have plenty more!
