@@ -38,7 +38,7 @@ Buyer Details:
 
 Please call this buyer ASAP!`;
 
-    const whatsappUrl = `https://wa.me/2349018837909?text=${encodeURIComponent(
+    const whatsappUrl = `https://wa.me/23480022772234?text=${encodeURIComponent(
       message
     )}`;
 

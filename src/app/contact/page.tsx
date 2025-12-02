@@ -46,7 +46,7 @@ export default function Contact() {
             {/* WHATSAPP – KING OF NIGERIA */}
             <div className="group">
               <Link
-                href="https://wa.me/2349018837909"
+                href="https://wa.me/23480022772234"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block bg-gradient-to-br from-green-600 to-emerald-600 text-white rounded-3xl p-12 text-center shadow-3xl transform transition-all duration-500 hover:scale-105 hover:shadow-green-600/50"
@@ -71,7 +71,7 @@ export default function Contact() {
             {/* PHONE CALL */}
             <div className="group">
               <a
-                href="tel:+2349018837909"
+                href="tel:+23480022772234"
                 className="block bg-gradient-to-br from-blue-600 to-indigo-700 text-white rounded-3xl p-12 text-center shadow-3xl transform transition-all duration-500 hover:scale-105 hover:shadow-blue-600/50"
               >
                 <Phone size={80} className="mx-auto mb-8" />
@@ -146,7 +146,7 @@ export default function Contact() {
 
           <div className="flex flex-col md:flex-row gap-10 justify-center items-center">
             <a
-              href="https://wa.me/2349018837909"
+              href="https://wa.me/23480022772234"
               target="_blank"
               rel="noopener noreferrer"
               className="bg-yellow-400 hover:bg-yellow-300 text-black px-24 py-16 rounded-full text-5xl md:text-7xl font-black shadow-3xl transform hover:scale-110 transition-all duration-300 flex items-center gap-6"
@@ -156,7 +156,7 @@ export default function Contact() {
             </a>
 
             <a
-              href="tel:+2349018837909"
+              href="tel:+23480022772234"
               className="bg-white text-green-600 px-24 py-16 rounded-full text-5xl md:text-7xl font-black shadow-3xl hover:bg-gray-100 transition-all duration-300"
             >
               CALL US NOW

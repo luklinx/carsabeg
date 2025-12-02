@@ -74,7 +74,7 @@ export default function Footer() {
             </h3>
             <div className="space-y-6 text-lg font-bold text-amber-800">
               <a
-                href="https://wa.me/2349018837909"
+                href="https://wa.me/23480022772234"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center md:justify-start gap-4 bg-green-600 text-white px-8 py-5 rounded-full shadow-2xl hover:shadow-green-600/50 transform hover:scale-105 transition-all"
