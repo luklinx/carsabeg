@@ -1,27 +1,25 @@
 // src/types.ts
 
-export type CarCondition = "Foreign Used" | "Nigerian Used";
+export type CarCondition = "Foreign Used" | "Nigerian Used" | "Brand New";
 
-export type Car = {
+export interface Car {
   id: string;
+  year: number;
   make: string;
   model: string;
-  year: number;
   price: number;
-  mileage: number;
   condition: CarCondition;
+  location?: string;
+  mileage?: number;
+  transmission?: string;
+  fuel?: string;
+  description?: string | null;
+  dealer_name: string;
+  dealer_phone: string;
   images: string[];
-  transmission: string;
-  fuel: string;
-  location: string;
-  created_at: string;
-  description?: string;
   featured: boolean;
-  approved: boolean;
-
-  // NEW: Paid Featured Ads (₦50,000)
   featured_paid?: boolean;
-  featured_until?: string; // e.g. "2025-12-25"
-  dealer_phone?: string; // WhatsApp number
-  dealer_name?: string; // Dealer name
-};
+  featured_until?: string;
+  approved: boolean;
+  created_at?: string;
+}
