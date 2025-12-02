@@ -276,7 +276,7 @@ export default function ValueMyCar() {
 
               <div className="mt-10 flex flex-col sm:flex-row gap-6 justify-center">
                 <a
-                  href={`https://wa.me/23480022772234?text=I%20just%20valued%20my%20${encodeURIComponent(
+                  href={`https://wa.me/2349018837909?text=I%20just%20valued%20my%20${encodeURIComponent(
                     carName
                   )}%20on%20CarsAbeg!%20Worth%20₦${result.min.toFixed(
                     1
@@ -306,7 +306,7 @@ export default function ValueMyCar() {
               <AlertCircle size={60} className="mx-auto mb-4 text-red-600" />
               <p className="text-2xl font-black text-red-700">{error}</p>
               <a
-                href="https://wa.me/23480022772234"
+                href="https://wa.me/2349018837909"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-block mt-6 bg-red-600 text-white font-black text-xl px-10 py-5 rounded-full"

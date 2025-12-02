@@ -28,7 +28,7 @@ When can I come and inspect?
 
 Thank you!`;
 
-  const whatsappUrl = `https://wa.me/23480022772234?text=${encodeURIComponent(
+  const whatsappUrl = `https://wa.me/2349018837909?text=${encodeURIComponent(
     message
   )}`;
 
