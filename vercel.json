@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/retrain",
+      "schedule": "0 2 * * 0"
+    }
+  ]
+}

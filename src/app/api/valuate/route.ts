@@ -1,7 +1,6 @@
 // src/app/api/valuate/route.ts
 import { NextRequest, NextResponse } from "next/server";
 
-// FULLY TYPE-SAFE MULTIPLIERS
 const YEAR_MULTIPLIERS = {
   2025: 1.75,
   2024: 1.6,
@@ -25,17 +24,8 @@ const LOCATION_MULTIPLIERS = {
   "Other Cities": 1.02,
 } as const;
 
-const CONDITION_MULTIPLIERS = {
-  tokunbo: 1.0,
-  nigerian: 0.58,
-} as const;
-
-const GRADE_MULTIPLIERS = {
-  full: 1.0,
-  mid: 0.93,
-  base: 0.84,
-} as const;
-
+const CONDITION_MULTIPLIERS = { tokunbo: 1.0, nigerian: 0.58 } as const;
+const GRADE_MULTIPLIERS = { full: 1.0, mid: 0.93, base: 0.84 } as const;
 const BODY_MULTIPLIERS = {
   first: 1.0,
   touchup: 0.92,
@@ -43,27 +33,43 @@ const BODY_MULTIPLIERS = {
   accident: 0.58,
 } as const;
 
-// BASE PRICES — FULLY TYPED
+// LUXURY TIER
+const LUXURY_PRICES: Record<string, Record<string, Record<number, number>>> = {
+  "mercedes-benz": {
+    "g-class-g-63-amg": {
+      2021: 385_000_000,
+      2020: 365_000_000,
+      2022: 420_000_000,
+    },
+    gle: { 2023: 185_000_000 },
+  },
+  toyota: {
+    "land-cruiser": { 2021: 485_000_000, 2022: 520_000_000 },
+  },
+  lexus: { lx570: { 2021: 320_000_000 } },
+  bmw: { x7: { 2022: 280_000_000 } },
+};
+
+// STANDARD BASE PRICES — FULLY TYPED
 const BASE_PRICES = {
   toyota: {
-    camry: 16500000,
-    corolla: 14200000,
-    rav4: 18800000,
-    highlander: 24800000,
+    camry: 16_500_000,
+    corolla: 14_200_000,
+    rav4: 18_800_000,
+    highlander: 24_800_000,
   },
-  honda: { accord: 10800000, "cr-v": 11800000, civic: 8500000 },
-  mercedes: { c300: 23800000, gle: 42800000 },
-  lexus: { rx350: 26800000, es350: 18800000 },
-  bmw: { x3: 28800000, x5: 39800000 },
-  hyundai: { sonata: 10800000, tucson: 12800000 },
-  kia: { optima: 10200000, sorento: 13800000 },
+  honda: { accord: 10_800_000, "cr-v": 11_800_000, civic: 8_500_000 },
+  mercedes: { c300: 23_800_000, gle: 42_800_000 },
+  lexus: { rx350: 26_800_000, es350: 18_800_000 },
+  bmw: { x3: 28_800_000, x5: 39_800_000 },
+  hyundai: { sonata: 10_800_000, tucson: 12_800_000 },
+  kia: { optima: 10_200_000, sorento: 13_800_000 },
 } as const;
 
 // TYPE-SAFE KEYS
 type Make = keyof typeof BASE_PRICES;
-type Model<T extends Make> = keyof (typeof BASE_PRICES)[T];
-type Year = keyof typeof YEAR_MULTIPLIERS;
-type Location = keyof typeof LOCATION_MULTIPLIERS;
+type Model<M extends Make> = keyof (typeof BASE_PRICES)[M];
+type YearKey = keyof typeof YEAR_MULTIPLIERS;
 
 interface ValuationInput {
   make: string;
@@ -82,35 +88,42 @@ function predictPrice(input: ValuationInput): { min: number; max: number } {
     model,
     year,
     condition,
-    mileage = 65000,
+    mileage = 65_000,
     grade,
     body,
     location,
   } = input;
 
   const makeKey = make.toLowerCase().replace(/[^a-z]/g, "") as Make;
-  const modelKey = model.toLowerCase().replace(/[^a-z-]/g, "") as string;
+  const modelKey = model.toLowerCase().replace(/[^a-z-]/g, "");
 
-  // SAFE BASE PRICE LOOKUP
-  const makePrices = BASE_PRICES[makeKey];
-  let base = makePrices
-    ? makePrices[modelKey as keyof typeof makePrices] ?? 14000000
-    : 14000000;
+  let base = 14_000_000; // fallback
 
-  // SAFE YEAR LOOKUP
-  const yearKey = year as Year;
-  base *= YEAR_MULTIPLIERS[yearKey] ?? 0.85;
+  // 1. LUXURY TIER CHECK
+  const luxuryMake = LUXURY_PRICES[makeKey];
+  if (luxuryMake?.[modelKey]?.[year]) {
+    base = luxuryMake[modelKey][year];
+  } else {
+    // 2. STANDARD BASE — 100% TYPE-SAFE
+    const makePrices = BASE_PRICES[makeKey];
+    if (makePrices && modelKey in makePrices) {
+      base = makePrices[modelKey as keyof typeof makePrices] as number;
+    }
+    // If model not found → keep fallback
+  }
 
-  // SAFE MULTIPLIERS
+  // Apply multipliers
+  base *= YEAR_MULTIPLIERS[year as YearKey] ?? 0.85;
   base *= CONDITION_MULTIPLIERS[condition];
   base *= GRADE_MULTIPLIERS[grade];
   base *= BODY_MULTIPLIERS[body];
-  base *= LOCATION_MULTIPLIERS[location as Location] ?? 1.0;
+  base *=
+    LOCATION_MULTIPLIERS[location as keyof typeof LOCATION_MULTIPLIERS] ?? 1.0;
 
-  // MILEAGE PENALTY
-  if (mileage > 120000) base *= 0.75;
-  else if (mileage > 90000) base *= 0.88;
-  else if (mileage > 60000) base *= 0.95;
+  // Mileage penalty
+  if (mileage > 120_000) base *= 0.75;
+  else if (mileage > 90_000) base *= 0.88;
+  else if (mileage > 60_000) base *= 0.95;
 
   const min = Math.round(base * 0.88) / 1_000_000;
   const max = Math.round(base * 1.18) / 1_000_000;
@@ -131,9 +144,9 @@ export async function POST(req: NextRequest) {
       valuation: result,
     });
   } catch (error) {
-    console.error("AI Valuation Error:", error);
+    console.error("Valuation failed:", error);
     return NextResponse.json(
-      { success: false, error: "Valuation failed" },
+      { success: false, error: "AI is thinking... Try again!" },
       { status: 500 }
     );
   }

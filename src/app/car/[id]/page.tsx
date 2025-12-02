@@ -29,28 +29,41 @@ export default function CarDetails({ params }: { params: { id: string } }) {
   const [loading, setLoading] = useState(true);
   const [imageIndex, setImageIndex] = useState(0);
 
-  // Instant kill bad IDs
-  if (!id || id === "undefined" || id.trim() === "") notFound();
+  // Instant kill invalid IDs
+  if (!id || id === "undefined" || id.trim() === "") {
+    notFound();
+  }
 
   useEffect(() => {
     async function fetchCar() {
       try {
-        // THE FIX: Use maybeSingle() instead of single()
+        console.log("Fetching car with ID:", id); // DEBUG
+
         const { data, error } = await supabaseBrowser
           .from("cars")
           .select("*")
           .eq("id", id)
-          .eq("approved", true)
-          .maybeSingle(); // ← THIS IS THE HERO
+          // REMOVE THIS LINE IN DEV → .eq("approved", true)
+          // UNCOMMENT IN PRODUCTION ONLY WHEN READY
+          // .eq("approved", true)
+          .maybeSingle();
+
+        console.log("Supabase response:", { data, error }); // DEBUG
 
         if (error && error.code !== "PGRST116") {
           console.error("Supabase error:", error);
         }
 
+        if (!data) {
+          console.log("Car not found or not approved yet");
+          notFound();
+        }
+
+        console.log("Car loaded successfully:", data);
         setCar(data);
       } catch (err) {
-        console.error("Fetch failed:", err);
-        setCar(null);
+        console.error("Fetch failed completely:", err);
+        notFound();
       } finally {
         setLoading(false);
       }
@@ -78,8 +91,11 @@ export default function CarDetails({ params }: { params: { id: string } }) {
     );
   }
 
-  // NOT FOUND
-  if (!car) notFound();
+  // FINAL SAFETY NET — if car is null after loading
+  if (!car) {
+    console.log("Final check: car is null → 404");
+    notFound();
+  }
 
   const cleanPhone =
     car.dealer_phone?.replace(/\D/g, "").replace(/^0/, "") || "8022772234";
@@ -234,7 +250,7 @@ export default function CarDetails({ params }: { params: { id: string } }) {
           </div>
         </section>
 
-        {/* DESCRIPTION & SIMILAR CARS */}
+        {/* DESCRIPTION */}
         {car.description && (
           <section className="container mx-auto px-4 md:px-6 py-16 bg-white">
             <h2 className="text-4xl font-black mb-6">Description</h2>
