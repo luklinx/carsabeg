@@ -26,10 +26,10 @@ export default function Header() {
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             {/* LOGO — Unmistakable */}
             <Link href="/" className="flex items-center gap-1">
-              <span className="text-3xl md:text-5xl font-black text-gray-900">
+              <span className="text-3xl md:text-3xl font-black text-gray-900">
                 CARS
               </span>
-              <span className="text-3xl md:text-5xl font-black text-green-600">
+              <span className="text-3xl md:text-3xl font-black text-green-600">
                 ABEG
               </span>
             </Link>

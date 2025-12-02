@@ -60,10 +60,10 @@ export default function AdminLoginPage() {
                 className="text-yellow-400 animate-pulse delay-300"
               />
             </div>
-            <h1 className="text-9xl md:text-10xl font-black text-white tracking-tighter leading-none">
+            <h1 className="text-3xl md:text-10xl font-black text-white tracking-tighter leading-none">
               CARS
             </h1>
-            <h1 className="text-8xl md:text-9xl font-black text-yellow-400 -mt-8 leading-none">
+            <h1 className="text-8xl md:text-3xl font-black text-yellow-400 -mt-8 leading-none">
               ABEG
             </h1>
             <p className="text-4xl font-black text-white/90 mt-10 tracking-widest">
@@ -87,7 +87,7 @@ export default function AdminLoginPage() {
                   placeholder="MASTER KEY REQUIRED"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-32 pr-10 py-12 text-5xl font-black text-center rounded-3xl border-8 border-white/40 focus:border-yellow-400 outline-none shadow-3xl bg-white/10 backdrop-blur-2xl text-white placeholder-white/50 tracking-widest"
+                  className="w-full pl-32 pr-10 py-12 text-3xl font-black text-center rounded-3xl border-8 border-white/40 focus:border-yellow-400 outline-none shadow-3xl bg-white/10 backdrop-blur-2xl text-white placeholder-white/50 tracking-widest"
                   autoFocus
                   spellCheck={false}
                 />

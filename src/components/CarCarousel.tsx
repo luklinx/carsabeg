@@ -37,7 +37,7 @@ export default function CarCarousel({ cars }: { cars: Car[] }) {
   if (validCars.length === 0) {
     return (
       <div className="text-center py-32 bg-gradient-to-br from-gray-900 via-black to-gray-900 rounded-3xl text-white shadow-2xl">
-        <p className="text-5xl md:text-7xl font-black mb-6">
+        <p className="text-3xl md:text-7xl font-black mb-6">
           No Premium Cars Yet
         </p>
         <p className="text-2xl opacity-80">

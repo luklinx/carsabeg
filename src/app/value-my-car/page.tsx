@@ -264,7 +264,7 @@ export default function ValueMyCar() {
           <div className="mt-16 text-center">
             <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-3xl p-10 md:p-16 shadow-3xl">
               <CheckCircle size={80} className="mx-auto mb-6 animate-bounce" />
-              <p className="text-3xl md:text-5xl font-black mb-4">
+              <p className="text-3xl md:text-3xl font-black mb-4">
                 Your {carName} is worth:
               </p>
               <p className="text-6xl md:text-8xl font-black tracking-tight">

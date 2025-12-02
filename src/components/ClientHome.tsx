@@ -70,10 +70,10 @@ export default function ClientHome() {
             size={120}
             className="mx-auto animate-pulse text-yellow-400 mb-8"
           />
-          <h1 className="text-7xl md:text-9xl font-black animate-pulse">
+          <h1 className="text-7xl md:text-3xl font-black animate-pulse">
             CARS ABEG
           </h1>
-          <p className="text-3xl md:text-5xl font-bold mt-6">
+          <p className="text-3xl md:text-3xl font-bold mt-6">
             Loading fresh deals...
           </p>
         </div>
@@ -105,7 +105,7 @@ export default function ClientHome() {
           <div className="flex justify-between items-center mb-10">
             <div className="flex items-center gap-5">
               <Icon size={48} className="text-green-600 hidden md:block" />
-              <h2 className="text-5xl md:text-7xl font-black text-gray-900">
+              <h2 className="text-3xl md:text-7xl font-black text-gray-900">
                 {title}
               </h2>
             </div>
@@ -160,17 +160,6 @@ export default function ClientHome() {
   };
   return (
     <>
-      {/* HERO WITH LOGO */}
-      <section className="bg-gradient-to-br from-green-600 to-emerald-700 py-20 md:py-32 text-white text-center">
-        {/* <Logo size="xl" className="mx-auto mb-10" /> */}
-        <h1 className="text-6xl md:text-9xl font-black mb-6 drop-shadow-2xl">
-          FIND YOUR DREAM CAR
-        </h1>
-        <p className="text-3xl md:text-5xl font-bold max-w-4xl mx-auto">
-          Foreign Used • Nigerian Used • Brand New • Direct from Owner
-        </p>
-      </section>
-
       {/* PREMIUM HERO */}
       {paidCars.length > 0 && (
         <section className="relative overflow-hidden bg-gradient-to-br from-orange-600 via-red-600 to-pink-700 py-20 text-white">
@@ -181,7 +170,7 @@ export default function ClientHome() {
               PREMIUM — SELLING IN HOURS
               <TrendingUp className="text-yellow-300" size={64} />
             </div>
-            <h1 className="text-6xl md:text-9xl font-black mb-8">
+            <h1 className="text-6xl md:text-3xl font-black mb-8">
               {paidCars.length} HOT DEALS LIVE
             </h1>
           </div>
@@ -259,10 +248,10 @@ export default function ClientHome() {
       {/* FINAL CTA */}
       <section className="py-32 bg-gradient-to-br from-green-600 to-emerald-700 text-white text-center">
         <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-6xl md:text-9xl font-black mb-12">
+          <h2 className="text-6xl md:text-3xl font-black mb-12">
             CAN’T FIND YOUR DREAM CAR?
           </h2>
-          <p className="text-3xl md:text-5xl font-bold mb-16 max-w-4xl mx-auto">
+          <p className="text-3xl md:text-3xl font-bold mb-16 max-w-4xl mx-auto">
             Tell us what you want — we’ll find it in 48hrs
           </p>
           <div className="flex flex-col md:flex-row gap-10 justify-center">

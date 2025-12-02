@@ -61,7 +61,7 @@ export default function InventoryClient() {
             size={80}
             className="mx-auto text-green-600 animate-bounce"
           />
-          <p className="text-5xl md:text-7xl font-black text-green-600 mt-8 animate-pulse">
+          <p className="text-3xl md:text-7xl font-black text-green-600 mt-8 animate-pulse">
             LOADING FRESH CARS...
           </p>
         </div>
@@ -74,10 +74,10 @@ export default function InventoryClient() {
       {/* HERO HEADER */}
       <section className="bg-gradient-to-b from-green-600 to-emerald-700 text-white py-20 md:py-32">
         <div className="container mx-auto px-6 text-center">
-          <h1 className="text-6xl md:text-9xl font-black mb-6 leading-none">
+          <h1 className="text-6xl md:text-3xl font-black mb-6 leading-none">
             ALL CARS IN STOCK
           </h1>
-          <p className="text-3xl md:text-5xl font-black opacity-90">
+          <p className="text-3xl md:text-3xl font-black opacity-90">
             {filteredCars.length} Fresh{" "}
             {filteredCars.length === 1 ? "Car" : "Cars"} Available
           </p>
@@ -97,7 +97,7 @@ export default function InventoryClient() {
         <div className="container mx-auto px-6">
           {filteredCars.length === 0 ? (
             <div className="text-center py-32 bg-white rounded-3xl shadow-2xl">
-              <p className="text-5xl font-black text-gray-400 mb-8">
+              <p className="text-3xl font-black text-gray-400 mb-8">
                 No cars match your search
               </p>
               <a

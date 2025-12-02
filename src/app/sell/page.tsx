@@ -138,7 +138,7 @@ export default function SellCarPage() {
             className="mx-auto text-orange-500 animate-pulse mb-8"
           />
           <CheckCircle className="w-40 h-40 text-green-600 mx-auto mb-8" />
-          <h1 className="text-6xl md:text-9xl font-black text-green-600 mb-8">
+          <h1 className="text-6xl md:text-3xl font-black text-green-600 mb-8">
             DONE!
           </h1>
           <p className="text-4xl md:text-6xl font-black text-gray-900 mb-6">
@@ -150,13 +150,13 @@ export default function SellCarPage() {
           <div className="flex flex-col sm:flex-row gap-8 justify-center">
             <Link
               href="/"
-              className="bg-green-600 hover:bg-green-700 text-white px-16 py-8 rounded-full font-black text-3xl md:text-5xl shadow-2xl transform hover:scale-110 transition"
+              className="bg-green-600 hover:bg-green-700 text-white px-16 py-8 rounded-full font-black text-3xl md:text-3xl shadow-2xl transform hover:scale-110 transition"
             >
               Back Home
             </Link>
             <a
               href="https://wa.me/23480022772234"
-              className="bg-yellow-400 hover:bg-yellow-300 text-black px-16 py-8 rounded-full font-black text-3xl md:text-5xl shadow-2xl transform hover:scale-110 transition"
+              className="bg-yellow-400 hover:bg-yellow-300 text-black px-16 py-8 rounded-full font-black text-3xl md:text-3xl shadow-2xl transform hover:scale-110 transition"
             >
               Chat Support
             </a>
@@ -172,7 +172,7 @@ export default function SellCarPage() {
       <section className="bg-gradient-to-br from-green-600 to-emerald-700 py-20 md:py-32 text-white">
         <div className="max-w-7xl mx-auto px-6 text-center">
           {/* <Logo size="xl" className="mx-auto mb-10" /> */}
-          <h1 className="text-5xl md:text-9xl font-black mb-8 drop-shadow-2xl">
+          <h1 className="text-3xl md:text-3xl font-black mb-8 drop-shadow-2xl">
             SELL YOUR CAR <span className="text-yellow-400">TODAY</span>
           </h1>
           <div className="flex flex-wrap justify-center gap-6 text-2xl md:text-4xl font-black">

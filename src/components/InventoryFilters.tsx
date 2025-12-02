@@ -71,7 +71,7 @@ export default function InventoryFilters({ initialCars }: Props) {
       <div className="sticky top-0 z-40 bg-white border-b-4 border-green-600 shadow-xl">
         <div className="px-4 py-5">
           <div className="flex items-center justify-between mb-4">
-            <h1 className="text-3xl md:text-5xl font-black text-gray-900">
+            <h1 className="text-3xl md:text-3xl font-black text-gray-900">
               All Cars ({filteredCars.length})
             </h1>
             {hasActiveFilters && (
@@ -157,7 +157,7 @@ export default function InventoryFilters({ initialCars }: Props) {
         id="results"
       >
         <div className="container mx-auto px-6 text-center">
-          <h2 className="text-5xl md:text-7xl font-black text-gray-900">
+          <h2 className="text-3xl md:text-7xl font-black text-gray-900">
             {filteredCars.length} {filteredCars.length === 1 ? "Car" : "Cars"}{" "}
             Found
           </h2>

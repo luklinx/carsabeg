@@ -27,10 +27,10 @@ export default function HowItWorks() {
             <Zap className="animate-pulse" size={40} />
             FASTEST CAR DEALS IN NIGERIA
           </div>
-          <h1 className="text-6xl md:text-9xl font-black leading-tight mb-8">
+          <h1 className="text-6xl md:text-3xl font-black leading-tight mb-8">
             How Cars Abeg Works
           </h1>
-          <p className="text-3xl md:text-5xl font-black opacity-90 max-w-5xl mx-auto">
+          <p className="text-3xl md:text-3xl font-black opacity-90 max-w-5xl mx-auto">
             Buy a clean car or sell yours in{" "}
             <span className="text-yellow-400">60 seconds</span> — no agents, no
             wahala
@@ -83,7 +83,7 @@ export default function HowItWorks() {
                 >
                   {step.number}
                 </div>
-                <h3 className="text-4xl md:text-5xl font-black text-gray-900 mb-6">
+                <h3 className="text-4xl md:text-3xl font-black text-gray-900 mb-6">
                   {step.title}
                 </h3>
                 <p className="text-xl md:text-2xl text-gray-700 leading-relaxed font-bold">
@@ -128,7 +128,7 @@ export default function HowItWorks() {
                 <div className="w-36 h-36 mx-auto bg-gradient-to-br from-yellow-400 to-orange-500 text-black rounded-full flex items-center justify-center text-7xl font-black shadow-3xl mb-10 group-hover:animate-bounce">
                   {step.number}
                 </div>
-                <h3 className="text-4xl md:text-5xl font-black text-gray-900 mb-6">
+                <h3 className="text-4xl md:text-3xl font-black text-gray-900 mb-6">
                   {step.title}
                 </h3>
                 <p className="text-xl md:text-2xl text-gray-700 leading-relaxed font-bold">
@@ -153,7 +153,7 @@ export default function HowItWorks() {
       {/* TRUST BADGES – Nigerian Pride */}
       <section className="py-24 bg-black text-white">
         <div className="container mx-auto px-6 text-center">
-          <h2 className="text-5xl md:text-7xl font-black mb-16">
+          <h2 className="text-3xl md:text-7xl font-black mb-16">
             Why 100,000+ Nigerians Trust Cars Abeg
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-10 text-2xl md:text-3xl font-black">
@@ -180,7 +180,7 @@ export default function HowItWorks() {
       {/* FINAL CTA – The Money Shot */}
       <section className="py-32 bg-gradient-to-r from-green-600 to-emerald-700 text-white text-center">
         <div className="container mx-auto px-6">
-          <h2 className="text-6xl md:text-9xl font-black mb-12">
+          <h2 className="text-6xl md:text-3xl font-black mb-12">
             Ready to Buy or Sell?
           </h2>
           <div className="flex flex-col md:flex-row gap-10 justify-center items-center max-w-5xl mx-auto">

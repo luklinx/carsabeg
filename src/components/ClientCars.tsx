@@ -66,10 +66,10 @@ export default function ClientCars() {
             size={120}
             className="mx-auto animate-pulse text-yellow-400 mb-8"
           />
-          <h1 className="text-6xl md:text-9xl font-black animate-pulse">
+          <h1 className="text-6xl md:text-3xl font-black animate-pulse">
             CARS ABEG
           </h1>
-          <p className="text-3xl md:text-5xl font-black mt-6">
+          <p className="text-3xl md:text-3xl font-black mt-6">
             Loading the hottest deals in Nigeria...
           </p>
           <div className="flex justify-center gap-6 mt-12">
@@ -98,7 +98,7 @@ export default function ClientCars() {
               <Zap className="text-yellow-300" size={56} />
             </div>
 
-            <h1 className="text-5xl md:text-9xl font-black mb-6 drop-shadow-2xl">
+            <h1 className="text-3xl md:text-3xl font-black mb-6 drop-shadow-2xl">
               {paidFeatured.length} CARS MOVING FAST
             </h1>
             <p className="text-2xl md:text-4xl font-bold max-w-5xl mx-auto opacity-95">
@@ -151,7 +151,7 @@ export default function ClientCars() {
       <section className="py-20 md:py-32 bg-gradient-to-b from-gray-50 to-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-6xl md:text-9xl font-black text-gray-900 mb-6">
+            <h2 className="text-6xl md:text-3xl font-black text-gray-900 mb-6">
               LATEST ARRIVALS
             </h2>
             <p className="text-2xl md:text-4xl font-bold text-gray-700">
@@ -201,7 +201,7 @@ export default function ClientCars() {
           <div className="text-center mt-20">
             <Link
               href="/inventory"
-              className="inline-block bg-black hover:bg-gray-900 text-white px-20 py-10 rounded-full font-black text-4xl md:text-5xl shadow-3xl transform hover:scale-110 transition-all duration-300"
+              className="inline-block bg-black hover:bg-gray-900 text-white px-20 py-10 rounded-full font-black text-4xl md:text-3xl shadow-3xl transform hover:scale-110 transition-all duration-300"
             >
               VIEW ALL {allCars.length} CARS →
             </Link>
@@ -209,7 +209,7 @@ export default function ClientCars() {
 
           {/* FINAL CTA — NO ONE LEAVES EMPTY */}
           <div className="mt-24 text-center bg-gradient-to-r from-green-600 to-emerald-700 py-16 rounded-3xl shadow-2xl">
-            <h2 className="text-5xl md:text-8xl font-black text-white mb-8">
+            <h2 className="text-3xl md:text-8xl font-black text-white mb-8">
               CAN’T FIND YOUR DREAM CAR?
             </h2>
             <p className="text-2xl md:text-4xl text-white font-bold mb-12 max-w-4xl mx-auto">

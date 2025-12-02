@@ -115,7 +115,7 @@ export default function AdminPanel() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-5xl font-black text-green-600 animate-pulse">
+        <div className="text-3xl font-black text-green-600 animate-pulse">
           LOADING ADMIN DASHBOARD...
         </div>
       </div>
@@ -139,7 +139,7 @@ export default function AdminPanel() {
           </div>
           <div className="text-right">
             <p className="text-sm text-gray-600">Total Revenue Earned</p>
-            <p className="text-5xl font-black text-green-600">
+            <p className="text-3xl font-black text-green-600">
               ₦{totalRevenue.toLocaleString()}
             </p>
             <p className="text-lg text-gray-500">{paidCars.length} × ₦50,000</p>

@@ -19,7 +19,7 @@ export default function Home() {
         </div>
         <div className="relative z-10 max-w-7xl mx-auto text-center">
           {/* MAIN HEADLINE — SHORT, LOUD, PROUD */}
-          <h1 className="text-6xl md:text-8xl lg:text-9xl font-black text-white drop-shadow-2xl leading-tight">
+          <h1 className="text-6xl md:text-8xl lg:text-3xl font-black text-white drop-shadow-2xl leading-tight">
             FIND YOUR <span className="text-yellow-400">DREAM CAR</span>
           </h1>
 
@@ -52,7 +52,7 @@ export default function Home() {
           <div className="mt-16 flex flex-col sm:flex-row gap-6 justify-center items-center">
             <Link
               href="/inventory"
-              className="bg-yellow-400 hover:bg-yellow-300 text-black px-16 py-8 rounded-full font-black text-3xl md:text-5xl shadow-2xl transform hover:scale-110 transition-all duration-300 flex items-center gap-4"
+              className="bg-yellow-400 hover:bg-yellow-300 text-black px-16 py-8 rounded-full font-black text-3xl md:text-3xl shadow-2xl transform hover:scale-110 transition-all duration-300 flex items-center gap-4"
             >
               <Zap size={48} className="animate-pulse" />
               BROWSE ALL CARS
@@ -62,7 +62,7 @@ export default function Home() {
               href="https://wa.me/2348022772234"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-white text-green-700 hover:bg-gray-100 px-16 py-8 rounded-full font-black text-3xl md:text-5xl shadow-2xl transform hover:scale-110 transition-all duration-300 flex items-center gap-4"
+              className="bg-white text-green-700 hover:bg-gray-100 px-16 py-8 rounded-full font-black text-3xl md:text-3xl shadow-2xl transform hover:scale-110 transition-all duration-300 flex items-center gap-4"
             >
               <MessageCircle size={48} className="animate-bounce" />
               CHAT NOW
