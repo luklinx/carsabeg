@@ -1,5 +1,5 @@
 // src/app/page.tsx
-// import CarCard from "@/components/CarCard";
+import CarCard from "@/components/CarCard";
 import ClientHome from "@/components/ClientHome"; // ← NEW COMPONENT
 
 export const revalidate = 0;
@@ -16,7 +16,7 @@ export default function Home() {
         <p className="text-xl mt-4">Clean Cars • Verified • Instant Buyers</p>
       </section>
 
-      {/* CLIENT-SIDE CARS — THIS FIXES EVERYTHING */}
+      {/* CLIENT-SIDE CARS */}
       <ClientHome />
     </main>
   );
