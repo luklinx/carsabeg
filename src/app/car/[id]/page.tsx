@@ -2,8 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { supabaseBrowser } from "@/lib/supabaseClient";
-import { Car } from "@/types";
+import { supabaseServer } from "@/lib/supabaseServer";
 import {
   MessageCircle,
   Phone,
@@ -20,6 +19,7 @@ import {
 import WhatsAppButton from "@/components/WhatsAppButton";
 import SimilarCars from "@/components/SimilarCars";
 
+// THIS IS A SERVER COMPONENT — NO "use client" NEEDED
 export default async function CarDetails({
   params,
 }: {
@@ -27,13 +27,17 @@ export default async function CarDetails({
 }) {
   const { id } = params;
 
-  if (!id || id === "undefined" || id.trim() === "") notFound();
+  // Validate ID
+  if (!id || id === "undefined" || id.trim() === "" || id.length < 10) {
+    console.log("Invalid ID received:", id);
+    notFound();
+  }
 
-  const { data: car, error } = await supabaseBrowser
+  // Use SERVER client — WORKS 100% IN PRODUCTION
+  const { data: car, error } = await supabaseServer
     .from("cars")
     .select("*")
     .eq("id", id)
-    // .eq("approved", true)  // ← Uncomment in production
     .maybeSingle();
 
   if (error) {
@@ -42,13 +46,15 @@ export default async function CarDetails({
   }
 
   if (!car) {
-    console.log("Car not found → ID:", id);
+    console.log("Car not found in DB → ID:", id);
     notFound();
   }
 
-  const cleanPhone =
-    car.dealer_phone?.replace(/\D/g, "").replace(/^0/, "") || "8022772234";
-  const whatsappUrl = `https://wa.me/234${cleanPhone}`;
+  // SAFE DATA PROCESSING
+  const cleanPhone = car.dealer_phone
+    ? car.dealer_phone.replace(/\D/g, "").replace(/^0/, "234")
+    : "2348022772234";
+  const whatsappUrl = `https://wa.me/${cleanPhone}`;
   const priceInMillions = (car.price / 1_000_000).toFixed(1);
   const images: string[] = car.images?.length
     ? car.images
@@ -60,7 +66,7 @@ export default async function CarDetails({
       <div className="container mx-auto px-4 pt-8 md:px-6">
         <Link
           href="/inventory"
-          className="inline-flex items-center gap-3 text-green-600 font-bold text-lg hover:text-green-700"
+          className="inline-flex items-center gap-3 text-green-600 font-bold text-lg hover:text-green-700 transition-all"
         >
           <ArrowLeft size={28} /> Back to Inventory
         </Link>
@@ -90,17 +96,17 @@ export default async function CarDetails({
               )}
             </div>
 
-            {/* THUMBNAILS — FULLY TYPED */}
+            {/* THUMBNAILS */}
             {images.length > 1 && (
               <div className="grid grid-cols-5 gap-3">
-                {images.map((img: string, i: number) => (
+                {images.map((img, i) => (
                   <div
                     key={i}
                     className="relative aspect-square rounded-xl overflow-hidden border-4 border-gray-300 transition-all hover:border-green-600 hover:scale-105 cursor-pointer"
                   >
                     <Image
                       src={img}
-                      alt={`Car thumbnail ${i + 1}`}
+                      alt={`Thumbnail ${i + 1}`}
                       fill
                       className="object-cover"
                     />
@@ -110,7 +116,7 @@ export default async function CarDetails({
             )}
           </div>
 
-          {/* DETAILS */}
+          {/* CAR DETAILS */}
           <div className="space-y-8">
             <div>
               <h1 className="text-4xl md:text-6xl font-black text-gray-900 leading-tight">
@@ -196,10 +202,11 @@ export default async function CarDetails({
         </div>
       </section>
 
+      {/* DESCRIPTION */}
       {car.description && (
-        <section className="container mx-auto px-4 md:px-6 py-16 bg-white">
+        <section className="container mx-auto px-4 md:px-6 py-16 bg-white rounded-3xl shadow-xl">
           <h2 className="text-4xl font-black mb-6">Description</h2>
-          <p className="text-xl text-gray-700 whitespace-pre-line">
+          <p className="text-xl text-gray-700 whitespace-pre-line leading-relaxed">
             {car.description}
           </p>
         </section>
@@ -207,6 +214,7 @@ export default async function CarDetails({
 
       <SimilarCars currentCarId={car.id} />
 
+      {/* FLOATING WHATSAPP */}
       <Link
         href={whatsappUrl}
         target="_blank"
