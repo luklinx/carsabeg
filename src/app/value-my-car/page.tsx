@@ -147,7 +147,7 @@ export default function ValueMyCar() {
             <Brain size={24} className="animate-pulse" />
             AI-Powered • 98.7% Accurate • Real-Time Nigerian Prices
           </div>
-          <h1 className="text-4xl md:text-7xl font-black text-gray-900 leading-tight">
+          <h1 className="text-2xl md:text-2xl font-black text-gray-900 leading-tight">
             Value Your <span className="text-green-600">{carName}</span>
           </h1>
           <p className="text-lg md:text-2xl text-gray-600 mt-4 font-medium">
@@ -267,7 +267,7 @@ export default function ValueMyCar() {
               <p className="text-3xl md:text-3xl font-black mb-4">
                 Your {carName} is worth:
               </p>
-              <p className="text-6xl md:text-8xl font-black tracking-tight">
+              <p className="text-3xl md:text-2xl font-black tracking-tight">
                 ₦{result.min.toFixed(1)}M – ₦{result.max.toFixed(1)}M
               </p>
               <p className="text-xl md:text-2xl font-bold opacity-90 mt-4">

@@ -138,13 +138,13 @@ export default function SellCarPage() {
             className="mx-auto text-orange-500 animate-pulse mb-8"
           />
           <CheckCircle className="w-40 h-40 text-green-600 mx-auto mb-8" />
-          <h1 className="text-6xl md:text-3xl font-black text-green-600 mb-8">
+          <h1 className="text-3xl md:text-3xl font-black text-green-600 mb-8">
             DONE!
           </h1>
-          <p className="text-4xl md:text-6xl font-black text-gray-900 mb-6">
+          <p className="text-2xl md:text-3xl font-black text-gray-900 mb-6">
             Your car is LIVE in minutes!
           </p>
-          <p className="text-2xl md:text-4xl font-bold text-gray-700 mb-12">
+          <p className="text-2xl md:text-2xl font-bold text-gray-700 mb-12">
             We’re reviewing now • WhatsApp alert coming in 1–24hrs
           </p>
           <div className="flex flex-col sm:flex-row gap-8 justify-center">
@@ -175,7 +175,7 @@ export default function SellCarPage() {
           <h1 className="text-3xl md:text-3xl font-black mb-8 drop-shadow-2xl">
             SELL YOUR CAR <span className="text-yellow-400">TODAY</span>
           </h1>
-          <div className="flex flex-wrap justify-center gap-6 text-2xl md:text-4xl font-black">
+          <div className="flex flex-wrap justify-center gap-6 text-2xl md:text-2xl font-black">
             <div className="bg-white/20 backdrop-blur-md px-8 py-4 rounded-full">
               FREE Listing
             </div>
@@ -274,7 +274,7 @@ export default function SellCarPage() {
 
             {/* IMAGE UPLOAD — KILLER UX */}
             <div>
-              <label className="block text-3xl md:text-4xl font-black text-gray-900 mb-8 flex items-center gap-4">
+              <label className="block text-3xl md:text-2xl font-black text-gray-900 mb-8 flex items-center gap-4">
                 <Camera size={48} className="text-green-600" />
                 Upload Photos <span className="text-green-600">(Max 12)</span>
               </label>
@@ -350,7 +350,7 @@ export default function SellCarPage() {
             <button
               type="submit"
               disabled={submitting || uploading || previewImages.length === 0}
-              className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 disabled:bg-gray-400 text-white py-10 rounded-3xl font-black text-4xl md:text-6xl shadow-3xl transform hover:scale-105 disabled:scale-100 transition-all duration-300 flex items-center justify-center gap-6"
+              className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 disabled:bg-gray-400 text-white py-10 rounded-3xl font-black text-2xl md:text-3xl shadow-3xl transform hover:scale-105 disabled:scale-100 transition-all duration-300 flex items-center justify-center gap-6"
             >
               {submitting || uploading ? (
                 <>PLEASE WAIT...</>

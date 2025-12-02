@@ -37,7 +37,7 @@ export default function CarCarousel({ cars }: { cars: Car[] }) {
   if (validCars.length === 0) {
     return (
       <div className="text-center py-32 bg-gradient-to-br from-gray-900 via-black to-gray-900 rounded-3xl text-white shadow-2xl">
-        <p className="text-3xl md:text-7xl font-black mb-6">
+        <p className="text-3xl md:text-2xl font-black mb-6">
           No Premium Cars Yet
         </p>
         <p className="text-2xl opacity-80">
@@ -56,7 +56,7 @@ export default function CarCarousel({ cars }: { cars: Car[] }) {
   // FINAL SAFETY — THIS SHOULD NEVER HAPPEN
   if (!car?.id) {
     return (
-      <div className="bg-red-900 text-white p-20 rounded-3xl text-center text-6xl font-black">
+      <div className="bg-red-900 text-white p-20 rounded-3xl text-center text-3xl font-black">
         CAROUSEL ERROR: MISSING ID
       </div>
     );
@@ -82,10 +82,10 @@ export default function CarCarousel({ cars }: { cars: Car[] }) {
 
             {/* TEXT CONTENT */}
             <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12 text-white">
-              <h3 className="text-4xl md:text-6xl lg:text-7xl font-black drop-shadow-2xl leading-tight">
+              <h3 className="text-2xl md:text-3xl lg:text-2xl font-black drop-shadow-2xl leading-tight">
                 {car.year} {car.make} {car.model}
               </h3>
-              <p className="text-4xl md:text-6xl font-black text-yellow-400 drop-shadow-2xl mt-3">
+              <p className="text-2xl md:text-3xl font-black text-yellow-400 drop-shadow-2xl mt-3">
                 ₦{(car.price / 1_000_000).toFixed(1)}M
               </p>
               <p className="text-xl md:text-2xl font-medium opacity-90 mt-4">

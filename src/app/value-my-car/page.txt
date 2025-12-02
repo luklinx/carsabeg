@@ -74,7 +74,7 @@ export default function ValueMyCar() {
       <div className="container mx-auto px-6 max-w-4xl">
         {/* HERO */}
         <div className="text-center mb-16">
-          <h1 className="text-3xl md:text-7xl font-black text-gray-900 mb-6">
+          <h1 className="text-3xl md:text-2xl font-black text-gray-900 mb-6">
             Value Your Car in 30 Seconds
           </h1>
           <p className="text-2xl md:text-3xl font-bold text-gray-800">
@@ -163,7 +163,7 @@ export default function ValueMyCar() {
           <div className="mt-16 text-center">
             <div className="bg-green-50 border-8 border-green-600 rounded-3xl p-12 inline-block">
               <p className="text-3xl font-black text-gray-800 mb-4">Your car is worth today:</p>
-              <p className="text-7xl font-black text-green-600 mb-6">{result}</p>
+              <p className="text-2xl font-black text-green-600 mb-6">{result}</p>
               <p className="text-2xl text-gray-700">₦{result} (Lagos market price)</p>
               <a href="https://wa.me/2348123456789?text=I%20just%20valued%20my%20car%20on%20CarsAbeg!%20Can%20you%20beat%20this%20price?" 
                  className="mt-8 inline-block bg-yellow-400 text-black font-black text-2xl px-12 py-6 rounded-full hover:bg-yellow-300 transition">

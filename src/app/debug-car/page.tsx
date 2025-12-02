@@ -13,7 +13,7 @@ export default async function DebugCar() {
 
   return (
     <div className="min-h-screen bg-black text-white p-20 font-bold text-xl space-y-8">
-      <h1 className="text-6xl">FINAL NUCLEAR DEBUG</h1>
+      <h1 className="text-3xl">FINAL NUCLEAR DEBUG</h1>
 
       <div className="bg-gray-900 p-10 rounded">
         <p>
@@ -41,15 +41,15 @@ export default async function DebugCar() {
 
       {data ? (
         <div className="bg-green-900 p-20 rounded-3xl text-center">
-          <h2 className="text-8xl">CAR FOUND — SYSTEM WORKS!</h2>
+          <h2 className="text-2xl">CAR FOUND — SYSTEM WORKS!</h2>
           <pre className="mt-10 bg-black p-10 rounded text-left text-sm overflow-auto">
             {JSON.stringify(data, null, 2)}
           </pre>
         </div>
       ) : (
         <div className="bg-red-900 p-20 rounded-3xl text-center">
-          <h2 className="text-8xl">STILL DEAD</h2>
-          <p className="text-4xl mt-10">
+          <h2 className="text-2xl">STILL DEAD</h2>
+          <p className="text-2xl mt-10">
             Then your Supabase project is wrong or RLS blocks anon
           </p>
         </div>

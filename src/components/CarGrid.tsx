@@ -46,7 +46,7 @@ export default function CarGrid({ cars, title, subtitle }: Props) {
       {(title || subtitle) && (
         <div className="text-center mb-10 md:mb-16 px-6">
           {title && (
-            <h2 className="text-4xl md:text-6xl font-black text-gray-900 leading-tight">
+            <h2 className="text-2xl md:text-3xl font-black text-gray-900 leading-tight">
               {title}
             </h2>
           )}

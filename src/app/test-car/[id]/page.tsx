@@ -17,7 +17,7 @@ export default async function TestCar({ params }: { params: { id: string } }) {
 
   return (
     <div className="min-h-screen bg-black text-white p-10 font-mono">
-      <h1 className="text-4xl font-bold mb-10">NUCLEAR CAR TEST</h1>
+      <h1 className="text-2xl font-bold mb-10">NUCLEAR CAR TEST</h1>
 
       <div className="space-y-4 text-lg">
         <p>
@@ -41,7 +41,7 @@ export default async function TestCar({ params }: { params: { id: string } }) {
 
       {data ? (
         <div className="mt-10 p-10 bg-green-900 rounded-lg">
-          <h2 className="text-6xl font-black text-green-400">
+          <h2 className="text-3xl font-black text-green-400">
             CAR FOUND — IT WORKS!
           </h2>
           <pre className="mt-10 text-sm bg-black p-5 rounded overflow-x-auto">
@@ -50,7 +50,7 @@ export default async function TestCar({ params }: { params: { id: string } }) {
         </div>
       ) : (
         <div className="mt-10 p-10 bg-red-900 rounded-lg">
-          <h2 className="text-6xl font-black text-red-400">CAR NOT FOUND</h2>
+          <h2 className="text-3xl font-black text-red-400">CAR NOT FOUND</h2>
           <p className="text-2xl mt-5">Your setup is broken. Check:</p>
           <ul className="mt-5 text-xl">
             <li>• Is your Supabase URL and anon key correct?</li>

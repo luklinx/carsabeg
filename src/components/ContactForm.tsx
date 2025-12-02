@@ -51,7 +51,7 @@ export default function ContactForm() {
           <MessageCircle size={28} />
           Chat With Us on WhatsApp
         </div>
-        <h2 className="text-4xl md:text-6xl font-black text-gray-900">
+        <h2 className="text-2xl md:text-3xl font-black text-gray-900">
           Got Questions? We&apos;re Here 24/7
         </h2>
         <p className="text-xl text-gray-600 mt-4">

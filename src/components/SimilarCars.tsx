@@ -86,7 +86,7 @@ export default function SimilarCars({ currentCarId }: Props) {
     <section className="mt-20 mb-10 px-4 md:px-6">
       {/* Header */}
       <div className="text-center mb-12">
-        <h2 className="text-3xl md:text-7xl font-black text-gray-900">
+        <h2 className="text-3xl md:text-2xl font-black text-gray-900">
           Similar Cars You Might Like
         </h2>
         <p className="text-xl md:text-2xl text-gray-700 font-bold mt-4">

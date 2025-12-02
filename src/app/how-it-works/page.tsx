@@ -27,7 +27,7 @@ export default function HowItWorks() {
             <Zap className="animate-pulse" size={40} />
             FASTEST CAR DEALS IN NIGERIA
           </div>
-          <h1 className="text-6xl md:text-3xl font-black leading-tight mb-8">
+          <h1 className="text-3xl md:text-3xl font-black leading-tight mb-8">
             How Cars Abeg Works
           </h1>
           <p className="text-3xl md:text-3xl font-black opacity-90 max-w-5xl mx-auto">
@@ -42,7 +42,7 @@ export default function HowItWorks() {
       {/* BUYING FLOW – 3 Steps to Glory */}
       <section className="py-24 md:py-32">
         <div className="container mx-auto px-6 max-w-7xl">
-          <h2 className="text-6xl md:text-8xl font-black text-center mb-20 text-gray-900">
+          <h2 className="text-3xl md:text-2xl font-black text-center mb-20 text-gray-900">
             Buying a Car? Done in 3 Steps
           </h2>
 
@@ -75,7 +75,7 @@ export default function HowItWorks() {
                 }`}
               >
                 <div
-                  className={`w-40 h-40 mx-auto rounded-full flex items-center justify-center text-white text-8xl font-black shadow-3xl mb-10 ${
+                  className={`w-40 h-40 mx-auto rounded-full flex items-center justify-center text-white text-2xl font-black shadow-3xl mb-10 ${
                     step.highlight
                       ? "bg-gradient-to-br from-yellow-400 to-orange-500 animate-pulse"
                       : "bg-gradient-to-br from-green-600 to-emerald-600"
@@ -83,7 +83,7 @@ export default function HowItWorks() {
                 >
                   {step.number}
                 </div>
-                <h3 className="text-4xl md:text-3xl font-black text-gray-900 mb-6">
+                <h3 className="text-2xl md:text-3xl font-black text-gray-900 mb-6">
                   {step.title}
                 </h3>
                 <p className="text-xl md:text-2xl text-gray-700 leading-relaxed font-bold">
@@ -99,7 +99,7 @@ export default function HowItWorks() {
       {/* SELLING FLOW – Even Easier */}
       <section className="py-24 md:py-32 bg-gradient-to-b from-gray-100 to-gray-50">
         <div className="container mx-auto px-6 max-w-7xl">
-          <h2 className="text-6xl md:text-8xl font-black text-center mb-20 text-gray-900">
+          <h2 className="text-3xl md:text-2xl font-black text-center mb-20 text-gray-900">
             Selling Your Car? Even Easier
           </h2>
 
@@ -125,10 +125,10 @@ export default function HowItWorks() {
               },
             ].map((step, i) => (
               <div key={i} className="text-center group">
-                <div className="w-36 h-36 mx-auto bg-gradient-to-br from-yellow-400 to-orange-500 text-black rounded-full flex items-center justify-center text-7xl font-black shadow-3xl mb-10 group-hover:animate-bounce">
+                <div className="w-36 h-36 mx-auto bg-gradient-to-br from-yellow-400 to-orange-500 text-black rounded-full flex items-center justify-center text-2xl font-black shadow-3xl mb-10 group-hover:animate-bounce">
                   {step.number}
                 </div>
-                <h3 className="text-4xl md:text-3xl font-black text-gray-900 mb-6">
+                <h3 className="text-2xl md:text-3xl font-black text-gray-900 mb-6">
                   {step.title}
                 </h3>
                 <p className="text-xl md:text-2xl text-gray-700 leading-relaxed font-bold">
@@ -142,7 +142,7 @@ export default function HowItWorks() {
           <div className="text-center mt-20">
             <Link
               href="/sell"
-              className="inline-block bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-300 hover:to-orange-400 text-black font-black text-4xl md:text-6xl px-24 py-12 rounded-full shadow-3xl transform hover:scale-110 transition-all duration-300"
+              className="inline-block bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-300 hover:to-orange-400 text-black font-black text-2xl md:text-3xl px-24 py-12 rounded-full shadow-3xl transform hover:scale-110 transition-all duration-300"
             >
               SELL MY CAR FREE NOW
             </Link>
@@ -153,7 +153,7 @@ export default function HowItWorks() {
       {/* TRUST BADGES – Nigerian Pride */}
       <section className="py-24 bg-black text-white">
         <div className="container mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-7xl font-black mb-16">
+          <h2 className="text-3xl md:text-2xl font-black mb-16">
             Why 100,000+ Nigerians Trust Cars Abeg
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-10 text-2xl md:text-3xl font-black">
@@ -180,19 +180,19 @@ export default function HowItWorks() {
       {/* FINAL CTA – The Money Shot */}
       <section className="py-32 bg-gradient-to-r from-green-600 to-emerald-700 text-white text-center">
         <div className="container mx-auto px-6">
-          <h2 className="text-6xl md:text-3xl font-black mb-12">
+          <h2 className="text-3xl md:text-3xl font-black mb-12">
             Ready to Buy or Sell?
           </h2>
           <div className="flex flex-col md:flex-row gap-10 justify-center items-center max-w-5xl mx-auto">
             <Link
               href="/inventory"
-              className="bg-white text-green-600 px-20 py-12 rounded-full text-4xl md:text-6xl font-black hover:bg-gray-100 shadow-3xl transform hover:scale-110 transition-all duration-300"
+              className="bg-white text-green-600 px-20 py-12 rounded-full text-2xl md:text-3xl font-black hover:bg-gray-100 shadow-3xl transform hover:scale-110 transition-all duration-300"
             >
               Browse Cars Now
             </Link>
             <Link
               href="/sell"
-              className="bg-yellow-400 text-black px-20 py-12 rounded-full text-4xl md:text-6xl font-black hover:bg-yellow-300 shadow-3xl transform hover:scale-110 transition-all duration-300"
+              className="bg-yellow-400 text-black px-20 py-12 rounded-full text-2xl md:text-3xl font-black hover:bg-yellow-300 shadow-3xl transform hover:scale-110 transition-all duration-300"
             >
               Sell My Car Free
             </Link>

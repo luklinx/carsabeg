@@ -63,10 +63,10 @@ export default function AdminLoginPage() {
             <h1 className="text-3xl md:text-10xl font-black text-white tracking-tighter leading-none">
               CARS
             </h1>
-            <h1 className="text-8xl md:text-3xl font-black text-yellow-400 -mt-8 leading-none">
+            <h1 className="text-2xl md:text-3xl font-black text-yellow-400 -mt-8 leading-none">
               ABEG
             </h1>
-            <p className="text-4xl font-black text-white/90 mt-10 tracking-widest">
+            <p className="text-2xl font-black text-white/90 mt-10 tracking-widest">
               ADMIN COMMAND CENTER
             </p>
           </div>
@@ -99,7 +99,7 @@ export default function AdminLoginPage() {
               <div className="text-center animate-in slide-in-from-bottom duration-500">
                 <div className="inline-flex items-center gap-5 bg-red-600/95 backdrop-blur-md px-12 py-8 rounded-full shadow-2xl">
                   <AlertTriangle size={56} className="animate-pulse" />
-                  <p className="text-4xl font-black text-white">
+                  <p className="text-2xl font-black text-white">
                     ACCESS DENIED
                   </p>
                 </div>
@@ -111,7 +111,7 @@ export default function AdminLoginPage() {
               <div className="text-center animate-in zoom-in duration-700">
                 <div className="inline-flex items-center gap-5 bg-green-600/95 backdrop-blur-md px-12 py-8 rounded-full shadow-2xl">
                   <CheckCircle size={56} className="animate-ping" />
-                  <p className="text-4xl font-black text-white">
+                  <p className="text-2xl font-black text-white">
                     ACCESS GRANTED — WELCOME BOSS
                   </p>
                 </div>
@@ -122,7 +122,7 @@ export default function AdminLoginPage() {
             <button
               type="submit"
               disabled={success}
-              className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-300 hover:to-orange-400 disabled:from-green-600 disabled:to-emerald-600 text-black font-black text-6xl md:text-7xl py-12 rounded-3xl shadow-3xl transform hover:scale-105 disabled:scale-100 transition-all duration-500 flex items-center justify-center gap-8"
+              className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-300 hover:to-orange-400 disabled:from-green-600 disabled:to-emerald-600 text-black font-black text-3xl md:text-2xl py-12 rounded-3xl shadow-3xl transform hover:scale-105 disabled:scale-100 transition-all duration-500 flex items-center justify-center gap-8"
             >
               {success ? (
                 <>ENTERING SECURE ZONE...</>

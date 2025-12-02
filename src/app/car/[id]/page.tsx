@@ -119,7 +119,7 @@ export default async function CarDetails({
           {/* CAR DETAILS */}
           <div className="space-y-8">
             <div>
-              <h1 className="text-4xl md:text-6xl font-black text-gray-900 leading-tight">
+              <h1 className="text-2xl md:text-3xl font-black text-gray-900 leading-tight">
                 {car.year} {car.make} {car.model}
               </h1>
               <p className="text-2xl font-semibold text-gray-600 mt-3 flex items-center gap-3">
@@ -128,7 +128,7 @@ export default async function CarDetails({
             </div>
 
             <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white p-10 rounded-3xl shadow-2xl text-center">
-              <p className="text-6xl md:text-8xl font-black">
+              <p className="text-3xl md:text-2xl font-black">
                 ₦{priceInMillions}M
               </p>
               <p className="text-xl md:text-2xl font-bold mt-4">
@@ -205,7 +205,7 @@ export default async function CarDetails({
       {/* DESCRIPTION */}
       {car.description && (
         <section className="container mx-auto px-4 md:px-6 py-16 bg-white rounded-3xl shadow-xl">
-          <h2 className="text-4xl font-black mb-6">Description</h2>
+          <h2 className="text-2xl font-black mb-6">Description</h2>
           <p className="text-xl text-gray-700 whitespace-pre-line leading-relaxed">
             {car.description}
           </p>

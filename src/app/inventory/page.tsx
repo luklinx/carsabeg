@@ -28,7 +28,7 @@ function LoadingSkeleton() {
         </div>
 
         {/* Title */}
-        <h1 className="text-7xl md:text-3xl font-black text-green-600 mb-8 leading-none">
+        <h1 className="text-2xl md:text-3xl font-black text-green-600 mb-8 leading-none">
           LOADING FRESH CARS
         </h1>
         <p className="text-3xl md:text-3xl font-black text-gray-700 mb-12">

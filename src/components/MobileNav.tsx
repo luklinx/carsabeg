@@ -85,7 +85,7 @@ export default function MobileNav() {
                 href="https://wa.me/23480022772234"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-12 flex items-center gap-6 bg-green-600 hover:bg-green-700 text-white px-20 py-10 rounded-full font-black text-4xl shadow-3xl transform hover:scale-110 transition-all duration-300"
+                className="mt-12 flex items-center gap-6 bg-green-600 hover:bg-green-700 text-white px-20 py-10 rounded-full font-black text-2xl shadow-3xl transform hover:scale-110 transition-all duration-300"
               >
                 <MessageCircle size={48} className="animate-bounce" />
                 CHAT NOW

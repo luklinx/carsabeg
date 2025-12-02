@@ -19,12 +19,12 @@ export default function Home() {
         </div>
         <div className="relative z-10 max-w-7xl mx-auto text-center">
           {/* MAIN HEADLINE — SHORT, LOUD, PROUD */}
-          <h1 className="text-6xl md:text-8xl lg:text-3xl font-black text-white drop-shadow-2xl leading-tight">
+          <h1 className="text-3xl md:text-2xl lg:text-3xl font-black text-white drop-shadow-2xl leading-tight">
             FIND YOUR <span className="text-yellow-400">DREAM CAR</span>
           </h1>
 
           {/* SUBHEAD — MINIMAL, POWERFUL */}
-          <p className="mt-6 text-2xl md:text-4xl font-black text-green-100">
+          <p className="mt-6 text-2xl md:text-2xl font-black text-green-100">
             Tokunbo • Nigerian Used • Brand New
           </p>
 

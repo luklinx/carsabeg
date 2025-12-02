@@ -18,7 +18,7 @@ export default function Top10TokunboUnder10M() {
           <p className="text-green-600 font-black text-lg mb-4 tracking-wider">
             UPDATED — 27 NOVEMBER 2025
           </p>
-          <h1 className="text-4xl md:text-6xl font-black text-gray-900 leading-tight mb-6">
+          <h1 className="text-2xl md:text-3xl font-black text-gray-900 leading-tight mb-6">
             Top 10 Tokunbo Cars Under ₦10 Million in Nigeria
             <br className="hidden md:block" />
             <span className="text-green-600">(November 2025 Live Prices)</span>
@@ -144,7 +144,7 @@ export default function Top10TokunboUnder10M() {
 
         {/* Bonus Section */}
         <section className="bg-green-50 rounded-3xl p-10 md:p-16 mb-16">
-          <h2 className="text-4xl md:text-3xl font-black text-center mb-10">
+          <h2 className="text-2xl md:text-3xl font-black text-center mb-10">
             Hidden Gems Under ₦10M (Bonus)
           </h2>
           <div className="grid md:grid-cols-3 gap-8 text-center">
@@ -167,7 +167,7 @@ export default function Top10TokunboUnder10M() {
 
         {/* Pro Tips */}
         <section className="text-center mb-20">
-          <h2 className="text-4xl md:text-3xl font-black mb-10">
+          <h2 className="text-2xl md:text-3xl font-black mb-10">
             Pro Tips Before You Pay
           </h2>
           <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
@@ -190,7 +190,7 @@ export default function Top10TokunboUnder10M() {
         <div className="text-center">
           <Link
             href="/"
-            className="inline-block bg-green-600 hover:bg-green-700 text-white font-black text-3xl md:text-4xl px-16 py-10 rounded-full shadow-2xl transition transform hover:scale-105"
+            className="inline-block bg-green-600 hover:bg-green-700 text-white font-black text-3xl md:text-2xl px-16 py-10 rounded-full shadow-2xl transition transform hover:scale-105"
           >
             SEE ALL TOKUNBO CARS UNDER ₦10M RIGHT NOW
           </Link>

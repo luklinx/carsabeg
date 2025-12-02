@@ -157,7 +157,7 @@ export default function InventoryFilters({ initialCars }: Props) {
         id="results"
       >
         <div className="container mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-7xl font-black text-gray-900">
+          <h2 className="text-3xl md:text-2xl font-black text-gray-900">
             {filteredCars.length} {filteredCars.length === 1 ? "Car" : "Cars"}{" "}
             Found
           </h2>
@@ -174,7 +174,7 @@ export default function InventoryFilters({ initialCars }: Props) {
             <CarGrid cars={filteredCars} />
           ) : (
             <div className="text-center py-32 bg-gray-50 rounded-3xl">
-              <div className="text-6xl font-black text-gray-400 mb-8">
+              <div className="text-3xl font-black text-gray-400 mb-8">
                 No cars found
               </div>
               <p className="text-2xl text-gray-600 mb-10">

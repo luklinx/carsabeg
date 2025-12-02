@@ -63,7 +63,7 @@ export default function RootLayout({
             {/* Logo */}
             <Link
               href="/"
-              className="text-3xl md:text-4xl font-black tracking-tight"
+              className="text-3xl md:text-2xl font-black tracking-tight"
             >
               CARS <span className="text-green-600">ABEG</span>
             </Link>

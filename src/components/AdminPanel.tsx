@@ -130,7 +130,7 @@ export default function AdminPanel() {
       <div className="bg-white border-b border-gray-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-6 py-6 flex justify-between items-center">
           <div>
-            <h1 className="text-4xl font-black text-green-600">
+            <h1 className="text-2xl font-black text-green-600">
               CARS ABEG ADMIN
             </h1>
             <p className="text-gray-600 mt-1">
@@ -152,31 +152,31 @@ export default function AdminPanel() {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
           <div className="bg-white p-6 rounded-2xl shadow text-center">
             <p className="text-gray-600">Total Cars</p>
-            <p className="text-4xl font-black text-gray-900 mt-2">
+            <p className="text-2xl font-black text-gray-900 mt-2">
               {cars.length}
             </p>
           </div>
           <div className="bg-orange-50 p-6 rounded-2xl shadow text-center border border-orange-200">
             <p className="text-orange-700">Pending</p>
-            <p className="text-4xl font-black text-orange-600 mt-2">
+            <p className="text-2xl font-black text-orange-600 mt-2">
               {pendingCars.length}
             </p>
           </div>
           <div className="bg-green-50 p-6 rounded-2xl shadow text-center border border-green-200">
             <p className="text-green-700">Live</p>
-            <p className="text-4xl font-black text-green-600 mt-2">
+            <p className="text-2xl font-black text-green-600 mt-2">
               {approvedCars.length}
             </p>
           </div>
           <div className="bg-gradient-to-r from-yellow-50 to-orange-50 p-6 rounded-2xl shadow text-center border border-yellow-300">
             <p className="text-yellow-700">Premium</p>
-            <p className="text-4xl font-black text-yellow-600 mt-2">
+            <p className="text-2xl font-black text-yellow-600 mt-2">
               {paidCars.length}
             </p>
           </div>
           <div className="bg-purple-50 p-6 rounded-2xl shadow text-center border border-purple-200">
             <p className="text-purple-700">Revenue</p>
-            <p className="text-4xl font-black text-purple-600 mt-2">
+            <p className="text-2xl font-black text-purple-600 mt-2">
               ₦{totalRevenue.toLocaleString()}
             </p>
           </div>

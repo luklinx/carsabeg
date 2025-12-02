@@ -132,10 +132,10 @@ export default function FeaturedSection({ initialCars }: Props) {
             PREMIUM LISTINGS — SELLING FAST
             <TrendingUp className="text-yellow-300" size={40} />
           </div>
-          <h2 className="text-3xl md:text-8xl font-black mb-6 drop-shadow-2xl">
+          <h2 className="text-3xl md:text-2xl font-black mb-6 drop-shadow-2xl">
             {featuredCars.length} Hot Deals Right Now
           </h2>
-          <p className="text-2xl md:text-4xl font-bold max-w-4xl mx-auto opacity-95">
+          <p className="text-2xl md:text-2xl font-bold max-w-4xl mx-auto opacity-95">
             These cars move in days • Verified sellers • Direct contact
           </p>
         </div>
@@ -167,7 +167,7 @@ export default function FeaturedSection({ initialCars }: Props) {
       <section className="py-20 md:py-28 bg-gradient-to-b from-green-50 to-white">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-6xl md:text-3xl font-black text-green-600 mb-6">
+            <h2 className="text-3xl md:text-3xl font-black text-green-600 mb-6">
               FOREIGN USED
             </h2>
             <p className="text-3xl md:text-3xl font-black text-gray-800">
@@ -196,7 +196,7 @@ export default function FeaturedSection({ initialCars }: Props) {
       <section className="py-20 md:py-28 bg-gradient-to-b from-gray-100 to-gray-50">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-6xl md:text-3xl font-black text-gray-900 mb-6">
+            <h2 className="text-3xl md:text-3xl font-black text-gray-900 mb-6">
               NIGERIAN USED
             </h2>
             <p className="text-3xl md:text-3xl font-black text-gray-700">

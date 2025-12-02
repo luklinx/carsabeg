@@ -6,7 +6,7 @@ export default function NotFound() {
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-6">
       <div className="text-center">
         <h1 className="text-3xl font-black text-green-600 mb-8">404</h1>
-        <p className="text-4xl font-bold text-gray-800 mb-4">
+        <p className="text-2xl font-bold text-gray-800 mb-4">
           Oops! This car has been sold or no more in existence
         </p>
         <p className="text-2xl text-gray-600 mb-12">

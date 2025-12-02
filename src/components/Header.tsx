@@ -105,7 +105,7 @@ export default function Header() {
                 href="https://wa.me/23480022772234"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block w-full text-center py-8 bg-green-600 text-white rounded-3xl font-black text-4xl shadow-2xl transform hover:scale-105 transition-all duration-300 mt-10"
+                className="block w-full text-center py-8 bg-green-600 text-white rounded-3xl font-black text-2xl shadow-2xl transform hover:scale-105 transition-all duration-300 mt-10"
               >
                 Chat on WhatsApp
               </a>

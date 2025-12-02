@@ -19,7 +19,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16 text-center md:text-left">
           {/* BRAND — The Golden Lion */}
           <div className="order-1">
-            <h2 className="text-6xl md:text-7xl font-black text-green-600 leading-none tracking-tighter">
+            <h2 className="text-3xl md:text-2xl font-black text-green-600 leading-none tracking-tighter">
               CARS ABEG
             </h2>
             <p className="text-2xl font-black text-amber-900 mt-4">

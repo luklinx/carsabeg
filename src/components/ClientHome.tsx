@@ -70,7 +70,7 @@ export default function ClientHome() {
             size={120}
             className="mx-auto animate-pulse text-yellow-400 mb-8"
           />
-          <h1 className="text-7xl md:text-3xl font-black animate-pulse">
+          <h1 className="text-2xl md:text-3xl font-black animate-pulse">
             CARS ABEG
           </h1>
           <p className="text-3xl md:text-3xl font-bold mt-6">
@@ -105,7 +105,7 @@ export default function ClientHome() {
           <div className="flex justify-between items-center mb-10">
             <div className="flex items-center gap-5">
               <Icon size={48} className="text-green-600 hidden md:block" />
-              <h2 className="text-3xl md:text-7xl font-black text-gray-900">
+              <h2 className="text-3xl md:text-2xl font-black text-gray-900">
                 {title}
               </h2>
             </div>
@@ -165,12 +165,12 @@ export default function ClientHome() {
         <section className="relative overflow-hidden bg-gradient-to-br from-orange-600 via-red-600 to-pink-700 py-20 text-white">
           <div className="absolute inset-0 bg-black/50" />
           <div className="relative z-10 text-center px-6">
-            <div className="inline-flex items-center gap-6 bg-black/70 backdrop-blur-xl px-10 py-6 rounded-full text-4xl font-black mb-10 shadow-3xl animate-pulse border-4 border-yellow-400">
+            <div className="inline-flex items-center gap-6 bg-black/70 backdrop-blur-xl px-10 py-6 rounded-full text-2xl font-black mb-10 shadow-3xl animate-pulse border-4 border-yellow-400">
               <Flame className="text-yellow-400" size={64} />
               PREMIUM — SELLING IN HOURS
               <TrendingUp className="text-yellow-300" size={64} />
             </div>
-            <h1 className="text-6xl md:text-3xl font-black mb-8">
+            <h1 className="text-3xl md:text-3xl font-black mb-8">
               {paidCars.length} HOT DEALS LIVE
             </h1>
           </div>
@@ -248,7 +248,7 @@ export default function ClientHome() {
       {/* FINAL CTA */}
       <section className="py-32 bg-gradient-to-br from-green-600 to-emerald-700 text-white text-center">
         <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-6xl md:text-3xl font-black mb-12">
+          <h2 className="text-3xl md:text-3xl font-black mb-12">
             CAN’T FIND YOUR DREAM CAR?
           </h2>
           <p className="text-3xl md:text-3xl font-bold mb-16 max-w-4xl mx-auto">
@@ -257,14 +257,14 @@ export default function ClientHome() {
           <div className="flex flex-col md:flex-row gap-10 justify-center">
             <a
               href="https://wa.me/2348022772234?text=Hi%20CarsAbeg!%20Help%20me%20find%20my%20dream%20car"
-              className="bg-yellow-400 hover:bg-yellow-300 text-black px-20 py-12 rounded-full font-black text-4xl md:text-6xl shadow-3xl transform hover:scale-110 transition flex items-center gap-6 justify-center"
+              className="bg-yellow-400 hover:bg-yellow-300 text-black px-20 py-12 rounded-full font-black text-2xl md:text-3xl shadow-3xl transform hover:scale-110 transition flex items-center gap-6 justify-center"
             >
               <MessageCircle size={64} className="animate-bounce" />
               REQUEST ANY CAR
             </a>
             <Link
               href="/sell"
-              className="bg-white text-green-600 px-20 py-12 rounded-full font-black text-4xl md:text-6xl shadow-3xl hover:bg-gray-100 transform hover:scale-110 transition"
+              className="bg-white text-green-600 px-20 py-12 rounded-full font-black text-2xl md:text-3xl shadow-3xl hover:bg-gray-100 transform hover:scale-110 transition"
             >
               SELL YOUR CAR FREE
             </Link>
