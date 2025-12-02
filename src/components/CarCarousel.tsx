@@ -1,5 +1,6 @@
 // src/components/CarCarousel.tsx
 "use client";
+
 import { Car } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,11 +10,19 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 export default function CarCarousel({ cars }: { cars: Car[] }) {
   const [index, setIndex] = useState(0);
 
-  // FILTER VALID CARS FIRST — BEFORE ANY HOOKS
-  const validCars =
-    cars?.filter((car) => car?.id && car.images?.length > 0) || [];
+  // FILTER ONLY CARS WITH VALID ID + IMAGE — THIS IS THE FINAL DEFENSE
+  const validCars = (cars || []).filter(
+    (car) => car?.id && car.images && car.images.length > 0
+  );
 
-  // AUTO-PLAY — MUST BE AFTER ALL STATE, BEFORE ANY RETURN
+  // DEBUG — Remove when happy
+  console.log(
+    "Carousel valid cars:",
+    validCars.length,
+    validCars.map((c) => ({ id: c.id, make: c.make }))
+  );
+
+  // AUTO-PLAY
   useEffect(() => {
     if (validCars.length <= 1) return;
 
@@ -22,14 +31,18 @@ export default function CarCarousel({ cars }: { cars: Car[] }) {
     }, 6000);
 
     return () => clearInterval(timer);
-  }, [validCars.length]); // ← DEPENDS ON validCars, NOT raw cars
+  }, [validCars.length]);
 
-  // EARLY RETURN ONLY AFTER ALL HOOKS
+  // NO VALID CARS → SHOW EMPTY STATE
   if (validCars.length === 0) {
     return (
-      <div className="text-center py-32 bg-gradient-to-b from-gray-900 to-black rounded-3xl text-white">
-        <p className="text-4xl md:text-6xl font-black">No Premium Cars Yet</p>
-        <p className="text-xl mt-6 opacity-80">New beasts dropping soon...</p>
+      <div className="text-center py-32 bg-gradient-to-br from-gray-900 via-black to-gray-900 rounded-3xl text-white shadow-2xl">
+        <p className="text-5xl md:text-7xl font-black mb-6">
+          No Premium Cars Yet
+        </p>
+        <p className="text-2xl opacity-80">
+          Fresh tokunbo beasts dropping soon...
+        </p>
       </div>
     );
   }
@@ -37,24 +50,37 @@ export default function CarCarousel({ cars }: { cars: Car[] }) {
   const prevSlide = () =>
     setIndex((prev) => (prev - 1 + validCars.length) % validCars.length);
   const nextSlide = () => setIndex((prev) => (prev + 1) % validCars.length);
+
   const car = validCars[index];
+
+  // FINAL SAFETY — THIS SHOULD NEVER HAPPEN
+  if (!car?.id) {
+    return (
+      <div className="bg-red-900 text-white p-20 rounded-3xl text-center text-6xl font-black">
+        CAROUSEL ERROR: MISSING ID
+      </div>
+    );
+  }
 
   return (
     <div className="relative group">
-      {/* Main Slide */}
-      <div className="overflow-hidden rounded-3xl shadow-2xl bg-gray-900">
+      {/* MAIN SLIDE */}
+      <div className="overflow-hidden rounded-3xl shadow-2xl">
         <Link href={`/car/${car.id}`} className="block">
-          <div className="relative aspect-[4/3] md:aspect-[16/9] bg-gray-800">
+          <div className="relative aspect-[4/3] md:aspect-[16/9] bg-gradient-to-b from-gray-900 to-black">
             <Image
               src={car.images[0]}
               alt={`${car.year} ${car.make} ${car.model}`}
               fill
               priority
-              className="object-cover transition-transform duration-1000 group-hover:scale-110"
+              className="object-cover transition-transform duration-1000 group-hover:scale-105 group-hover:scale-110"
               sizes="100vw"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
 
+            {/* DARK OVERLAY */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
+
+            {/* TEXT CONTENT */}
             <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12 text-white">
               <h3 className="text-4xl md:text-6xl lg:text-7xl font-black drop-shadow-2xl leading-tight">
                 {car.year} {car.make} {car.model}
@@ -68,6 +94,7 @@ export default function CarCarousel({ cars }: { cars: Car[] }) {
               </p>
             </div>
 
+            {/* PREMIUM BADGE */}
             {car.featured_paid && (
               <div className="absolute top-8 right-8 bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-8 py-4 rounded-full font-black text-2xl shadow-2xl animate-pulse">
                 PREMIUM
@@ -77,44 +104,45 @@ export default function CarCarousel({ cars }: { cars: Car[] }) {
         </Link>
       </div>
 
-      {/* Arrows */}
+      {/* NAVIGATION ARROWS */}
       {validCars.length > 1 && (
         <>
           <button
             onClick={prevSlide}
-            className="absolute left-6 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-md hover:bg-white/40 text-white p-4 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300"
+            className="absolute left-6 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-md hover:bg-white/40 text-white p-5 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300"
           >
-            <ChevronLeft size={40} />
+            <ChevronLeft size={48} />
           </button>
           <button
             onClick={nextSlide}
-            className="absolute right-6 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-md hover:bg-white/40 text-white p-4 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300"
+            className="absolute right-6 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-md hover:bg-white/40 text-white p-5 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300"
           >
-            <ChevronRight size={40} />
+            <ChevronRight size={48} />
           </button>
         </>
       )}
 
-      {/* Dots */}
+      {/* DOTS INDICATOR */}
       {validCars.length > 1 && (
-        <div className="flex justify-center gap-3 mt-10">
+        <div className="flex justify-center gap-4 mt-12">
           {validCars.map((_, i) => (
             <button
               key={i}
               onClick={() => setIndex(i)}
-              className={`transition-all duration-300 rounded-full ${
+              className={`transition-all duration-500 rounded-full ${
                 i === index
-                  ? "bg-green-500 w-16 h-4 shadow-lg"
-                  : "bg-white/50 w-4 h-4 hover:bg-white/80"
+                  ? "bg-green-500 w-20 h-4 shadow-2xl shadow-green-500/50"
+                  : "bg-white/40 w-4 h-4 hover:bg-white/70"
               }`}
+              aria-label={`Go to slide ${i + 1}`}
             />
           ))}
         </div>
       )}
 
-      {/* Counter */}
+      {/* COUNTER */}
       {validCars.length > 1 && (
-        <div className="absolute top-8 left-8 bg-black/70 text-white px-5 py-3 rounded-full font-bold text-lg backdrop-blur-sm">
+        <div className="absolute top-8 left-8 bg-black/80 backdrop-blur-sm text-white px-6 py-3 rounded-full font-black text-xl">
           {index + 1} / {validCars.length}
         </div>
       )}

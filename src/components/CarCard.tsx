@@ -1,5 +1,6 @@
 // src/components/CarCard.tsx
 "use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { Car } from "@/types";
@@ -9,19 +10,23 @@ interface CarCardProps {
 }
 
 export default function CarCard({ car }: CarCardProps) {
-  // DEBUG — REMOVE LATER
+  // DEBUG — You can remove later when everything works
   console.log("CarCard received →", {
     id: car.id,
     make: car.make,
     model: car.model,
-    images: car.images,
+    images: car.images?.length,
     phone: car.dealer_phone,
   });
 
-  // SAFETY FIRST — NEVER TRUST DATA
+  // SAFETY FIRST — BLOCK CARS WITH NO ID (THE REAL KILLER)
   if (!car?.id) {
     console.error("CAR HAS NO ID → WILL CAUSE 404", car);
-    return <div className="text-red-600 font-bold p-10">ERROR: NO CAR ID</div>;
+    return (
+      <div className="bg-red-900 text-white p-10 rounded-2xl text-center font-black text-2xl">
+        ERROR: NO CAR ID
+      </div>
+    );
   }
 
   // Fix Nigerian phone: 080x → 23480x
@@ -37,7 +42,7 @@ export default function CarCard({ car }: CarCardProps) {
 
   return (
     <div className="bg-white rounded-2xl shadow-lg overflow-hidden group hover:shadow-2xl transition-all duration-300">
-      {/* ONLY LINK IF ID EXISTS */}
+      {/* ONLY CREATE LINK IF car.id IS VALID — THIS IS THE FINAL FIX */}
       <Link href={`/car/${car.id}`} className="block">
         <div className="relative aspect-[4/3] bg-gray-100">
           <Image
@@ -46,6 +51,7 @@ export default function CarCard({ car }: CarCardProps) {
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-500"
             sizes="(max-width: 768px) 100vw, 33vw"
+            priority={false}
           />
           {car.featured_paid && (
             <div className="absolute top-4 left-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-4 py-2 rounded-full font-black text-sm shadow-lg">
@@ -69,9 +75,9 @@ export default function CarCard({ car }: CarCardProps) {
         </div>
       </Link>
 
-      {/* WHATSAPP BUTTON — ONLY IF PHONE EXISTS */}
-      {whatsappUrl ? (
-        <div className="px-5 pb-5">
+      {/* WHATSAPP BUTTON */}
+      <div className="px-5 pb-5">
+        {whatsappUrl ? (
           <a
             href={whatsappUrl}
             target="_blank"
@@ -81,17 +87,15 @@ export default function CarCard({ car }: CarCardProps) {
           >
             Chat on WhatsApp
           </a>
-        </div>
-      ) : (
-        <div className="px-5 pb-5">
+        ) : (
           <button
             disabled
-            className="block w-full text-center bg-gray-400 text-white py-4 rounded-xl font-black text-lg opacity-60"
+            className="block w-full text-center bg-gray-400 text-white py-4 rounded-xl font-black text-lg opacity-60 cursor-not-allowed"
           >
-            No Phone
+            No Phone Number
           </button>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
