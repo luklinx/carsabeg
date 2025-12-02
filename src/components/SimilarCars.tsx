@@ -1,46 +1,86 @@
 // src/components/SimilarCars.tsx
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import CarCard from "./CarCard";
+import { supabaseBrowser } from "@/lib/supabaseClient";
 import { Car } from "@/types";
 import { ArrowRight, Zap } from "lucide-react";
 
 interface Props {
   currentCarId: string;
-  cars: Car[];
 }
 
-export default function SimilarCars({ currentCarId, cars }: Props) {
-  // Find current car to get make/model/year for smarter matching
-  const currentCar = cars.find((c) => c.id === currentCarId);
-  if (!currentCar) return null;
+export default function SimilarCars({ currentCarId }: Props) {
+  const [currentCar, setCurrentCar] = useState<Car | null>(null);
+  const [similarCars, setSimilarCars] = useState<Car[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Smart similar cars: same make → then similar price → then condition
-  const similar = cars
-    .filter((car) => {
-      if (car.id === currentCarId) return false;
-      const sameMake = car.make.toLowerCase() === currentCar.make.toLowerCase();
-      const similarPrice = Math.abs(car.price - currentCar.price) <= 5_000_000; // within ~₦5M
-      const sameCondition = car.condition === currentCar.condition;
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        // Fetch current car first
+        const { data: current } = await supabaseBrowser
+          .from("cars")
+          .select("*")
+          .eq("id", currentCarId)
+          .eq("approved", true)
+          .single();
 
-      return sameMake || (similarPrice && sameCondition);
-    })
-    .sort((a, b) => {
-      // Prioritize same make
-      if (
-        a.make.toLowerCase() === currentCar.make.toLowerCase() &&
-        b.make.toLowerCase() !== currentCar.make.toLowerCase()
-      )
-        return -1;
-      if (
-        b.make.toLowerCase() === currentCar.make.toLowerCase() &&
-        a.make.toLowerCase() !== currentCar.make.toLowerCase()
-      )
-        return 1;
-      return 0;
-    })
-    .slice(0, 6); // Show more on mobile
+        if (!current) {
+          setLoading(false);
+          return;
+        }
 
-  if (similar.length === 0) return null;
+        setCurrentCar(current);
+
+        // Now fetch similar cars
+        const { data: allCars } = await supabaseBrowser
+          .from("cars")
+          .select("*")
+          .eq("approved", true)
+          .neq("id", currentCarId)
+          .limit(50); // Get enough to filter smartly
+
+        if (!allCars || allCars.length === 0) {
+          setLoading(false);
+          return;
+        }
+
+        // YOUR GENIUS FILTERING LOGIC — KEPT 100%
+        const similar = allCars
+          .filter((car) => {
+            const sameMake =
+              car.make.toLowerCase() === current.make.toLowerCase();
+            const similarPrice =
+              Math.abs(car.price - current.price) <= 5_000_000;
+            const sameCondition = car.condition === current.condition;
+            return sameMake || (similarPrice && sameCondition);
+          })
+          .sort((a, b) => {
+            const aSameMake =
+              a.make.toLowerCase() === current.make.toLowerCase();
+            const bSameMake =
+              b.make.toLowerCase() === current.make.toLowerCase();
+            if (aSameMake && !bSameMake) return -1;
+            if (!aSameMake && bSameMake) return 1;
+            return 0;
+          })
+          .slice(0, 6);
+
+        setSimilarCars(similar);
+      } catch (err) {
+        console.error("Similar cars fetch failed:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchData();
+  }, [currentCarId]);
+
+  if (loading || !currentCar || similarCars.length === 0) return null;
 
   return (
     <section className="mt-20 mb-10 px-4 md:px-6">
@@ -54,9 +94,9 @@ export default function SimilarCars({ currentCarId, cars }: Props) {
         </p>
       </div>
 
-      {/* MOBILE: Vertical Scroll Carousel */}
+      {/* MOBILE: Vertical Scroll */}
       <div className="md:hidden space-y-8">
-        {similar.map((car, index) => (
+        {similarCars.map((car, index) => (
           <div
             key={car.id}
             className="animate-in slide-in-from-bottom"
@@ -66,7 +106,6 @@ export default function SimilarCars({ currentCarId, cars }: Props) {
             {index === 1 && (
               <div className="my-8 text-center">
                 <span className="inline-flex items-center gap-2 bg-green-100 text-green-700 px-6 py-3 rounded-full font-black text-lg">
-                  <Zap size={24} className="animate-pulse" />
                   Hot Deals Like This One
                 </span>
               </div>
@@ -75,9 +114,9 @@ export default function SimilarCars({ currentCarId, cars }: Props) {
         ))}
       </div>
 
-      {/* DESKTOP: 3-Column Grid */}
+      {/* DESKTOP: Grid */}
       <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {similar.map((car) => (
+        {similarCars.map((car) => (
           <div
             key={car.id}
             className="transform transition-all duration-500 hover:-translate-y-6 hover:shadow-2xl"
@@ -87,7 +126,7 @@ export default function SimilarCars({ currentCarId, cars }: Props) {
         ))}
       </div>
 
-      {/* CTA Footer */}
+      {/* CTA */}
       <div className="text-center mt-16">
         <Link
           href="/inventory"
@@ -96,9 +135,8 @@ export default function SimilarCars({ currentCarId, cars }: Props) {
           View All {currentCar.make} Cars
           <ArrowRight size={36} />
         </Link>
-
         <p className="text-gray-600 font-bold text-lg mt-6">
-          {similar.length}+ similar cars available right now
+          {similarCars.length}+ similar cars available right now
         </p>
       </div>
     </section>

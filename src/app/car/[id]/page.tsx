@@ -70,7 +70,9 @@ export default function CarDetails({ params }: { params: { id: string } }) {
           <p className="text-5xl md:text-7xl font-black text-green-600 mt-10 animate-pulse">
             LOADING THIS RIDE...
           </p>
-          <p className="text-2xl text-gray-700 mt-6 font-bold">Fresh from Lagos</p>
+          <p className="text-2xl text-gray-700 mt-6 font-bold">
+            Fresh from Lagos
+          </p>
         </div>
       </div>
     );
@@ -79,7 +81,8 @@ export default function CarDetails({ params }: { params: { id: string } }) {
   // NOT FOUND
   if (!car) notFound();
 
-  const cleanPhone = car.dealer_phone?.replace(/\D/g, "").replace(/^0/, "") || "8022772234";
+  const cleanPhone =
+    car.dealer_phone?.replace(/\D/g, "").replace(/^0/, "") || "8022772234";
   const whatsappUrl = `https://wa.me/234${cleanPhone}`;
   const priceInMillions = (car.price / 1_000_000).toFixed(1);
   const images = car.images?.length ? car.images : ["/placeholder.jpg"];
@@ -89,7 +92,10 @@ export default function CarDetails({ params }: { params: { id: string } }) {
       <div className="min-h-screen bg-gradient-to-b from-green-50 via-white to-gray-50 pb-24">
         {/* BACK BUTTON */}
         <div className="container mx-auto px-4 pt-8 md:px-6">
-          <Link href="/inventory" className="inline-flex items-center gap-3 text-green-600 font-bold text-lg hover:text-green-700">
+          <Link
+            href="/inventory"
+            className="inline-flex items-center gap-3 text-green-600 font-bold text-lg hover:text-green-700"
+          >
             <ArrowLeft size={28} /> Back to Inventory
           </Link>
         </div>
@@ -109,7 +115,9 @@ export default function CarDetails({ params }: { params: { id: string } }) {
                   sizes="(max-width: 1024px) 100vw, 50vw"
                 />
                 <div className="absolute top-4 left-4 bg-green-600 text-white px-6 py-3 rounded-full font-black text-xl shadow-xl">
-                  {car.condition === "Foreign Used" ? "TOKUNBO" : "NIGERIAN USED"}
+                  {car.condition === "Foreign Used"
+                    ? "TOKUNBO"
+                    : "NIGERIAN USED"}
                 </div>
                 {car.featured && (
                   <div className="absolute top-4 right-4 bg-yellow-500 text-black px-5 py-3 rounded-full font-black flex items-center gap-2">
@@ -126,7 +134,9 @@ export default function CarDetails({ params }: { params: { id: string } }) {
                       key={i}
                       onClick={() => setImageIndex(i)}
                       className={`relative aspect-square rounded-xl overflow-hidden border-4 transition-all ${
-                        i === imageIndex ? "border-green-600 shadow-xl scale-105" : "border-gray-300"
+                        i === imageIndex
+                          ? "border-green-600 shadow-xl scale-105"
+                          : "border-gray-300"
                       }`}
                     >
                       <Image src={img} alt="" fill className="object-cover" />
@@ -148,8 +158,12 @@ export default function CarDetails({ params }: { params: { id: string } }) {
               </div>
 
               <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white p-10 rounded-3xl shadow-2xl text-center">
-                <p className="text-6xl md:text-8xl font-black">₦{priceInMillions}M</p>
-                <p className="text-xl md:text-2xl font-bold mt-4">Final Price • No Hidden Fees</p>
+                <p className="text-6xl md:text-8xl font-black">
+                  ₦{priceInMillions}M
+                </p>
+                <p className="text-xl md:text-2xl font-bold mt-4">
+                  Final Price • No Hidden Fees
+                </p>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
@@ -158,7 +172,9 @@ export default function CarDetails({ params }: { params: { id: string } }) {
                     <Gauge className="text-green-600" size={40} />
                     <div>
                       <p className="text-gray-600 font-semibold">Mileage</p>
-                      <p className="text-xl font-bold">{car.mileage.toLocaleString()} km</p>
+                      <p className="text-xl font-bold">
+                        {car.mileage.toLocaleString()} km
+                      </p>
                     </div>
                   </div>
                 )}
@@ -166,7 +182,9 @@ export default function CarDetails({ params }: { params: { id: string } }) {
                   <div className="bg-gray-100 p-6 rounded-2xl flex items-center gap-4">
                     <Settings className="text-green-600" size={40} />
                     <div>
-                      <p className="text-gray-600 font-semibold">Transmission</p>
+                      <p className="text-gray-600 font-semibold">
+                        Transmission
+                      </p>
                       <p className="text-xl font-bold">{car.transmission}</p>
                     </div>
                   </div>
@@ -202,9 +220,15 @@ export default function CarDetails({ params }: { params: { id: string } }) {
               </div>
 
               <div className="flex flex-wrap justify-center gap-6 text-green-700 font-bold text-lg">
-                <div className="flex items-center gap-2"><CheckCircle size={32} /> Real Photos</div>
-                <div className="flex items-center gap-2"><Shield size={32} /> Verified</div>
-                <div className="flex items-center gap-2"><MessageCircle size={32} /> Direct Chat Now</div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle size={32} /> Real Photos
+                </div>
+                <div className="flex items-center gap-2">
+                  <Shield size={32} /> Verified
+                </div>
+                <div className="flex items-center gap-2">
+                  <MessageCircle size={32} /> Direct Chat Now
+                </div>
               </div>
             </div>
           </div>
@@ -214,7 +238,9 @@ export default function CarDetails({ params }: { params: { id: string } }) {
         {car.description && (
           <section className="container mx-auto px-4 md:px-6 py-16 bg-white">
             <h2 className="text-4xl font-black mb-6">Description</h2>
-            <p className="text-xl text-gray-700 whitespace-pre-line">{car.description}</p>
+            <p className="text-xl text-gray-700 whitespace-pre-line">
+              {car.description}
+            </p>
           </section>
         )}
 
