@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { supabaseBrowser } from "@/lib/supabaseClient";
-import { Car } from "@/types"; // ← OFFICIAL GLOBAL TYPE — NO MORE DUPLICATES
+import { Car } from "@/types";
 import {
   MessageCircle,
   Phone,
@@ -18,40 +18,48 @@ import {
   Zap,
   ArrowLeft,
   CheckCircle,
+  Car as CarIcon,
 } from "lucide-react";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import SimilarCars from "@/components/SimilarCars";
 
 export default function CarDetails({ params }: { params: { id: string } }) {
   const { id } = params;
-
-  // Kill bad IDs instantly
-  if (!id || id === "undefined" || id.trim() === "") notFound();
-
   const [car, setCar] = useState<Car | null>(null);
   const [loading, setLoading] = useState(true);
   const [imageIndex, setImageIndex] = useState(0);
 
+  // Instant kill bad IDs
+  if (!id || id === "undefined" || id.trim() === "") notFound();
+
   useEffect(() => {
     async function fetchCar() {
-      const { data, error } = await supabaseBrowser
-        .from("cars")
-        .select("*")
-        .eq("id", id)
-        .eq("approved", true)
-        .single();
+      try {
+        // THE FIX: Use maybeSingle() instead of single()
+        const { data, error } = await supabaseBrowser
+          .from("cars")
+          .select("*")
+          .eq("id", id)
+          .eq("approved", true)
+          .maybeSingle(); // ← THIS IS THE HERO
 
-      if (error || !data) {
-        setCar(null);
-      } else {
+        if (error && error.code !== "PGRST116") {
+          console.error("Supabase error:", error);
+        }
+
         setCar(data);
+      } catch (err) {
+        console.error("Fetch failed:", err);
+        setCar(null);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     }
+
     fetchCar();
   }, [id]);
 
-  // LOADING STATE — Nigerian Power
+  // LOADING STATE
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-green-50 to-white flex items-center justify-center px-6">
@@ -59,207 +67,168 @@ export default function CarDetails({ params }: { params: { id: string } }) {
           <div className="w-32 h-32 mx-auto bg-green-600 rounded-full flex items-center justify-center animate-pulse shadow-2xl">
             <Zap size={64} className="text-white" />
           </div>
-          <p className="text-6xl md:text-8xl font-black text-green-600 mt-10 animate-pulse">
+          <p className="text-5xl md:text-7xl font-black text-green-600 mt-10 animate-pulse">
             LOADING THIS RIDE...
           </p>
-          <p className="text-2xl text-gray-700 mt-6 font-bold">
-            Fresh from the streets of Lagos
-          </p>
+          <p className="text-2xl text-gray-700 mt-6 font-bold">Fresh from Lagos</p>
         </div>
       </div>
     );
   }
 
-  // NOT FOUND — Clean & Proud
-  if (!car) {
-    notFound();
-  }
+  // NOT FOUND
+  if (!car) notFound();
 
-  const cleanPhone = car.dealer_phone?.replace(/\D/g, "") || "80022772234";
+  const cleanPhone = car.dealer_phone?.replace(/\D/g, "").replace(/^0/, "") || "8022772234";
   const whatsappUrl = `https://wa.me/234${cleanPhone}`;
   const priceInMillions = (car.price / 1_000_000).toFixed(1);
+  const images = car.images?.length ? car.images : ["/placeholder.jpg"];
 
   return (
     <>
-      <div className="min-h-screen bg-gradient-to-b from-green-50 via-white to-gray-50">
+      <div className="min-h-screen bg-gradient-to-b from-green-50 via-white to-gray-50 pb-24">
         {/* BACK BUTTON */}
-        <div className="container mx-auto px-6 pt-10">
-          <Link
-            href="/inventory"
-            className="inline-flex items-center gap-4 text-green-600 font-black text-2xl hover:text-green-700 transition-all hover:translate-x-2"
-          >
-            <ArrowLeft size={40} />
-            Back to All Cars
+        <div className="container mx-auto px-4 pt-8 md:px-6">
+          <Link href="/inventory" className="inline-flex items-center gap-3 text-green-600 font-bold text-lg hover:text-green-700">
+            <ArrowLeft size={28} /> Back to Inventory
           </Link>
         </div>
 
-        {/* MAIN CAR SECTION */}
-        <section className="container mx-auto px-6 py-12">
-          <div className="grid lg:grid-cols-2 gap-12">
+        {/* MAIN GRID */}
+        <section className="container mx-auto px-4 md:px-6 py-8">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
             {/* IMAGE GALLERY */}
-            <div className="space-y-6 order-1 lg:order-none">
-              <div className="relative aspect-square rounded-3xl overflow-hidden shadow-3xl bg-black">
+            <div className="space-y-4">
+              <div className="relative aspect-square rounded-3xl overflow-hidden shadow-2xl">
                 <Image
-                  src={car.images[imageIndex] || "/placeholder.jpg"}
+                  src={images[imageIndex]}
                   alt={`${car.year} ${car.make} ${car.model}`}
                   fill
                   className="object-cover"
                   priority
+                  sizes="(max-width: 1024px) 100vw, 50vw"
                 />
-                <div className="absolute top-6 left-6 bg-green-600 text-white px-8 py-4 rounded-full font-black text-2xl shadow-2xl z-10">
-                  {car.condition === "Foreign Used"
-                    ? "TOKUNBO"
-                    : "NIGERIAN USED"}
+                <div className="absolute top-4 left-4 bg-green-600 text-white px-6 py-3 rounded-full font-black text-xl shadow-xl">
+                  {car.condition === "Foreign Used" ? "TOKUNBO" : "NIGERIAN USED"}
                 </div>
+                {car.featured && (
+                  <div className="absolute top-4 right-4 bg-yellow-500 text-black px-5 py-3 rounded-full font-black flex items-center gap-2">
+                    <Zap size={20} /> FEATURED
+                  </div>
+                )}
               </div>
 
               {/* THUMBNAILS */}
-              {car.images.length > 1 && (
-                <div className="grid grid-cols-5 gap-4">
-                  {car.images.map((img, i) => (
+              {images.length > 1 && (
+                <div className="grid grid-cols-5 gap-3">
+                  {images.map((img, i) => (
                     <button
                       key={i}
                       onClick={() => setImageIndex(i)}
-                      className={`relative aspect-square rounded-2xl overflow-hidden border-4 transition-all duration-300 ${
-                        i === imageIndex
-                          ? "border-green-600 shadow-2xl scale-105"
-                          : "border-gray-300 hover:border-gray-500"
+                      className={`relative aspect-square rounded-xl overflow-hidden border-4 transition-all ${
+                        i === imageIndex ? "border-green-600 shadow-xl scale-105" : "border-gray-300"
                       }`}
                     >
-                      <Image
-                        src={img}
-                        alt={`Thumbnail ${i + 1}`}
-                        fill
-                        className="object-cover"
-                      />
+                      <Image src={img} alt="" fill className="object-cover" />
                     </button>
                   ))}
                 </div>
               )}
             </div>
 
-            {/* CAR DETAILS */}
-            <div className="space-y-12">
+            {/* DETAILS */}
+            <div className="space-y-8">
               <div>
-                <h1 className="text-6xl md:text-8xl font-black text-gray-900 leading-none">
+                <h1 className="text-4xl md:text-6xl font-black text-gray-900 leading-tight">
                   {car.year} {car.make} {car.model}
                 </h1>
-                <p className="text-3xl font-bold text-gray-600 mt-4 flex items-center gap-3">
-                  <MapPin size={36} />
-                  {car.location}
+                <p className="text-2xl font-semibold text-gray-600 mt-3 flex items-center gap-3">
+                  <MapPin size={32} /> {car.location}
                 </p>
               </div>
 
-              <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white p-12 rounded-3xl shadow-3xl text-center">
-                <p className="text-8xl md:text-9xl font-black">
-                  ₦{priceInMillions}M
-                </p>
-                <p className="text-3xl font-black opacity-90 mt-4">
-                  Final Price • No Hidden Fees
-                </p>
+              <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white p-10 rounded-3xl shadow-2xl text-center">
+                <p className="text-6xl md:text-8xl font-black">₦{priceInMillions}M</p>
+                <p className="text-xl md:text-2xl font-bold mt-4">Final Price • No Hidden Fees</p>
               </div>
 
-              {/* SPECS */}
-              <div className="grid grid-cols-2 gap-6">
-                {car.mileage && (
-                  <div className="bg-gray-100 p-8 rounded-3xl flex items-center gap-5">
-                    <Gauge size={48} className="text-green-600" />
+              <div className="grid grid-cols-2 gap-4">
+                {car.mileage > 0 && (
+                  <div className="bg-gray-100 p-6 rounded-2xl flex items-center gap-4">
+                    <Gauge className="text-green-600" size={40} />
                     <div>
-                      <p className="text-gray-600 font-bold">Mileage</p>
-                      <p className="text-2xl font-black">
-                        {car.mileage.toLocaleString()} km
-                      </p>
+                      <p className="text-gray-600 font-semibold">Mileage</p>
+                      <p className="text-xl font-bold">{car.mileage.toLocaleString()} km</p>
                     </div>
                   </div>
                 )}
                 {car.transmission && (
-                  <div className="bg-gray-100 p-8 rounded-3xl flex items-center gap-5">
-                    <Settings size={48} className="text-green-600" />
+                  <div className="bg-gray-100 p-6 rounded-2xl flex items-center gap-4">
+                    <Settings className="text-green-600" size={40} />
                     <div>
-                      <p className="text-gray-600 font-bold">Transmission</p>
-                      <p className="text-2xl font-black">{car.transmission}</p>
+                      <p className="text-gray-600 font-semibold">Transmission</p>
+                      <p className="text-xl font-bold">{car.transmission}</p>
                     </div>
                   </div>
                 )}
                 {car.fuel && (
-                  <div className="bg-gray-100 p-8 rounded-3xl flex items-center gap-5">
-                    <Fuel size={48} className="text-green-600" />
+                  <div className="bg-gray-100 p-6 rounded-2xl flex items-center gap-4">
+                    <Fuel className="text-green-600" size={40} />
                     <div>
-                      <p className="text-gray-600 font-bold">Fuel Type</p>
-                      <p className="text-2xl font-black">{car.fuel}</p>
+                      <p className="text-gray-600 font-semibold">Fuel</p>
+                      <p className="text-xl font-bold">{car.fuel}</p>
                     </div>
                   </div>
                 )}
-                <div className="bg-gray-100 p-8 rounded-3xl flex items-center gap-5">
-                  <Shield size={48} className="text-green-600" />
+                <div className="bg-gray-100 p-6 rounded-2xl flex items-center gap-4">
+                  <CarIcon className="text-green-600" size={40} />
                   <div>
-                    <p className="text-gray-600 font-bold">Status</p>
-                    <p className="text-2xl font-black">Verified & Ready</p>
+                    <p className="text-gray-600 font-semibold">Condition</p>
+                    <p className="text-xl font-bold">{car.condition}</p>
                   </div>
                 </div>
               </div>
 
-              {/* ACTION BUTTONS */}
-              <div className="space-y-6">
+              <div className="space-y-5">
                 <WhatsAppButton car={car} size="large" />
-                <a
+                <Link
                   href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block text-center bg-black hover:bg-gray-900 text-white py-10 rounded-3xl font-black text-4xl flex items-center justify-center gap-5 transition-all hover:scale-105"
+                  className="block text-center bg-black hover:bg-gray-900 text-white py-8 rounded-3xl font-black text-3xl flex items-center justify-center gap-4 transition-all hover:scale-105 shadow-xl"
                 >
-                  <Phone size={56} />
-                  Call Seller Now
-                </a>
+                  <Phone size={48} /> Call Seller
+                </Link>
               </div>
 
-              {/* TRUST BADGES */}
-              <div className="flex flex-wrap justify-center gap-8 text-green-600 font-black text-xl">
-                <div className="flex items-center gap-3">
-                  <CheckCircle size={40} />
-                  Real Photos
-                </div>
-                <div className="flex items-center gap-3">
-                  <Shield size={40} />
-                  Verified Seller
-                </div>
-                <div className="flex items-center gap-3">
-                  <MessageCircle size={40} />
-                  Direct Contact
-                </div>
+              <div className="flex flex-wrap justify-center gap-6 text-green-700 font-bold text-lg">
+                <div className="flex items-center gap-2"><CheckCircle size={32} /> Real Photos</div>
+                <div className="flex items-center gap-2"><Shield size={32} /> Verified</div>
+                <div className="flex items-center gap-2"><MessageCircle size={32} /> Direct Chat Now</div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* DESCRIPTION */}
+        {/* DESCRIPTION & SIMILAR CARS */}
         {car.description && (
-          <section className="container mx-auto px-6 py-16">
-            <div className="bg-white rounded-3xl p-12 shadow-3xl">
-              <h2 className="text-5xl font-black mb-8 text-gray-900">
-                Seller&apos;s Description
-              </h2>
-              <p className="text-2xl text-gray-700 leading-relaxed whitespace-pre-line">
-                {car.description}
-              </p>
-            </div>
+          <section className="container mx-auto px-4 md:px-6 py-16 bg-white">
+            <h2 className="text-4xl font-black mb-6">Description</h2>
+            <p className="text-xl text-gray-700 whitespace-pre-line">{car.description}</p>
           </section>
         )}
 
-        {/* SIMILAR CARS */}
-        <section className="container mx-auto px-6 py-20 bg-gray-50">
-          <SimilarCars currentCarId={car.id} cars={[]} />
-        </section>
+        <SimilarCars currentCarId={car.id} />
 
-        {/* STICKY WHATSAPP FLOAT */}
-        <a
+        {/* FLOATING WHATSAPP */}
+        <Link
           href={whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="fixed bottom-6 right-6 bg-green-600 hover:bg-green-700 text-white p-6 rounded-full shadow-3xl z-50 transform hover:scale-110 transition-all duration-300 animate-bounce"
+          className="fixed bottom-6 right-6 bg-green-600 hover:bg-green-700 text-white p-5 rounded-full shadow-2xl z-50 transition-all hover:scale-110 animate-bounce"
         >
-          <MessageCircle size={56} />
-        </a>
+          <MessageCircle size={48} />
+        </Link>
       </div>
     </>
   );
