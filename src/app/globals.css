@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* ==================================================================
+   ROOT & THEME
+   ================================================================== */
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -25,34 +28,9 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* src/app/globals.css  ← Add these lines at the bottom */
-.section-heading {
-  @apply text-2xl font-bold text-gray-800/70 text-center mb-12;
-}
-
-/* For smaller headings */
-.sub-heading {
-  @apply text-2xl font-semibold text-gray-700/80 mb-6;
-}
-
-/* src/app/globals.css – ADD THIS AT THE BOTTOM */
-::placeholder {
-  @apply text-gray-700 font-bold opacity-100;
-}
-
-select,
-input,
-textarea {
-  @apply text-gray-900 font-bold;
-}
-
-/* Navigation text — always bold & dark */
-nav a,
-nav button {
-  @apply text-gray-900 font-black hover:text-green-600 transition;
-}
-
-/* All headings — never faint again */
+/* ==================================================================
+   TYPOGRAPHY — ALWAYS BOLD, ALWAYS PROUD
+   ================================================================== */
 h1,
 h2,
 h3,
@@ -62,8 +40,83 @@ h6 {
   @apply text-gray-900 font-black;
 }
 
-/* Filter form — super visible */
+.section-heading {
+  @apply text-2xl md:text-4xl font-black text-center mb-12 text-gray-800;
+}
+
+.sub-heading {
+  @apply text-xl md:text-2xl font-bold text-gray-700 mb-6;
+}
+
+/* ==================================================================
+   FORM INPUTS — NIGERIAN BOLD
+   ================================================================== */
+::placeholder {
+  @apply text-gray-600 font-bold opacity-100;
+}
+
+input,
+textarea,
+select {
+  @apply text-gray-900 font-bold placeholder-gray-600;
+}
+
 input::placeholder,
 select {
-  @apply text-gray-700 font-semibold;
+  @apply text-gray-600 font-bold;
+}
+
+/* ==================================================================
+   NAVIGATION — ALWAYS DARK & STRONG
+   ================================================================== */
+nav a,
+nav button {
+  @apply text-gray-900 font-black hover:text-green-600 transition;
+}
+
+/* ==================================================================
+   BUTTON RESIZE REVOLUTION — 50% SMALLER, 200% CLASSIER
+   ================================================================== */
+/* Kill all the old fat button classes globally */
+button,
+a[class*="bg-"],
+button[class*="px-"],
+button[class*="py-"],
+a[class*="rounded"],
+button[class*="text-"] {
+  /* Text size — 50% smaller */
+  @apply text-xl md:text-2xl; /* was text-3xl to text-9xl */
+
+  /* Padding — slim & sexy */
+  @apply px-8 md:px-10 py-5 md:py-6; /* was px-20+, py-12+ */
+
+  /* Border radius — modern */
+  @apply rounded-3xl;
+
+  /* Shadow — refined */
+  @apply shadow-xl hover:shadow-2xl;
+
+  /* Scale — subtle */
+  @apply transition-all duration-300 hover:scale-105 active:scale-95;
+}
+
+/* Special override for the few CTA kings that deserve to stay big */
+.btn-hero,
+.btn-mega {
+  @apply text-3xl md:text-5xl px-12 md:px-20 py-8 md:py-10;
+}
+
+/* WhatsApp floating button — keep it big but not ridiculous */
+button[class*="fixed"][class*="bottom-"],
+a[class*="fixed"][class*="bottom-"] {
+  @apply p-5 md:p-6;
+}
+
+/* ==================================================================
+   FINAL TOUCH — CLEAN FOCUS STATES
+   ================================================================== */
+input:focus,
+textarea:focus,
+select:focus {
+  @apply outline-none ring-4 ring-green-600/30 border-green-600;
 }
