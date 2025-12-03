@@ -1,6 +1,5 @@
 // src/components/ClientHome.tsx
 "use client";
-
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import CarCard from "./CarCard";
@@ -19,7 +18,6 @@ import {
   Phone,
   MapPin,
 } from "lucide-react";
-// import Logo from "./Logo";
 
 export default function ClientHome() {
   const [cars, setCars] = useState<Car[]>([]);
@@ -46,7 +44,6 @@ export default function ClientHome() {
     load();
   }, []);
 
-  // EXACTLY 4 CARS PER CATEGORY — NO MORE, NO LESS
   const foreignUsed = cars
     .filter((c) => c.condition === "Foreign Used")
     .slice(0, 4);
@@ -67,13 +64,11 @@ export default function ClientHome() {
       <div className="min-h-screen bg-gradient-to-br from-green-600 to-emerald-800 flex items-center justify-center px-6">
         <div className="text-center text-white">
           <Flame
-            size={120}
-            className="mx-auto animate-pulse text-yellow-400 mb-8"
+            size={80}
+            className="mx-auto animate-pulse text-yellow-400 mb-6"
           />
-          <h1 className="text-2xl md:text-3xl font-black animate-pulse">
-            CARS ABEG
-          </h1>
-          <p className="text-3xl md:text-3xl font-bold mt-6">
+          <h1 className="text-5xl md:text-7xl font-black">CARS ABEG</h1>
+          <p className="text-xl md:text-2xl font-bold mt-4">
             Loading fresh deals...
           </p>
         </div>
@@ -81,7 +76,6 @@ export default function ClientHome() {
     );
   }
 
-  // REUSABLE SECTION — "View All" ONLY SHOWS WHEN 5+ CARS
   const HomeSection = ({
     title,
     cars: sectionCars,
@@ -96,46 +90,44 @@ export default function ClientHome() {
     gradient?: string;
   }) => {
     if (sectionCars.length === 0) return null;
-
-    const showViewAll = sectionCars.length >= 5; // ONLY SHOW IF 5 OR MORE
+    const showViewAll = sectionCars.length >= 5;
 
     return (
-      <section className={`py-16 md:py-24 ${gradient || "bg-white"}`}>
+      <section className={`py-16 md:py-20 ${gradient || "bg-white"}`}>
         <div className="max-w-7xl mx-auto px-6">
-          <div className="flex justify-between items-center mb-10">
-            <div className="flex items-center gap-5">
-              <Icon size={48} className="text-green-600 hidden md:block" />
-              <h2 className="text-3xl md:text-2xl font-black text-gray-900">
+          <div className="flex justify-between items-center mb-8">
+            <div className="flex items-center gap-4">
+              <Icon size={36} className="text-green-600 hidden md:block" />
+              <h2 className="text-3xl md:text-5xl font-black text-gray-900">
                 {title}
               </h2>
             </div>
 
-            {/* CONDITIONAL "VIEW ALL" — ONLY WHEN 5+ CARS */}
             {showViewAll && (
               <Link
                 href={href}
-                className="flex items-center gap-3 text-green-600 hover:text-green-700 font-black text-xl underline decoration-4 underline-offset-8 hover:scale-110 transition animate-pulse"
+                className="flex items-center gap-2 text-green-600 hover:text-green-700 font-bold text-lg underline decoration-2 underline-offset-4 hover:scale-105 transition"
               >
                 View All →
               </Link>
             )}
           </div>
 
-          {/* MOBILE: 4 SWIPES MAX */}
+          {/* MOBILE */}
           <div className="md:hidden">
             <Swiper
               modules={[Autoplay, Navigation]}
-              spaceBetween={20}
-              slidesPerView={1.15}
+              spaceBetween={16}
+              slidesPerView={1.2}
               centeredSlides
               loop={sectionCars.length >= 3}
               autoplay={{ delay: 5000 }}
               navigation
-              className="pb-8"
+              className="pb-6"
             >
               {sectionCars.map((car) => (
                 <SwiperSlide key={car.id}>
-                  <div className="px-2">
+                  <div className="px-1">
                     <CarCard car={car} />
                   </div>
                 </SwiperSlide>
@@ -143,13 +135,10 @@ export default function ClientHome() {
             </Swiper>
           </div>
 
-          {/* DESKTOP: SHOW ONLY 4 CARDS */}
-          <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* DESKTOP */}
+          <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-6">
             {sectionCars.slice(0, 4).map((car) => (
-              <div
-                key={car.id}
-                className="transform hover:-translate-y-4 transition-all duration-300"
-              >
+              <div key={car.id} className="hover:-translate-y-2 transition">
                 <CarCard car={car} />
               </div>
             ))}
@@ -158,43 +147,42 @@ export default function ClientHome() {
       </section>
     );
   };
+
   return (
     <>
-      {/* PREMIUM HERO */}
+      {/* PREMIUM HERO — SLIMMED DOWN */}
       {paidCars.length > 0 && (
-        <section className="relative overflow-hidden bg-gradient-to-br from-orange-600 via-red-600 to-pink-700 py-20 text-white">
+        <section className="relative overflow-hidden bg-gradient-to-br from-orange-600 via-red-600 to-pink-700 py-16 text-white">
           <div className="absolute inset-0 bg-black/50" />
           <div className="relative z-10 text-center px-6">
-            <div className="inline-flex items-center gap-6 bg-black/70 backdrop-blur-xl px-10 py-6 rounded-full text-2xl font-black mb-10 shadow-3xl animate-pulse border-4 border-yellow-400">
-              <Flame className="text-yellow-400" size={64} />
-              PREMIUM — SELLING IN HOURS
-              <TrendingUp className="text-yellow-300" size={64} />
+            <div className="inline-flex items-center gap-4 bg-black/70 backdrop-blur-xl px-8 py-4 rounded-full text-xl font-black mb-8 shadow-2xl border-4 border-yellow-400">
+              <Flame size={40} className="text-yellow-400" />
+              PREMIUM — SELLING FAST
+              <TrendingUp size={40} className="text-yellow-300" />
             </div>
-            <h1 className="text-3xl md:text-3xl font-black mb-8">
-              {paidCars.length} HOT DEALS LIVE
+            <h1 className="text-4xl md:text-6xl font-black mb-6">
+              {paidCars.length} Hot Deals Live
             </h1>
           </div>
 
-          <div className="mt-16 max-w-7xl mx-auto px-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="mt-12 max-w-7xl mx-auto px-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {paidCars.slice(0, 4).map((car) => (
-                <div
-                  key={car.id}
-                  className="transform hover:scale-105 transition-all duration-300"
-                >
-                  <div className="bg-white/10 backdrop-blur-xl rounded-3xl overflow-hidden shadow-3xl border-4 border-yellow-400">
+                <div key={car.id} className="hover:scale-105 transition">
+                  <div className="bg-white/10 backdrop-blur-xl rounded-3xl overflow-hidden shadow-2xl border-4 border-yellow-400">
                     <CarCard car={car} />
                   </div>
                 </div>
               ))}
             </div>
+
             {paidCars.length > 4 && (
-              <div className="text-center mt-12">
+              <div className="text-center mt-10">
                 <Link
                   href="/inventory?featured=true"
-                  className="inline-block bg-yellow-400 hover:bg-yellow-300 text-black px-12 py-6 rounded-full font-black text-3xl shadow-2xl transform hover:scale-110 transition"
+                  className="inline-block bg-yellow-400 hover:bg-yellow-300 text-black px-10 py-5 rounded-3xl font-black text-xl shadow-xl hover:scale-105 transition"
                 >
-                  View All Premium Cars
+                  View All Premium
                 </Link>
               </div>
             )}
@@ -202,7 +190,7 @@ export default function ClientHome() {
         </section>
       )}
 
-      {/* MAIN CATEGORIES — 4 CARS ONLY */}
+      {/* MAIN CATEGORIES */}
       <HomeSection
         title="Brand New Cars"
         cars={brandNew}
@@ -245,26 +233,26 @@ export default function ClientHome() {
         gradient="bg-gradient-to-b from-orange-50 to-white"
       />
 
-      {/* FINAL CTA */}
-      <section className="py-32 bg-gradient-to-br from-green-600 to-emerald-700 text-white text-center">
-        <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-3xl md:text-3xl font-black mb-12">
+      {/* FINAL CTA — SLIM & ELEGANT */}
+      <section className="py-24 bg-gradient-to-br from-green-600 to-emerald-700 text-white text-center">
+        <div className="max-w-5xl mx-auto px-6">
+          <h2 className="text-4xl md:text-6xl font-black mb-8">
             CAN’T FIND YOUR DREAM CAR?
           </h2>
-          <p className="text-3xl md:text-3xl font-bold mb-16 max-w-4xl mx-auto">
-            Tell us what you want — we’ll find it in 48hrs
+          <p className="text-xl md:text-2xl font-bold mb-12 max-w-3xl mx-auto">
+            Tell us what you want — we’ll source it in 48hrs
           </p>
-          <div className="flex flex-col md:flex-row gap-10 justify-center">
+          <div className="flex flex-col md:flex-row gap-6 justify-center">
             <a
               href="https://wa.me/2348022772234?text=Hi%20CarsAbeg!%20Help%20me%20find%20my%20dream%20car"
-              className="bg-yellow-400 hover:bg-yellow-300 text-black px-20 py-12 rounded-full font-black text-2xl md:text-3xl shadow-3xl transform hover:scale-110 transition flex items-center gap-6 justify-center"
+              className="bg-yellow-400 hover:bg-yellow-300 text-black px-12 py-6 rounded-3xl font-black text-xl md:text-2xl shadow-2xl hover:scale-105 transition flex items-center gap-4 justify-center"
             >
-              <MessageCircle size={64} className="animate-bounce" />
+              <MessageCircle size={36} className="animate-bounce" />
               REQUEST ANY CAR
             </a>
             <Link
               href="/sell"
-              className="bg-white text-green-600 px-20 py-12 rounded-full font-black text-2xl md:text-3xl shadow-3xl hover:bg-gray-100 transform hover:scale-110 transition"
+              className="bg-white text-green-700 hover:bg-gray-100 px-12 py-6 rounded-3xl font-black text-xl md:text-2xl shadow-2xl hover:scale-105 transition"
             >
               SELL YOUR CAR FREE
             </Link>
