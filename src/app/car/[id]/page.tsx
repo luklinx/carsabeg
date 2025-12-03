@@ -19,13 +19,13 @@ import {
 import WhatsAppButton from "@/components/WhatsAppButton";
 import SimilarCars from "@/components/SimilarCars";
 
-// THIS IS A SERVER COMPONENT — NO "use client" NEEDED
+// CRITICAL: params is now a PROMISE in Next.js 16
 export default async function CarDetails({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>; // ← PROMISE!
 }) {
-  const { id } = params;
+  const { id } = await params; // ← AWAIT IT! THIS IS THE FIX
 
   // Validate ID
   if (!id || id === "undefined" || id.trim() === "" || id.length < 10) {
@@ -33,11 +33,11 @@ export default async function CarDetails({
     notFound();
   }
 
-  // Use SERVER client — WORKS 100% IN PRODUCTION
   const { data: car, error } = await supabaseServer
     .from("cars")
     .select("*")
     .eq("id", id)
+    .eq("approved", true) // ← always check approved
     .maybeSingle();
 
   if (error) {
@@ -46,11 +46,11 @@ export default async function CarDetails({
   }
 
   if (!car) {
-    console.log("Car not found in DB → ID:", id);
+    console.log("Car not found or not approved → ID:", id);
     notFound();
   }
 
-  // SAFE DATA PROCESSING
+  // SAFE DATA
   const cleanPhone = car.dealer_phone
     ? car.dealer_phone.replace(/\D/g, "").replace(/^0/, "234")
     : "2348022772234";
@@ -87,11 +87,11 @@ export default async function CarDetails({
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />
               <div className="absolute top-4 left-4 bg-green-600 text-white px-6 py-3 rounded-full font-black text-xl shadow-xl">
-                {car.condition === "Foreign Used" ? "TOKUNBO" : "NIGERIAN USED"}
+                {car.condition === "Foreign Used" ? "TOKUNBO" : car.condition}
               </div>
-              {car.featured && (
+              {car.featured_paid && (
                 <div className="absolute top-4 right-4 bg-yellow-500 text-black px-5 py-3 rounded-full font-black flex items-center gap-2">
-                  <Zap size={20} /> FEATURED
+                  <Zap size={20} /> PREMIUM
                 </div>
               )}
             </div>
@@ -119,19 +119,19 @@ export default async function CarDetails({
           {/* CAR DETAILS */}
           <div className="space-y-8">
             <div>
-              <h1 className="text-2xl md:text-3xl font-black text-gray-900 leading-tight">
+              <h1 className="text-4xl md:text-5xl font-black text-gray-900 leading-tight">
                 {car.year} {car.make} {car.model}
               </h1>
-              <p className="text-2xl font-semibold text-gray-600 mt-3 flex items-center gap-3">
+              <p className="text-xl font-semibold text-gray-600 mt-3 flex items-center gap-3">
                 <MapPin size={32} /> {car.location}
               </p>
             </div>
 
             <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white p-10 rounded-3xl shadow-2xl text-center">
-              <p className="text-3xl md:text-2xl font-black">
+              <p className="text-5xl md:text-6xl font-black">
                 ₦{priceInMillions}M
               </p>
-              <p className="text-xl md:text-2xl font-bold mt-4">
+              <p className="text-xl font-bold mt-4">
                 Final Price • No Hidden Fees
               </p>
             </div>
@@ -205,7 +205,7 @@ export default async function CarDetails({
       {/* DESCRIPTION */}
       {car.description && (
         <section className="container mx-auto px-4 md:px-6 py-16 bg-white rounded-3xl shadow-xl">
-          <h2 className="text-2xl font-black mb-6">Description</h2>
+          <h2 className="text-4xl font-black mb-6">Description</h2>
           <p className="text-xl text-gray-700 whitespace-pre-line leading-relaxed">
             {car.description}
           </p>
@@ -219,9 +219,9 @@ export default async function CarDetails({
         href={whatsappUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 bg-green-600 text-white p-4 rounded-full shadow-2xl z-50 hover:scale-110 transition-all animate-bounce"
+        className="fixed bottom-6 right-6 bg-green-600 text-white p-6 rounded-full shadow-2xl z-50 hover:scale-110 transition-all animate-bounce"
       >
-        <MessageCircle size={32} />
+        <MessageCircle size={36} />
       </Link>
     </div>
   );

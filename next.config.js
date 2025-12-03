@@ -2,7 +2,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // ─────────────────────────────────────────────────────────────
-  // IMAGES — Supabase storage (already perfect)
+  // IMAGES — Supabase (keep this)
   // ─────────────────────────────────────────────────────────────
   images: {
     remotePatterns: [
@@ -15,21 +15,20 @@ const nextConfig = {
   },
 
   // ─────────────────────────────────────────────────────────────
-  // EXPERIMENTAL — THE GOLDEN COMBO FOR 2025
+  // THESE ARE NOW TOP-LEVEL (NO LONGER IN experimental)
   // ─────────────────────────────────────────────────────────────
-  experimental: {
-    // Kills fake Turbopack source map errors in dev
-    turbopack: false,
-
-    // Fixes Suspense/CSR bailout issues with dynamic routes
-    missingSuspenseWithCSRBailout: false,
-
-    // Optional: Faster font loading (recommended)
-    optimizeFonts: true,
-  },
+  swcMinify: true, // ← moved out
+  optimizeFonts: true, // ← moved out
 
   // ─────────────────────────────────────────────────────────────
-  // HEADERS — NO CACHING ON CAR DETAILS (CRITICAL!)
+  // TURBOPACK — you cannot disable it anymore in 16.0.3
+  // It is now default and permanent in dev
+  // The fake source-map error is a known Turbopack bug → will be fixed soon
+  // Just ignore it or downgrade to Next.js 15 if it annoys you
+  // ─────────────────────────────────────────────────────────────
+
+  // ─────────────────────────────────────────────────────────────
+  // HEADERS — NO CACHING ON CAR PAGES (still 100% valid)
   // ─────────────────────────────────────────────────────────────
   async headers() {
     return [
@@ -51,11 +50,7 @@ const nextConfig = {
     ];
   },
 
-  // ─────────────────────────────────────────────────────────────
-  // OPTIONAL BUT RECOMMENDED — FOR PRODUCTION
-  // ─────────────────────────────────────────────────────────────
   reactStrictMode: true,
-  swcMinify: true,
   poweredByHeader: false,
 };
 
