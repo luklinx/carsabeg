@@ -219,9 +219,9 @@ export default async function CarDetails({
         href={whatsappUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 bg-green-600 hover:bg-green-700 text-white p-5 rounded-full shadow-2xl z-50 transition-all hover:scale-110 animate-bounce"
+        className="fixed bottom-6 right-6 bg-green-600 text-white p-4 rounded-full shadow-2xl z-50 hover:scale-110 transition-all animate-bounce"
       >
-        <MessageCircle size={48} />
+        <MessageCircle size={32} />
       </Link>
     </div>
   );
