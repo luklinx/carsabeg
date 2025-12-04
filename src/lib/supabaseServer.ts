@@ -17,7 +17,11 @@ export function getSupabaseServer() {
             const cookieStore = await cookies(); // await the cookie store
             return cookieStore.get(name)?.value;
           },
-          async set(name: string, value: string, options: Record<string, unknown>) {
+          async set(
+            name: string,
+            value: string,
+            options: Record<string, unknown>
+          ) {
             try {
               (await cookies()).set(name, value, options);
             } catch {
@@ -38,4 +42,3 @@ export function getSupabaseServer() {
 
   return cachedClient;
 }
-
