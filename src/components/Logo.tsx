@@ -1,5 +1,4 @@
 // src/components/Logo.tsx
-import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { Flame } from "lucide-react";
 
@@ -38,16 +37,11 @@ export default function Logo({
       {/* If you want to use a static image instead of the SVG, pass `logoSrc="/logo.png"` to this component. */}
       {/* If `logoSrc` is provided render the image from `public/`, otherwise fall back to the SVG */}
       {logoSrc ? (
-        <div className="relative w-full h-full">
-          <Image
-            src={logoSrc}
-            alt={alt ?? "Cars Abeg"}
-            fill
-            sizes="(max-width: 640px) 160px, (max-width: 1024px) 256px, 400px"
-            className="object-contain"
-            priority
-          />
-        </div>
+        <img
+          src={logoSrc}
+          alt={alt ?? "Cars Abeg"}
+          className="max-w-full h-auto object-contain"
+        />
       ) : (
         <svg
           viewBox="0 0 800 200"

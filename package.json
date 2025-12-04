@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "concurrently \"next dev\" \"ts-node-dev src/server/index.ts --port 4000\"",
     "dev:api": "ts-node-dev src/server/index.ts --port 4000",
-    "dev:all": "concurrently \"npm run dev\" \"npm run dev:api\""
+    "dev:all": "concurrently \"npm run dev\" \"npm run dev:api\"",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@supabase/auth-helpers-nextjs": "^0.15.0",
@@ -34,6 +35,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.0.3",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "@playwright/test": "^1.40.0"
   }
 }
