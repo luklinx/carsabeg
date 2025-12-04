@@ -23,11 +23,11 @@ export default function Header() {
     <>
       {/* MAIN HEADER — Sticky, Clean, Nigerian Power */}
       <header className="bg-white shadow-lg sticky top-0 z-50 border-b-4 border-green-600">
-        <div className="px-4 py-4 md:py-5">
-          <div className="max-w-7xl mx-auto flex items-center justify-between">
+        <div className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 md:py-5">
+          <div className="max-w-7xl mx-auto flex items-center justify-between gap-3 sm:gap-6">
             {/* LOGO — Unmistakable */}
-            <Link href="/" className="flex items-center gap-1">
-              <Logo logoSrc="/logo.webp" alt="CarsAbeg" size="md" />
+            <Link href="/" className="flex-shrink-0 flex items-center gap-1">
+              <Logo logoSrc="/logo.webp" alt="CarsAbeg" size="sm" />
             </Link>{" "}
             {/* DESKTOP NAV — Clean, Bold, Dubizzle Energy */}
             <nav className="hidden lg:flex items-center gap-6 xl:gap-10">
