@@ -157,7 +157,7 @@ export default function ClientHome() {
           <div className="relative z-10 text-center px-6">
             <div className="inline-flex items-center gap-4 bg-black/70 backdrop-blur-xl px-8 py-4 rounded-full text-xl font-black mb-8 shadow-2xl border-4 border-yellow-400">
               <Flame size={40} className="text-yellow-400" />
-              PREMIUM — SELLING FAST
+              PREMIUM • SELLING FAST
               <TrendingUp size={40} className="text-yellow-300" />
             </div>
             <h1 className="text-4xl md:text-6xl font-black mb-6">

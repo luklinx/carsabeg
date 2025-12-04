@@ -84,7 +84,7 @@ export default function ClientCars() {
             {/* URGENCY BADGE — SLIMMER */}
             <div className="inline-flex items-center gap-3 bg-black/70 backdrop-blur-xl px-6 py-3 rounded-full text-lg md:text-xl font-black mb-8 shadow-2xl border-4 border-yellow-400">
               <Flame size={36} className="text-yellow-400" />
-              PREMIUM — SELLING FAST
+              PREMIUM • SELLING FAST
               <Zap size={36} className="text-yellow-300" />
             </div>
 
