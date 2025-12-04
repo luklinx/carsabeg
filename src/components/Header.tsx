@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, Zap, MessageCircle } from "lucide-react";
 import { useState } from "react";
+import Logo from "@/components/Logo";
 
 const navItems = [
   { name: "Home", href: "/" },
@@ -26,13 +27,8 @@ export default function Header() {
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             {/* LOGO — Unmistakable */}
             <Link href="/" className="flex items-center gap-1">
-              <span className="text-3xl md:text-3xl font-black text-gray-900">
-                CARS
-              </span>
-              <span className="text-3xl md:text-3xl font-black text-green-600">
-                ABEG
-              </span>
-            </Link>
+              <Logo logoSrc="/logo.png" alt="CarsAbeg" size="md" />
+            </Link>{" "}
             {/* DESKTOP NAV — Clean, Bold, Dubizzle Energy */}
             <nav className="hidden lg:flex items-center gap-6 xl:gap-10">
               {navItems.map((item) => (
@@ -64,7 +60,6 @@ export default function Header() {
                 <MessageCircle size={32} />
               </a>
             </nav>
-
             {/* MOBILE MENU BUTTON */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

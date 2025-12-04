@@ -94,7 +94,7 @@ export default function CarGallery({
 
       {/* THUMBNAILS — HORIZONTAL SCROLL ON MOBILE */}
       {hasMultiple && (
-        <div className="flex gap-3 overflow-x-auto pb-3 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
+        <div className="flex gap-3 overflow-x-auto pb-3 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 flex-nowrap w-full max-w-full min-w-0">
           {safeImages.map((img, idx) => (
             <button
               key={idx}
@@ -111,7 +111,7 @@ export default function CarGallery({
                 alt={`Thumbnail ${idx + 1}`}
                 width={112}
                 height={112}
-                className="object-cover w-full h-full"
+                className="object-cover w-full h-full block"
               />
               {idx === currentIndex && (
                 <div className="absolute inset-0 bg-green-600/40" />
