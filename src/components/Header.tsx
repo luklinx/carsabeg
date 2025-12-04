@@ -49,16 +49,6 @@ export default function Header() {
                   {item.name}
                 </Link>
               ))}
-
-              {/* WhatsApp CTA — Impossible to miss */}
-              <a
-                href="https://wa.me/23480022772234"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="fixed bottom-4 right-4 bg-green-600 text-white p-4 rounded-full shadow-2xl z-50 hover:scale-110 transition"
-              >
-                <MessageCircle size={32} />
-              </a>
             </nav>
             {/* MOBILE MENU BUTTON */}
             <button
@@ -69,6 +59,17 @@ export default function Header() {
             </button>
           </div>
         </div>
+
+        {/* Desktop WhatsApp CTA (render once, show on lg+) */}
+        <a
+          href="https://wa.me/23480022772234"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hidden lg:inline-flex fixed bottom-4 right-4 bg-green-600 text-white p-4 rounded-full shadow-2xl z-50 hover:scale-110 transition"
+          aria-label="WhatsApp Chat"
+        >
+          <MessageCircle size={32} />
+        </a>
 
         {/* MOBILE FULL-SCREEN MENU — Nigerian Speed */}
         {mobileMenuOpen && (

@@ -55,17 +55,17 @@ export default async function CarDetails({
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 via-white to-gray-50 pb-32">
-      <div className="container mx-auto px-4 pt-8 md:px-6">
+      <div className="container mx-auto px-3 sm:px-4 md:px-6 pt-4 sm:pt-6 md:pt-8">
         <Link
           href="/inventory"
-          className="inline-flex items-center gap-3 text-green-600 font-bold text-lg hover:text-green-700 transition-all hover:-translate-x-2"
+          className="inline-flex items-center gap-3 text-green-600 font-bold text-base sm:text-lg hover:text-green-700 transition-all hover:-translate-x-2"
         >
-          <ArrowLeft size={28} /> Back to Inventory
+          <ArrowLeft size={24} /> Back to Inventory
         </Link>
       </div>
 
-      <section className="container mx-auto px-4 md:px-6 py-8">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
+      <section className="container mx-auto px-3 sm:px-4 md:px-6 py-6 sm:py-8 md:py-10">
+        <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12">
           {/* IMAGE GALLERY — NOW FULLY INTERACTIVE */}
           <ImageGallery
             images={images}
@@ -77,73 +77,76 @@ export default async function CarDetails({
           />
 
           {/* CAR DETAILS */}
-          <div className="space-y-8">
+          <div className="space-y-6 sm:space-y-8">
             <div>
-              <h1 className="text-4xl md:text-6xl font-black text-gray-900 leading-tight">
+              <h1 className="text-3xl sm:text-4xl md:text-6xl font-black text-gray-900 leading-tight">
                 {car.year} {car.make} {car.model}
               </h1>
-              <p className="text-2xl font-bold text-gray-700 mt-4 flex items-center gap-3">
-                <MapPin size={36} className="text-green-600" />{" "}
+              <p className="text-lg sm:text-xl md:text-2xl font-bold text-gray-700 mt-3 sm:mt-4 flex items-center gap-2 sm:gap-3">
+                <MapPin size={28} className="text-green-600 flex-shrink-0" />{" "}
                 {car.location || "Lagos"}
               </p>
             </div>
 
-            <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white p-10 rounded-3xl shadow-2xl text-center">
-              <p className="text-6xl md:text-8xl font-black">
+            <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white p-6 sm:p-8 md:p-10 rounded-2xl sm:rounded-3xl shadow-2xl text-center">
+              <p className="text-4xl sm:text-6xl md:text-8xl font-black">
                 ₦{priceInMillions}M
               </p>
-              <p className="text-xl md:text-2xl font-bold mt-4 opacity-90">
+              <p className="text-base sm:text-lg md:text-2xl font-bold mt-2 sm:mt-4 opacity-90">
                 Final Price • No Hidden Charges
               </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 md:gap-6">
               {car.mileage != null && car.mileage > 0 && (
-                <div className="bg-gray-100 p-6 rounded-2xl flex items-center gap-4">
-                  <Gauge className="text-green-600" size={44} />
+                <div className="bg-gray-100 p-4 sm:p-5 md:p-6 rounded-lg sm:rounded-2xl flex items-center gap-3 sm:gap-4">
+                  <Gauge className="text-green-600 flex-shrink-0" size={36} />
                   <div>
-                    <p className="text-gray-700 font-bold uppercase tracking-wider text-sm">
+                    <p className="text-gray-700 font-bold uppercase tracking-wider text-xs sm:text-sm">
                       Mileage
                     </p>
-                    <p className="text-2xl font-black text-gray-900">
+                    <p className="text-lg sm:text-2xl font-black text-gray-900">
                       {Number(car.mileage).toLocaleString()} km
                     </p>
                   </div>
                 </div>
               )}
               {car.transmission && (
-                <div className="bg-gray-100 p-6 rounded-2xl flex items-center gap-4">
-                  <Settings className="text-green-600" size={44} />
+                <div className="bg-gray-100 p-4 sm:p-5 md:p-6 rounded-lg sm:rounded-2xl flex items-center gap-3 sm:gap-4">
+                  <Settings
+                    className="text-green-600 flex-shrink-0"
+                    size={36}
+                  />
                   <div>
-                    <p className="text-gray-700 font-bold uppercase tracking-wider text-sm">
+                    <p className="text-gray-700 font-bold uppercase tracking-wider text-xs sm:text-sm">
                       Transmission
                     </p>
-                    <p className="text-2xl font-black text-gray-900">
+                    <p className="text-lg sm:text-2xl font-black text-gray-900">
                       {car.transmission}
                     </p>
                   </div>
                 </div>
               )}
               {car.fuel && (
-                <div className="bg-gray-100 p-6 rounded-2xl flex items-center gap-4">
-                  <Fuel className="text-green-600" size={44} />
+                <div className="bg-gray-100 p-4 sm:p-5 md:p-6 rounded-lg sm:rounded-2xl flex items-center gap-3 sm:gap-4">
+                  <Fuel className="text-green-600 flex-shrink-0" size={36} />
                   <div>
-                    <p className="text-gray-700 font-bold uppercase tracking-wider text-sm">
+                    <p className="text-gray-700 font-bold uppercase tracking-wider text-xs sm:text-sm">
                       Fuel Type
                     </p>
-                    <p className="text-2xl font-black text-gray-900">
+                    <p className="text-lg sm:text-2xl font-black text-gray-900">
                       {car.fuel}
                     </p>
                   </div>
                 </div>
               )}
-              <div className="bg-gray-100 p-6 rounded-2xl flex items-center gap-4">
-                <CarIcon className="text-green-600" size={44} />
+              <div className="bg-gray-100 p-4 sm:p-5 md:p-6 rounded-lg sm:rounded-2xl flex items-center gap-3 sm:gap-4">
+                <CarIcon className="text-green-600 flex-shrink-0" size={36} />
                 <div>
-                  <p className="text-gray-700 font-bold uppercase tracking-wider text-sm">
+                  <p className="text-gray-700 font-bold uppercase tracking-wider text-xs sm:text-sm">
                     Condition
                   </p>
-                  <p className="text-2xl font-black text-gray-900">
+                  <p className="text-lg sm:text-2xl font-black text-gray-900">
                     {car.condition === "Foreign Used"
                       ? "TOKUNBO"
                       : car.condition}
@@ -152,27 +155,27 @@ export default async function CarDetails({
               </div>
             </div>
 
-            <div className="space-y-5">
+            <div className="space-y-3 sm:space-y-4">
               <WhatsAppButton car={car} size="large" />
               <Link
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block text-center bg-black hover:bg-gray-900 text-white py-8 rounded-3xl font-black text-3xl flex items-center justify-center gap-4 transition-all hover:scale-105 shadow-2xl"
+                className="block text-center bg-black hover:bg-gray-900 text-white py-5 sm:py-6 md:py-8 rounded-2xl sm:rounded-3xl font-black text-xl sm:text-2xl md:text-3xl flex items-center justify-center gap-3 sm:gap-4 transition-all hover:scale-105 shadow-2xl"
               >
-                <Phone size={48} /> Call Seller Now
+                <Phone size={32} /> Call Seller Now
               </Link>
             </div>
 
-            <div className="flex flex-wrap justify-center gap-8 text-green-700 font-black text-lg">
-              <div className="flex items-center gap-3">
-                <CheckCircle size={36} /> Real Photos
+            <div className="flex flex-wrap justify-center gap-4 sm:gap-6 md:gap-8 text-green-700 font-black text-sm sm:text-base md:text-lg">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <CheckCircle size={28} /> Real Photos
               </div>
-              <div className="flex items-center gap-3">
-                <Shield size={36} /> Verified Seller
+              <div className="flex items-center gap-2 sm:gap-3">
+                <Shield size={28} /> Verified Seller
               </div>
-              <div className="flex items-center gap-3">
-                <MessageCircle size={36} /> Instant Reply
+              <div className="flex items-center gap-2 sm:gap-3">
+                <MessageCircle size={28} /> Instant Reply
               </div>
             </div>
           </div>
@@ -180,11 +183,11 @@ export default async function CarDetails({
       </section>
 
       {car.description && (
-        <section className="container mx-auto px-4 md:px-6 py-16 bg-white rounded-3xl shadow-2xl">
-          <h2 className="text-4xl md:text-5xl font-black mb-8 text-gray-900">
+        <section className="container mx-auto px-3 sm:px-4 md:px-6 py-12 md:py-16 bg-white rounded-2xl sm:rounded-3xl shadow-2xl">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mb-6 md:mb-8 text-gray-900">
             Description
           </h2>
-          <p className="text-xl text-gray-700 whitespace-pre-line leading-relaxed">
+          <p className="text-base sm:text-lg md:text-xl text-gray-700 whitespace-pre-line leading-relaxed">
             {car.description}
           </p>
         </section>
@@ -196,9 +199,10 @@ export default async function CarDetails({
         href={whatsappUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 bg-green-600 hover:bg-green-700 text-white p-6 rounded-full shadow-2xl z-50 hover:scale-110 transition-all animate-bounce"
+        className="fixed bottom-6 right-4 sm:right-6 bg-green-600 hover:bg-green-700 text-white p-4 sm:p-6 rounded-full shadow-2xl z-50 hover:scale-110 transition-all animate-bounce flex items-center justify-center"
       >
-        <MessageCircle size={38} />
+        <MessageCircle size={32} className="sm:hidden" />
+        <MessageCircle size={40} className="hidden sm:block" />
       </Link>
 
       <div className="fixed top-1/2 -right-4 -rotate-90 origin-right bg-yellow-400 text-black px-8 py-3 rounded-tl-2xl rounded-tr-2xl font-black text-xl shadow-2xl z-40 animate-pulse">

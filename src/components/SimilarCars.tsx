@@ -88,19 +88,19 @@ export default function SimilarCars({ currentCarId, make: passedMake }: Props) {
   if (loading || !currentCar || similarCars.length === 0) return null;
 
   return (
-    <section className="mt-20 mb-10 px-4 md:px-6">
+    <section className="mt-12 sm:mt-16 md:mt-20 mb-8 sm:mb-10 px-3 sm:px-4 md:px-6">
       {/* Header */}
-      <div className="text-center mb-12">
-        <h2 className="text-4xl md:text-5xl font-black text-gray-900">
+      <div className="text-center mb-8 sm:mb-10 md:mb-12">
+        <h2 className="text-2xl sm:text-3xl md:text-5xl font-black text-gray-900">
           Similar Cars You Might Like
         </h2>
-        <p className="text-2xl md:text-3xl text-gray-700 font-bold mt-4">
+        <p className="text-base sm:text-lg md:text-3xl text-gray-700 font-bold mt-2 sm:mt-3 md:mt-4">
           More {displayMake} rides • Same vibe • Ready to buy
         </p>
       </div>
 
       {/* MOBILE: Vertical Scroll */}
-      <div className="md:hidden space-y-8">
+      <div className="md:hidden space-y-6 sm:space-y-8">
         {similarCars.map((car, index) => (
           <div
             key={car.id}
@@ -109,9 +109,10 @@ export default function SimilarCars({ currentCarId, make: passedMake }: Props) {
           >
             <CarCard car={car} />
             {index === 1 && (
-              <div className="my-8 text-center">
-                <span className="inline-flex items-center gap-2 bg-green-100 text-green-700 px-6 py-3 rounded-full font-black text-lg">
-                  <Zap size={20} /> Hot Deals Like This One
+              <div className="my-6 sm:my-8 text-center">
+                <span className="inline-flex items-center gap-2 bg-green-100 text-green-700 px-4 sm:px-6 py-2 sm:py-3 rounded-full font-black text-sm sm:text-base md:text-lg">
+                  <Zap size={16} className="sm:w-5 sm:h-5" /> Hot Deals Like
+                  This One
                 </span>
               </div>
             )}
@@ -120,7 +121,7 @@ export default function SimilarCars({ currentCarId, make: passedMake }: Props) {
       </div>
 
       {/* DESKTOP: Grid */}
-      <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
         {similarCars.map((car) => (
           <div
             key={car.id}
@@ -132,15 +133,15 @@ export default function SimilarCars({ currentCarId, make: passedMake }: Props) {
       </div>
 
       {/* CTA */}
-      <div className="text-center mt-16">
+      <div className="text-center mt-10 sm:mt-12 md:mt-16">
         <Link
           href={`/inventory?make=${encodeURIComponent(displayMake)}`}
-          className="inline-flex items-center gap-4 bg-green-600 hover:bg-green-700 text-white px-12 py-6 rounded-full font-black text-2xl md:text-3xl shadow-2xl transform hover:scale-110 transition-all duration-300"
+          className="inline-flex items-center gap-2 sm:gap-3 md:gap-4 bg-green-600 hover:bg-green-700 text-white px-6 sm:px-8 md:px-12 py-3 sm:py-4 md:py-6 rounded-full font-black text-base sm:text-lg md:text-3xl shadow-2xl transform hover:scale-110 transition-all duration-300"
         >
           View All {displayMake} Cars
-          <ArrowRight size={36} />
+          <ArrowRight size={20} className="sm:w-6 sm:h-6 md:w-9 md:h-9" />
         </Link>
-        <p className="text-gray-600 font-bold text-lg mt-6">
+        <p className="text-gray-600 font-bold text-xs sm:text-sm md:text-lg mt-4 sm:mt-5 md:mt-6">
           {similarCars.length}+ similar cars available right now
         </p>
       </div>

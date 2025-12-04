@@ -61,14 +61,16 @@ export default function ClientHome() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-600 to-emerald-800 flex items-center justify-center px-6">
+      <div className="min-h-screen bg-gradient-to-br from-green-600 to-emerald-800 flex items-center justify-center px-4 sm:px-6">
         <div className="text-center text-white">
           <Flame
-            size={80}
-            className="mx-auto animate-pulse text-yellow-400 mb-6"
+            size={64}
+            className="mx-auto animate-pulse text-yellow-400 mb-4 sm:mb-6"
           />
-          <h1 className="text-5xl md:text-7xl font-black">CARS ABEG</h1>
-          <p className="text-xl md:text-2xl font-bold mt-4">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-black">
+            CARS ABEG
+          </h1>
+          <p className="text-base sm:text-lg md:text-2xl font-bold mt-2 sm:mt-4">
             Loading fresh deals...
           </p>
         </div>
@@ -93,12 +95,12 @@ export default function ClientHome() {
     const showViewAll = sectionCars.length >= 5;
 
     return (
-      <section className={`py-16 md:py-20 ${gradient || "bg-white"}`}>
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex justify-between items-center mb-8">
-            <div className="flex items-center gap-4">
-              <Icon size={36} className="text-green-600 hidden md:block" />
-              <h2 className="text-3xl md:text-5xl font-black text-gray-900">
+      <section className={`py-12 sm:py-16 md:py-20 ${gradient || "bg-white"}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-6 mb-6 sm:mb-8">
+            <div className="flex items-center gap-2 sm:gap-4">
+              <Icon size={28} className="text-green-600 hidden md:block" />
+              <h2 className="text-2xl sm:text-3xl md:text-5xl font-black text-gray-900">
                 {title}
               </h2>
             </div>
@@ -106,7 +108,7 @@ export default function ClientHome() {
             {showViewAll && (
               <Link
                 href={href}
-                className="flex items-center gap-2 text-green-600 hover:text-green-700 font-bold text-lg underline decoration-2 underline-offset-4 hover:scale-105 transition"
+                className="flex items-center gap-2 text-green-600 hover:text-green-700 font-bold text-sm sm:text-base md:text-lg underline decoration-2 underline-offset-4 hover:scale-105 transition whitespace-nowrap"
               >
                 View All →
               </Link>
@@ -117,13 +119,13 @@ export default function ClientHome() {
           <div className="md:hidden">
             <Swiper
               modules={[Autoplay, Navigation]}
-              spaceBetween={16}
+              spaceBetween={12}
               slidesPerView={1.2}
               centeredSlides
               loop={sectionCars.length >= 3}
               autoplay={{ delay: 5000 }}
               navigation
-              className="pb-6"
+              className="pb-4 sm:pb-6"
             >
               {sectionCars.map((car) => (
                 <SwiperSlide key={car.id}>
@@ -136,7 +138,7 @@ export default function ClientHome() {
           </div>
 
           {/* DESKTOP */}
-          <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {sectionCars.slice(0, 4).map((car) => (
               <div key={car.id} className="hover:-translate-y-2 transition">
                 <CarCard car={car} />
@@ -152,24 +154,30 @@ export default function ClientHome() {
     <>
       {/* PREMIUM HERO — SLIMMED DOWN */}
       {paidCars.length > 0 && (
-        <section className="relative overflow-hidden bg-gradient-to-br from-orange-600 via-red-600 to-pink-700 py-16 text-white">
+        <section className="relative overflow-hidden bg-gradient-to-br from-orange-600 via-red-600 to-pink-700 py-10 sm:py-14 md:py-16 text-white">
           <div className="absolute inset-0 bg-black/50" />
-          <div className="relative z-10 text-center px-6">
-            <div className="inline-flex items-center gap-4 bg-black/70 backdrop-blur-xl px-8 py-4 rounded-full text-xl font-black mb-8 shadow-2xl border-4 border-yellow-400">
-              <Flame size={40} className="text-yellow-400" />
+          <div className="relative z-10 text-center px-4 sm:px-6">
+            <div className="inline-flex items-center gap-2 sm:gap-3 md:gap-4 bg-black/70 backdrop-blur-xl px-4 sm:px-6 md:px-8 py-2 sm:py-3 md:py-4 rounded-full text-sm sm:text-base md:text-xl font-black mb-4 sm:mb-6 md:mb-8 shadow-2xl border-2 sm:border-3 md:border-4 border-yellow-400">
+              <Flame
+                size={24}
+                className="sm:block text-yellow-400 flex-shrink-0"
+              />
               PREMIUM • SELLING FAST
-              <TrendingUp size={40} className="text-yellow-300" />
+              <TrendingUp
+                size={24}
+                className="sm:block text-yellow-300 flex-shrink-0"
+              />
             </div>
-            <h1 className="text-4xl md:text-6xl font-black mb-6">
+            <h1 className="text-2xl sm:text-4xl md:text-6xl font-black mb-4 sm:mb-6">
               {paidCars.length} Hot Deals Live
             </h1>
           </div>
 
-          <div className="mt-12 max-w-7xl mx-auto px-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="mt-8 sm:mt-10 md:mt-12 max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
               {paidCars.slice(0, 4).map((car) => (
                 <div key={car.id} className="hover:scale-105 transition">
-                  <div className="bg-white/10 backdrop-blur-xl rounded-3xl overflow-hidden shadow-2xl border-4 border-yellow-400">
+                  <div className="bg-white/10 backdrop-blur-xl rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border-2 sm:border-3 md:border-4 border-yellow-400">
                     <CarCard car={car} />
                   </div>
                 </div>
@@ -177,10 +185,10 @@ export default function ClientHome() {
             </div>
 
             {paidCars.length > 4 && (
-              <div className="text-center mt-10">
+              <div className="text-center mt-8 sm:mt-10">
                 <Link
                   href="/inventory?featured=true"
-                  className="inline-block bg-yellow-400 hover:bg-yellow-300 text-black px-10 py-5 rounded-3xl font-black text-xl shadow-xl hover:scale-105 transition"
+                  className="inline-block bg-yellow-400 hover:bg-yellow-300 text-black px-6 sm:px-8 md:px-10 py-3 sm:py-4 md:py-5 rounded-2xl sm:rounded-3xl font-black text-base sm:text-lg md:text-xl shadow-xl hover:scale-105 transition"
                 >
                   View All Premium
                 </Link>

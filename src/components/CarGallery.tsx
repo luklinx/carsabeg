@@ -33,16 +33,16 @@ export default function CarGallery({
   const next = () => setCurrentIndex((i) => (i + 1) % safeImages.length);
 
   return (
-    <div className="space-y-4 sm:space-y-5">
+    <div className="space-y-4 sm:space-y-5 w-full max-w-full overflow-hidden">
       {/* MAIN IMAGE */}
-      <div className="relative group rounded-2xl sm:rounded-3xl overflow-hidden bg-gray-900">
+      <div className="relative group rounded-2xl sm:rounded-3xl overflow-hidden bg-gray-900 w-full">
         <div className="relative aspect-square sm:aspect-[4/3] lg:aspect-square rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl sm:shadow-2xl">
           <Image
             src={safeImages[currentIndex]}
             alt={`${year} ${make} ${model} - View ${currentIndex + 1}`}
             fill
             priority={currentIndex === 0}
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1000px"
+            sizes="(max-width: 640px) 90vw, (max-width: 1024px) 85vw, 600px"
             className="object-cover transition-all duration-700 group-hover:scale-110"
           />
 
@@ -94,30 +94,32 @@ export default function CarGallery({
 
       {/* THUMBNAILS — HORIZONTAL SCROLL ON MOBILE */}
       {hasMultiple && (
-        <div className="flex gap-2 sm:gap-3 overflow-x-auto pb-2 sm:pb-3 px-1 -mx-1 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 flex-nowrap w-full">
-          {safeImages.map((img, idx) => (
-            <button
-              key={idx}
-              onClick={() => setCurrentIndex(idx)}
-              className={`relative flex-shrink-0 w-20 h-20 sm:w-28 sm:h-28 rounded-lg sm:rounded-2xl overflow-hidden border-3 sm:border-4 transition-all duration-300 shadow-md sm:shadow-lg hover:shadow-xl
-                ${
-                  idx === currentIndex
-                    ? "border-green-600 ring-3 sm:ring-4 ring-green-600/30 scale-105 sm:scale-110"
-                    : "border-gray-300 hover:border-gray-500"
-                }`}
-            >
-              <Image
-                src={img}
-                alt={`Thumbnail ${idx + 1}`}
-                width={112}
-                height={112}
-                className="object-cover w-full h-full block"
-              />
-              {idx === currentIndex && (
-                <div className="absolute inset-0 bg-green-600/40" />
-              )}
-            </button>
-          ))}
+        <div className="w-full overflow-x-auto overflow-y-hidden">
+          <div className="flex gap-2 sm:gap-3 pb-2 sm:pb-3 px-1 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 flex-nowrap min-w-min">
+            {safeImages.map((img, idx) => (
+              <button
+                key={idx}
+                onClick={() => setCurrentIndex(idx)}
+                className={`relative flex-shrink-0 w-20 h-20 sm:w-28 sm:h-28 rounded-lg sm:rounded-2xl overflow-hidden border-3 sm:border-4 transition-all duration-300 shadow-md sm:shadow-lg hover:shadow-xl
+                  ${
+                    idx === currentIndex
+                      ? "border-green-600 ring-3 sm:ring-4 ring-green-600/30 scale-105 sm:scale-110"
+                      : "border-gray-300 hover:border-gray-500"
+                  }`}
+              >
+                <Image
+                  src={img}
+                  alt={`Thumbnail ${idx + 1}`}
+                  width={112}
+                  height={112}
+                  className="object-cover w-full h-full block"
+                />
+                {idx === currentIndex && (
+                  <div className="absolute inset-0 bg-green-600/40" />
+                )}
+              </button>
+            ))}
+          </div>
         </div>
       )}
 
