@@ -41,6 +41,8 @@ export default function Logo({
           src={logoSrc}
           alt={alt ?? "Cars Abeg"}
           className="max-w-full h-auto object-contain"
+          loading="eager"
+          decoding="async"
         />
       ) : (
         <svg

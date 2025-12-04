@@ -27,7 +27,7 @@ export default function Header() {
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             {/* LOGO — Unmistakable */}
             <Link href="/" className="flex items-center gap-1">
-              <Logo logoSrc="/logo.png" alt="CarsAbeg" size="md" />
+              <Logo logoSrc="/logo.webp" alt="CarsAbeg" size="md" />
             </Link>{" "}
             {/* DESKTOP NAV — Clean, Bold, Dubizzle Energy */}
             <nav className="hidden lg:flex items-center gap-6 xl:gap-10">
