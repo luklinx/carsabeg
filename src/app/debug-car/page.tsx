@@ -1,10 +1,11 @@
 // src/app/debug-car/page.tsx   ← NEW FILE
-import { supabaseServer } from "@/lib/supabaseServer";
+import { getSupabaseServer } from "@/lib/supabaseServer";
 
 export default async function DebugCar() {
   // HARD-CODED REAL CAR ID FROM YOUR SUPABASE (COPY ONE FROM THE TABLE)
   const HARD_CODED_ID = "becb83fa-4db7-422b-801e-38e8daafee75"; // ← CHANGE THIS
 
+  const supabaseServer = getSupabaseServer();
   const { data, error, count } = await supabaseServer
     .from("cars")
     .select("*", { count: "exact" })

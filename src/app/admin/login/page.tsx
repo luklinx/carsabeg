@@ -1,3 +1,5 @@
+"use client";
+
 // app/admin/login/page.tsx
 import { useAuth } from "@/lib/auth";
 
