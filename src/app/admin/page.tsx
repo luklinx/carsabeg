@@ -1,4 +1,5 @@
-// app/admin/page.tsx
+"use client";
+
 import { useAuth } from "@/lib/auth";
 import AdminPanel from "@/components/AdminPanel";
 

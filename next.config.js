@@ -15,10 +15,11 @@ const nextConfig = {
   },
 
   // ─────────────────────────────────────────────────────────────
-  // THESE ARE NOW TOP-LEVEL (NO LONGER IN experimental)
+  // THESE OPTIONS ARE DEPRECATED IN NEXT.JS 16
+  // Remove them to eliminate warnings
   // ─────────────────────────────────────────────────────────────
-  swcMinify: true, // ← moved out
-  optimizeFonts: true, // ← moved out
+  // swcMinify: true, // deprecated
+  // optimizeFonts: true, // deprecated
 
   // ─────────────────────────────────────────────────────────────
   // TURBOPACK — you cannot disable it anymore in 16.0.3
