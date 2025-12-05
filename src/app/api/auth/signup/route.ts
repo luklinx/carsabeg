@@ -2,6 +2,7 @@
 import { getSupabaseServer } from "@/lib/supabaseServer";
 import { NextRequest, NextResponse } from "next/server";
 import { hash } from "bcryptjs";
+import { setUserCookie } from "@/lib/authCookies";
 
 export async function POST(req: NextRequest) {
   try {
@@ -55,11 +56,17 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Optionally sign the user in by setting the cookie
+    const createdUser = newUser?.[0];
+    if (createdUser?.id) {
+      setUserCookie(createdUser.id);
+    }
+
     return NextResponse.json(
       {
         success: true,
         message: "Account created successfully",
-        user: newUser?.[0],
+        user: createdUser,
       },
       { status: 201 }
     );

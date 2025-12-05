@@ -4,7 +4,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Mail, Lock, User, Phone, Eye, EyeOff } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function SignupForm() {
   const [fullName, setFullName] = useState("");
@@ -16,6 +16,8 @@ export default function SignupForm() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect");
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,8 +60,17 @@ export default function SignupForm() {
         return;
       }
 
-      // Redirect to signin
-      router.push("/auth/signin?success=true");
+      // If the API created a session (cookie), go straight to the destination.
+      // Otherwise fall back to signin page.
+      if (data?.user) {
+        router.push(redirectTo || "/dashboard/profile");
+      } else {
+        router.push(
+          `/auth/signin?success=true${
+            redirectTo ? `&redirect=${encodeURIComponent(redirectTo)}` : ""
+          }`
+        );
+      }
     } catch (err) {
       setError("An error occurred. Please try again.");
       console.error(err);

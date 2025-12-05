@@ -5,55 +5,95 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 First, run the development server:
 
-```bash
+````bash
 npm run dev
 # or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-=======
-# Cars Abeg - No Wahala
+# Cars Abeg
 
 Clean foreign used & Nigerian used cars in Nigeria.
 
-## Live Site
-[https://carsabeg.com](https://carsabeg.com)
+## Local development
 
-## Features
-- Full dealership site
-- Offline admin panel
-- WhatsApp integration
-- Search & filter
-- Mobile responsive
-
-## Deploy
 ```bash
 git clone https://github.com/luklinx/carsabeg.git
 cd carsabeg
 npm install
 npm run dev
->>>>>>> 65ee2e835178ef9b814a9163962d41779c52b40d
+````
+
+Open http://localhost:3000
+
+## Supabase setup (manual steps)
+
+This project uses Supabase for the database and storage. To set up the required resources:
+
+1. Create a Supabase project at https://app.supabase.com
+2. Create the `users` table by running the migration in one of these ways:
+
+   - Use the Supabase SQL editor (recommended): open your project → SQL Editor → paste the SQL from `db/migrations/001_create_users_table.sql` → Run.
+
+   - Or run it locally against your Postgres instance:
+
+     ```powershell
+     psql "postgres://<db_user>:<db_pass>@<db_host>:5432/<db_name>" -f db/migrations/001_create_users_table.sql
+     ```
+
+   - If you use the Supabase CLI you can also apply SQL migrations with your workflow — consult the Supabase CLI docs for your setup.
+
+3. In the Supabase dashboard Storage section, create a new bucket named `carsabeg-uploads`.
+
+   - If you want uploaded photos to be publicly accessible via a URL, enable public access for the bucket.
+   - If you prefer privacy, keep the bucket private and serve images using signed URLs (recommended for private user data).
+
+4. Add the Supabase keys to your environment (create a `.env.local` file at the project root):
+
+```
+NEXT_PUBLIC_SUPABASE_URL=<your-supabase-url>
+SUPABASE_SERVICE_ROLE_KEY=<service-role-key>
+SUPABASE_ANON_KEY=<anon-key>
+```
+
+Place these in a `.env.local` file at the project root.
+
+## Notes
+
+- The migration file is located at `db/migrations/001_create_users_table.sql`.
+- The app currently uses a simple cookie named `user_id` for session identification (HttpOnly, SameSite=lax, 30 days). For production usage, consider integrating Supabase Auth or a proper session system.
+- Profile photos are uploaded to the `carsabeg-uploads` storage bucket and the public URL is stored in the `users.profile_photo_url` column.
+
+## Features added by this branch
+
+- Signup / Signin pages and API endpoints
+- Profile page with photo upload and profile editing
+- Middleware to protect `/dashboard/*` routes
+- Feedback, report abuse and mark-unavailable endpoints for cars
+
+## Running locally with migrations
+
+The repo includes the SQL migration file. You can run it via the Supabase SQL editor or using your preferred migration tool connected to your Postgres instance.
+
+## Troubleshooting
+
+- If image upload fails, ensure the `carsabeg-uploads` bucket exists and your Supabase keys have Storage permissions.
+- If cookies are not persisting in development, check `secure` cookie flag: it is only set in production (secure true when NODE_ENV=production).
+
+### Example: create storage bucket using Supabase CLI
+
+If you use the Supabase CLI you can create a bucket like this (install the CLI first):
+
+```powershell
+supabase login
+supabase projects list
+supabase storage create-bucket carsabeg-uploads --public
+```
+
+Replace `--public` with `--private` or omit if you want the bucket restricted.
+
+### Verifying uploads
+
+- Upload a small file from the browser using the profile page to confirm the `upload-photo` endpoint and storage permissions are correct.
+- If you keep the bucket private, verify your code uses signed URLs or that the API returns accessible URLs for the client.
+
+---
+
+If you want, I can also add a small `scripts` section or GitHub Actions to run migrations automatically.

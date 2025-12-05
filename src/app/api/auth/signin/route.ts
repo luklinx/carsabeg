@@ -2,7 +2,7 @@
 import { getSupabaseServer } from "@/lib/supabaseServer";
 import { NextRequest, NextResponse } from "next/server";
 import { compare } from "bcryptjs";
-import { cookies } from "next/headers";
+import { setUserCookie } from "@/lib/authCookies";
 
 export async function POST(req: NextRequest) {
   try {
@@ -42,14 +42,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Set session cookie (simple approach - in production use proper session management)
-    const cookieStore = await cookies();
-    cookieStore.set("user_id", user.id, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 30 * 24 * 60 * 60, // 30 days
-      path: "/",
-    });
+    // Set session cookie
+    setUserCookie(user.id);
 
     return NextResponse.json({
       success: true,

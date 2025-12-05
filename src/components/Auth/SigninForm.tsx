@@ -18,6 +18,7 @@ export default function SigninForm() {
 
   // Check for success message from signup
   const signupSuccess = searchParams.get("success");
+  const redirectTo = searchParams.get("redirect");
 
   const handleSignin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,8 +48,8 @@ export default function SigninForm() {
 
       setSuccess("Signed in successfully! Redirecting...");
       setTimeout(() => {
-        router.push("/dashboard");
-      }, 1000);
+        router.push(redirectTo || "/dashboard/profile");
+      }, 800);
     } catch (err) {
       setError("An error occurred. Please try again.");
       console.error(err);
