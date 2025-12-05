@@ -1,6 +1,7 @@
 // src/components/Logo.tsx
 import { cn } from "@/lib/utils";
 import { Flame } from "lucide-react";
+import Image from "next/image";
 
 interface LogoProps {
   className?: string;
@@ -37,12 +38,12 @@ export default function Logo({
       {/* If you want to use a static image instead of the SVG, pass `logoSrc="/logo.png"` to this component. */}
       {/* If `logoSrc` is provided render the image from `public/`, otherwise fall back to the SVG */}
       {logoSrc ? (
-        <img
+        <Image
           src={logoSrc}
           alt={alt ?? "Cars Abeg"}
           className="max-w-full h-auto object-contain"
-          loading="eager"
-          decoding="async"
+          priority
+          fill
         />
       ) : (
         <svg
