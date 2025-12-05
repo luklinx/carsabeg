@@ -16,14 +16,11 @@ import {
   CheckCircle,
   Car as CarIcon,
   Briefcase,
-  AlertTriangle,
-  Star,
-  AlertCircle,
-  Lock,
 } from "lucide-react";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import SimilarCars from "@/components/SimilarCars";
 import ImageGallery from "@/components/CarGallery";
+import CarDetailActions from "@/components/CarDetailActions";
 
 export default async function CarDetails({
   params,
@@ -56,6 +53,38 @@ export default async function CarDetails({
   const whatsappUrl = `https://wa.me/${cleanPhone}`;
   const priceInMillions = (car.price / 1_000_000).toFixed(1);
   const images = car.images?.length ? car.images : ["/placeholder.jpg"];
+
+  // Fetch dealer's active ads count
+  const { data: dealerCars } = await supabase
+    .from("cars")
+    .select("id")
+    .eq("dealer_name", car.dealer_name)
+    .eq("approved", true);
+
+  const dealerAdsCount = dealerCars?.length || 1;
+
+  // Fetch dealer's feedback/rating (if table exists, otherwise default to 0)
+  let dealerRating = { average: 0, total: 0 };
+  try {
+    const { data: feedbacks } = await supabase
+      .from("seller_feedback")
+      .select("*")
+      .eq("dealer_id", car.id);
+
+    if (feedbacks && feedbacks.length > 0) {
+      const avgRating =
+        feedbacks.reduce(
+          (sum: number, f: { rating: number }) => sum + f.rating,
+          0
+        ) / feedbacks.length;
+      dealerRating = {
+        average: parseFloat(avgRating.toFixed(1)),
+        total: feedbacks.length,
+      };
+    }
+  } catch {
+    // Table might not exist yet, continue with default
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 via-white to-gray-50 pb-32">
@@ -197,144 +226,11 @@ export default async function CarDetails({
         </section>
       )}
 
-      {/* SELLER INFO & FEEDBACK SECTION */}
-      <section className="container mx-auto px-3 sm:px-4 md:px-6 py-12 md:py-16 bg-gradient-to-r from-blue-50 to-blue-100 rounded-2xl sm:rounded-3xl shadow-lg">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-gray-900 mb-6 md:mb-8">
-            About the Seller
-          </h2>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-8">
-            {/* Seller Name & Contact */}
-            <div className="bg-white p-5 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl shadow-md">
-              <p className="text-xs sm:text-sm font-bold text-gray-600 uppercase tracking-wide mb-2">
-                Seller Name
-              </p>
-              <p className="text-lg sm:text-xl md:text-2xl font-black text-gray-900 mb-4">
-                {car.dealer_name || "Cars Abeg Verified Dealer"}
-              </p>
-              <p className="text-xs sm:text-sm font-bold text-gray-600 uppercase tracking-wide mb-2">
-                Contact
-              </p>
-              <a
-                href={`tel:${car.dealer_phone}`}
-                className="text-green-600 font-bold text-base sm:text-lg hover:underline flex items-center gap-2"
-              >
-                <Phone size={20} /> {car.dealer_phone || "+234 901 883 7909"}
-              </a>
-            </div>
-
-            {/* Number of Ads */}
-            <div className="bg-white p-5 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl shadow-md">
-              <p className="text-xs sm:text-sm font-bold text-gray-600 uppercase tracking-wide mb-2">
-                Active Listings
-              </p>
-              <p className="text-3xl sm:text-4xl md:text-5xl font-black text-green-600 mb-4">
-                12
-              </p>
-              <p className="text-xs sm:text-sm text-gray-700 font-medium">
-                This seller has 12 active cars for sale
-              </p>
-            </div>
-          </div>
-
-          {/* Leave Feedback */}
-          <div className="bg-white p-5 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl shadow-md">
-            <div className="flex items-center gap-3 sm:gap-4 mb-4">
-              <Star size={28} className="text-yellow-500" />
-              <h3 className="text-lg sm:text-xl md:text-2xl font-black text-gray-900">
-                Seller Rating
-              </h3>
-            </div>
-            <div className="flex gap-2 mb-6">
-              {[...Array(5)].map((_, i) => (
-                <button
-                  key={i}
-                  className="text-yellow-400 hover:text-yellow-500 transition text-2xl"
-                  title={`Rate ${i + 1} stars`}
-                >
-                  ★
-                </button>
-              ))}
-            </div>
-            <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 sm:py-4 rounded-xl sm:rounded-2xl font-black text-base sm:text-lg transition-all hover:scale-105">
-              Leave Feedback About This Seller
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* SAFETY TIPS SECTION */}
-      <section className="container mx-auto px-3 sm:px-4 md:px-6 py-12 md:py-16 bg-gradient-to-r from-red-50 to-orange-50 rounded-2xl sm:rounded-3xl shadow-lg">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex items-center gap-3 sm:gap-4 mb-6 md:mb-8">
-            <AlertCircle size={32} className="text-red-600 flex-shrink-0" />
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-gray-900">
-              Safety Tips
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-            {[
-              {
-                icon: Lock,
-                title: "Meet in Safe Places",
-                desc: "Always meet the seller in a public location during daylight",
-              },
-              {
-                icon: Shield,
-                title: "Verify Identity",
-                desc: "Ask for government-issued ID and confirm seller details",
-              },
-              {
-                icon: Gauge,
-                title: "Get Vehicle Inspection",
-                desc: "Have a trusted mechanic inspect the car before payment",
-              },
-              {
-                icon: AlertTriangle,
-                title: "Use Secure Payment",
-                desc: "Never send money via wire; use escrow or bank transfer",
-              },
-            ].map((tip, idx) => {
-              const Icon = tip.icon;
-              return (
-                <div
-                  key={idx}
-                  className="bg-white p-4 sm:p-5 md:p-6 rounded-xl shadow-md hover:shadow-lg transition"
-                >
-                  <div className="flex items-start gap-3 sm:gap-4">
-                    <Icon
-                      size={24}
-                      className="text-red-600 mt-1 flex-shrink-0"
-                    />
-                    <div>
-                      <h3 className="font-black text-gray-900 text-base sm:text-lg md:text-xl mb-2">
-                        {tip.title}
-                      </h3>
-                      <p className="text-xs sm:text-sm md:text-base text-gray-700 leading-relaxed">
-                        {tip.desc}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* ACTION BUTTONS */}
-      <section className="container mx-auto px-3 sm:px-4 md:px-6 py-8 md:py-12">
-        <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-          <button className="bg-orange-500 hover:bg-orange-600 text-white py-4 sm:py-5 md:py-6 px-6 rounded-xl sm:rounded-2xl font-black text-base sm:text-lg transition-all hover:scale-105 flex items-center justify-center gap-2 sm:gap-3">
-            <AlertTriangle size={24} /> Mark as Unavailable
-          </button>
-          <button className="bg-red-600 hover:bg-red-700 text-white py-4 sm:py-5 md:py-6 px-6 rounded-xl sm:rounded-2xl font-black text-base sm:text-lg transition-all hover:scale-105 flex items-center justify-center gap-2 sm:gap-3">
-            <AlertCircle size={24} /> Report Abuse
-          </button>
-        </div>
-      </section>
+      <CarDetailActions
+        car={car}
+        dealerAdsCount={dealerAdsCount}
+        dealerRating={dealerRating}
+      />
 
       <SimilarCars currentCarId={car.id} />
 
