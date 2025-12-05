@@ -306,21 +306,21 @@ export default function CarDetailActions({
 
       {/* Feedback Modal */}
       {showFeedbackModal && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 sm:p-8">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-2xl font-black">Leave Feedback</h3>
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-sm sm:max-w-md p-5 sm:p-6 md:p-8 max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-start gap-4 mb-4 sm:mb-6">
+              <h3 className="text-xl sm:text-2xl font-black">Leave Feedback</h3>
               <button
                 onClick={() => setShowFeedbackModal(false)}
-                className="text-gray-500 hover:text-gray-700"
+                className="text-gray-500 hover:text-gray-700 flex-shrink-0"
               >
-                <X size={28} />
+                <X size={24} className="sm:w-7 sm:h-7" />
               </button>
             </div>
 
             {message && (
               <div
-                className={`mb-4 p-4 rounded-lg font-bold ${
+                className={`mb-4 p-3 sm:p-4 rounded-lg font-bold text-sm sm:text-base ${
                   message.includes("Thank")
                     ? "bg-green-100 text-green-800"
                     : "bg-red-100 text-red-800"
@@ -332,28 +332,28 @@ export default function CarDetailActions({
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">
+                <label className="block text-xs sm:text-sm font-bold text-gray-700 mb-2">
                   Email
                 </label>
                 <input
                   type="email"
                   value={userEmail}
                   onChange={(e) => setUserEmail(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                   placeholder="your@email.com"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">
+                <label className="block text-xs sm:text-sm font-bold text-gray-700 mb-3">
                   Rating
                 </label>
-                <div className="flex gap-2">
+                <div className="flex gap-1 sm:gap-2 justify-center">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <button
                       key={star}
                       onClick={() => setRating(star)}
-                      className={`text-3xl transition ${
+                      className={`text-2xl sm:text-3xl md:text-4xl transition transform hover:scale-110 ${
                         star <= rating
                           ? "text-yellow-400"
                           : "text-gray-300 hover:text-yellow-200"
@@ -366,14 +366,14 @@ export default function CarDetailActions({
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">
+                <label className="block text-xs sm:text-sm font-bold text-gray-700 mb-2">
                   Your Feedback (Optional)
                 </label>
                 <textarea
                   value={feedback}
                   onChange={(e) => setFeedback(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 resize-none"
-                  rows={4}
+                  className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 resize-none"
+                  rows={3}
                   placeholder="Share your experience..."
                 />
               </div>
@@ -381,7 +381,7 @@ export default function CarDetailActions({
               <button
                 onClick={handleFeedbackSubmit}
                 disabled={loading}
-                className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white py-3 rounded-lg font-black transition"
+                className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white py-2.5 sm:py-3 text-sm sm:text-base rounded-lg font-black transition"
               >
                 {loading ? "Submitting..." : "Submit Feedback"}
               </button>
@@ -392,21 +392,21 @@ export default function CarDetailActions({
 
       {/* Report Abuse Modal */}
       {showAbuseModal && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 sm:p-8">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-2xl font-black">Report Abuse</h3>
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-sm sm:max-w-md p-5 sm:p-6 md:p-8 max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-start gap-4 mb-4 sm:mb-6">
+              <h3 className="text-xl sm:text-2xl font-black">Report Abuse</h3>
               <button
                 onClick={() => setShowAbuseModal(false)}
-                className="text-gray-500 hover:text-gray-700"
+                className="text-gray-500 hover:text-gray-700 flex-shrink-0"
               >
-                <X size={28} />
+                <X size={24} className="sm:w-7 sm:h-7" />
               </button>
             </div>
 
             {message && (
               <div
-                className={`mb-4 p-4 rounded-lg font-bold ${
+                className={`mb-4 p-3 sm:p-4 rounded-lg font-bold text-sm sm:text-base ${
                   message.includes("Thank")
                     ? "bg-green-100 text-green-800"
                     : "bg-red-100 text-red-800"
@@ -418,13 +418,13 @@ export default function CarDetailActions({
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">
+                <label className="block text-xs sm:text-sm font-bold text-gray-700 mb-2">
                   Reason for Report
                 </label>
                 <select
                   value={abuseReason}
                   onChange={(e) => setAbuseReason(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600"
+                  className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600"
                 >
                   <option value="">Select a reason...</option>
                   <option value="fake_listing">Fake Listing</option>
@@ -439,27 +439,27 @@ export default function CarDetailActions({
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">
+                <label className="block text-xs sm:text-sm font-bold text-gray-700 mb-2">
                   Details (Optional)
                 </label>
                 <textarea
                   value={abuseDetails}
                   onChange={(e) => setAbuseDetails(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 resize-none"
-                  rows={4}
+                  className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600 resize-none"
+                  rows={3}
                   placeholder="Please provide details..."
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">
+                <label className="block text-xs sm:text-sm font-bold text-gray-700 mb-2">
                   Email (Optional)
                 </label>
                 <input
                   type="email"
                   value={userEmail}
                   onChange={(e) => setUserEmail(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600"
+                  className="w-full px-3 sm:px-4 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600"
                   placeholder="your@email.com"
                 />
               </div>
@@ -467,7 +467,7 @@ export default function CarDetailActions({
               <button
                 onClick={handleAbuseReport}
                 disabled={loading}
-                className="w-full bg-red-600 hover:bg-red-700 disabled:bg-gray-400 text-white py-3 rounded-lg font-black transition"
+                className="w-full bg-red-600 hover:bg-red-700 disabled:bg-gray-400 text-white py-2.5 sm:py-3 text-sm sm:text-base rounded-lg font-black transition"
               >
                 {loading ? "Submitting..." : "Submit Report"}
               </button>
@@ -478,21 +478,23 @@ export default function CarDetailActions({
 
       {/* Mark Unavailable Modal */}
       {showUnavailableModal && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 sm:p-8">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-2xl font-black">Mark as Unavailable</h3>
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-sm sm:max-w-md p-5 sm:p-6 md:p-8">
+            <div className="flex justify-between items-start gap-4 mb-4 sm:mb-6">
+              <h3 className="text-xl sm:text-2xl font-black">
+                Mark as Unavailable
+              </h3>
               <button
                 onClick={() => setShowUnavailableModal(false)}
-                className="text-gray-500 hover:text-gray-700"
+                className="text-gray-500 hover:text-gray-700 flex-shrink-0"
               >
-                <X size={28} />
+                <X size={24} className="sm:w-7 sm:h-7" />
               </button>
             </div>
 
             {message && (
               <div
-                className={`mb-4 p-4 rounded-lg font-bold ${
+                className={`mb-4 p-3 sm:p-4 rounded-lg font-bold text-sm sm:text-base ${
                   message.includes("Thank")
                     ? "bg-green-100 text-green-800"
                     : "bg-red-100 text-red-800"
@@ -502,22 +504,22 @@ export default function CarDetailActions({
               </div>
             )}
 
-            <p className="text-gray-700 mb-6 leading-relaxed">
+            <p className="text-gray-700 mb-6 leading-relaxed text-sm sm:text-base">
               Help other buyers by marking this car as unavailable if you know
               it has been sold or is no longer for sale.
             </p>
 
-            <div className="flex gap-4">
+            <div className="flex gap-3 sm:gap-4">
               <button
                 onClick={() => setShowUnavailableModal(false)}
-                className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-900 py-3 rounded-lg font-black transition"
+                className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-900 py-2.5 sm:py-3 text-sm sm:text-base rounded-lg font-black transition"
               >
                 Cancel
               </button>
               <button
                 onClick={handleMarkUnavailable}
                 disabled={loading}
-                className="flex-1 bg-orange-500 hover:bg-orange-600 disabled:bg-gray-400 text-white py-3 rounded-lg font-black transition"
+                className="flex-1 bg-orange-500 hover:bg-orange-600 disabled:bg-gray-400 text-white py-2.5 sm:py-3 text-sm sm:text-base rounded-lg font-black transition"
               >
                 {loading ? "Processing..." : "Confirm"}
               </button>
