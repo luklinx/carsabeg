@@ -35,7 +35,8 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ success: true, data });
-  } catch (err) {
+  } catch (err: unknown) {
+    console.error("Feedback POST error:", err);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
@@ -70,7 +71,10 @@ export async function GET(req: NextRequest) {
     const avgRating =
       feedbacks.length > 0
         ? (
-            feedbacks.reduce((sum, f) => sum + f.rating, 0) / feedbacks.length
+            feedbacks.reduce(
+              (sum: number, f: { rating: number }) => sum + f.rating,
+              0
+            ) / feedbacks.length
           ).toFixed(1)
         : 0;
 
@@ -79,7 +83,8 @@ export async function GET(req: NextRequest) {
       average_rating: avgRating,
       total_reviews: feedbacks.length,
     });
-  } catch (err) {
+  } catch (err: unknown) {
+    console.error("Feedback GET error:", err);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

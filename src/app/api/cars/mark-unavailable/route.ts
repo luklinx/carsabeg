@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
     const supabase = getSupabaseServer();
 
     // Log the unavailable report
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from("car_reports")
       .insert([
         {
@@ -34,7 +34,8 @@ export async function POST(req: NextRequest) {
       success: true,
       message: "Car marked as unavailable. Thank you for the update!",
     });
-  } catch (err) {
+  } catch (err: unknown) {
+    console.error("Mark unavailable error:", err);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
