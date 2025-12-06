@@ -51,7 +51,7 @@ export default function HowItWorks() {
               {
                 number: "1",
                 title: "Browse & Pick Your Ride",
-                desc: "Hundreds of verified Tokunbo & Nigerian Used cars. Real photos. Real prices. No fake listings.",
+                desc: "Hundreds of verified Foreign Used & Nigerian Used cars. Real photos. Real prices. No fake listings.",
                 icon: <Phone className="w-20 h-20" />,
               },
               {

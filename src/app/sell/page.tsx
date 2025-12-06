@@ -1,7 +1,8 @@
 // src/app/sell/page.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { supabaseBrowser } from "@/lib/supabaseClient";
@@ -20,13 +21,52 @@ import {
 // import Logo from "@/components/Logo";
 
 export default function SellCarPage() {
+  const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [isAuthed, setIsAuthed] = useState(false);
   const [previewImages, setPreviewImages] = useState<
     { url: string; file: File }[]
   >([]);
+
+  // Check authentication on mount
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const res = await fetch("/api/auth/check");
+        if (res.ok) {
+          setIsAuthed(true);
+        } else {
+          router.push("/auth/signin?redirect=/sell");
+        }
+      } catch (err) {
+        console.error("Auth check error:", err);
+        router.push("/auth/signin?redirect=/sell");
+      }
+    };
+    checkAuth();
+  }, [router]);
+
+  // Show loading state while checking auth
+  if (!isAuthed) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-blue-50">
+        <div className="text-center">
+          <p className="text-xl font-bold text-gray-700 mb-4">
+            Checking authentication...
+          </p>
+          <Link
+            href="/auth/signin?redirect=/sell"
+            className="inline-block px-6 py-3 bg-green-600 text-white font-bold rounded-lg hover:bg-green-700"
+          >
+            Sign In to List Cars
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;

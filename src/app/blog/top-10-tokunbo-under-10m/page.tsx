@@ -4,7 +4,7 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title:
-    "Top 10 Tokunbo Cars Under ₦10 Million in Nigeria (November 2025 Live Prices)",
+    "Top 10 Foreign Used Cars Under ₦10 Million in Nigeria (November 2025 Live Prices)",
   description:
     "The cleanest, most reliable foreign-used cars you can buy right now in Lagos, Abuja & PH under 10 million naira.",
 };
@@ -19,7 +19,7 @@ export default function Top10TokunboUnder10M() {
             UPDATED — 27 NOVEMBER 2025
           </p>
           <h1 className="text-2xl md:text-3xl font-black text-gray-900 leading-tight mb-6">
-            Top 10 Tokunbo Cars Under ₦10 Million in Nigeria
+            Top 10 Foreign Used Cars Under ₦10 Million in Nigeria
             <br className="hidden md:block" />
             <span className="text-green-600">(November 2025 Live Prices)</span>
           </h1>

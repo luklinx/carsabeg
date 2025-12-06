@@ -11,7 +11,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: {
-    default: "CARS ABEG – Tokunbo & Nigerian Used Cars",
+    default: "CARS ABEG – Foreign Used & Nigerian Used Cars",
     template: "%s | CARS ABEG",
   },
   description:

@@ -110,7 +110,7 @@ export default function InventoryFilters({ initialCars }: Props) {
               className="px-4 py-4 border-2 border-gray-800 rounded-2xl text-lg font-black bg-white focus:border-green-600 focus:ring-4 focus:ring-green-100 transition"
             >
               <option value="">All Conditions</option>
-              <option value="Foreign Used">Tokunbo</option>
+              <option value="Foreign Used">Foreign Used</option>
               <option value="Nigerian Used">Nigerian Used</option>
             </select>
 

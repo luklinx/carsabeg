@@ -26,8 +26,8 @@ export default function Footer() {
               No Wahala. Just Quality Cars.
             </p>
             <p className="text-sm sm:text-base md:text-lg text-amber-800 mt-4 sm:mt-6 leading-relaxed font-medium max-w-xs mx-auto md:mx-0">
-              Nigeria’s fastest-growing marketplace for Tokunbo & Nigerian Used
-              cars.
+              Nigeria’s fastest-growing marketplace for Foreign Used & Nigerian
+              Used cars.
             </p>
 
             {/* Trust Icons */}

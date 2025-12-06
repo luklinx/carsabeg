@@ -25,7 +25,7 @@ export default function Home() {
 
           {/* SUBHEAD — MINIMAL, POWERFUL */}
           <p className="mt-6 text-2xl md:text-2xl font-black text-green-100">
-            Tokunbo • Nigerian Used • Brand New
+            Foreign Used • Nigerian Used • Brand New
           </p>
 
           {/* TRUST PILLS — MOBILE FRIENDLY GRID */}

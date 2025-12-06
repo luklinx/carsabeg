@@ -8,7 +8,7 @@ export const metadata = {
 const posts = [
   {
     slug: "top-10-tokunbo-under-10m",
-    title: "Top 10 Tokunbo Cars Under ₦10 Million in Nigeria (2025)",
+    title: "Top 10 Foreign Used Cars Under ₦10 Million in Nigeria (2025)",
     date: "Nov 27, 2025",
     excerpt:
       "Clean foreign-used cars you can actually afford right now in Lagos & Abuja",
@@ -16,14 +16,14 @@ const posts = [
   },
   {
     slug: "nigerian-used-vs-tokunbo",
-    title: "Nigerian Used vs Tokunbo: Which One Should You Buy in 2025?",
+    title: "Nigerian Used vs Foreign Used: Which One Should You Buy in 2025?",
     date: "Nov 25, 2025",
     excerpt: "The honest truth nobody tells you before spending millions",
     readTime: "8 min read",
   },
   {
     slug: "spot-fake-tokunbo",
-    title: "How to Spot a Fake Tokunbo Car in Lagos (5 Red Flags)",
+    title: "How to Spot a Fake Foreign Used Car in Lagos (5 Red Flags)",
     date: "Nov 23, 2025",
     excerpt: "95% of “Tokunbo” in Berger are accidented Nigerian-used cars",
     readTime: "5 min read",

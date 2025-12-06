@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { Menu, X, Zap, MessageCircle } from "lucide-react";
 import { useState } from "react";
 import Logo from "@/components/Logo";
+import UserNav from "@/components/UserNav";
 
 const navItems = [
   { name: "Home", href: "/" },
@@ -50,6 +51,10 @@ export default function Header() {
                 </Link>
               ))}
             </nav>
+            {/* User Auth Nav */}
+            <div className="hidden lg:flex">
+              <UserNav />
+            </div>
             {/* MOBILE MENU BUTTON */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

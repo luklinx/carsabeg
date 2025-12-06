@@ -171,7 +171,7 @@ export default function FeaturedSection({ initialCars }: Props) {
               FOREIGN USED
             </h2>
             <p className="text-3xl md:text-3xl font-black text-gray-800">
-              Tokunbo • Clean Title • Zero Accidents
+              Foreign Used • Clean Title • Zero Accidents
             </p>
             <div className="flex justify-center gap-6 mt-8">
               <span className="bg-green-600 text-white px-8 py-4 rounded-full font-black text-2xl shadow-xl">
