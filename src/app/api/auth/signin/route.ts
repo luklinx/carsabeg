@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Set session cookie
-    setUserCookie(user.id);
+    await setUserCookie(user.id);
 
     return NextResponse.json({
       success: true,

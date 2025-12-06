@@ -1,9 +1,9 @@
 import { cookies } from "next/headers";
 
 // Centralized helpers for setting/clearing the auth cookie.
-// Uses `cookies()` from Next.js server runtime.
-export function setUserCookie(userId: string) {
-  const cookieStore = cookies();
+// Uses `cookies()` from Next.js server runtime (async).
+export async function setUserCookie(userId: string) {
+  const cookieStore = await cookies();
   // Use explicit options to ensure secure defaults.
   cookieStore.set({
     name: "user_id",
@@ -16,7 +16,7 @@ export function setUserCookie(userId: string) {
   });
 }
 
-export function clearUserCookie() {
-  const cookieStore = cookies();
+export async function clearUserCookie() {
+  const cookieStore = await cookies();
   cookieStore.delete("user_id", { path: "/" });
 }

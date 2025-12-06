@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
     // Optionally sign the user in by setting the cookie
     const createdUser = newUser?.[0];
     if (createdUser?.id) {
-      setUserCookie(createdUser.id);
+      await setUserCookie(createdUser.id);
     }
 
     return NextResponse.json(

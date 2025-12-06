@@ -4,7 +4,7 @@ import { clearUserCookie } from "@/lib/authCookies";
 
 export async function POST() {
   try {
-    clearUserCookie();
+    await clearUserCookie();
 
     return NextResponse.json({
       success: true,
