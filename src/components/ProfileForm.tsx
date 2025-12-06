@@ -66,15 +66,26 @@ export default function ProfileForm({ user }: ProfileFormProps) {
         body: formData,
       });
 
-      const data = await response.json();
+      let data;
+      try {
+        data = await response.json();
+      } catch (parseErr) {
+        console.error(
+          "Failed to parse response JSON:",
+          parseErr,
+          "Response text:",
+          await response.text()
+        );
+        data = {};
+      }
 
       if (!response.ok) {
-        const errorMsg = data.error || "Failed to upload photo";
-        const details = data.details ? ` (${data.details})` : "";
+        const errorMsg = data?.error || "Failed to upload photo";
+        const details = data?.details ? ` (${data.details})` : "";
         console.error("Upload failed:", {
           status: response.status,
           error: errorMsg,
-          details: data.details,
+          details: data?.details,
           fullResponse: data,
         });
         setError(errorMsg + details);

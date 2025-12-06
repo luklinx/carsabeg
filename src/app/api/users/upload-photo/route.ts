@@ -54,12 +54,17 @@ export async function POST(req: NextRequest) {
       });
 
     if (uploadError) {
-      console.error("Upload error:", uploadError);
+      console.error("Supabase upload error:", {
+        message: uploadError.message,
+        code: uploadError.code,
+        fullError: uploadError,
+      });
       return NextResponse.json(
         {
-          error: uploadError.message || "Failed to upload photo",
-          details:
-            "Ensure the 'carsabeg-uploads' storage bucket exists in Supabase",
+          error: uploadError.message || "Failed to upload photo to storage",
+          details: `Storage error: ${
+            uploadError.message || "Unknown error"
+          }. Check bucket permissions and that 'carsabeg-uploads' bucket exists.`,
         },
         { status: 500 }
       );
