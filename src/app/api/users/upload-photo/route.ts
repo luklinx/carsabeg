@@ -56,7 +56,11 @@ export async function POST(req: NextRequest) {
     if (uploadError) {
       console.error("Upload error:", uploadError);
       return NextResponse.json(
-        { error: "Failed to upload photo" },
+        {
+          error: uploadError.message || "Failed to upload photo",
+          details:
+            "Ensure the 'carsabeg-uploads' storage bucket exists in Supabase",
+        },
         { status: 500 }
       );
     }
@@ -83,7 +87,11 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     console.error("Upload error:", err);
     return NextResponse.json(
-      { error: "Internal server error" },
+      {
+        error: err instanceof Error ? err.message : "Internal server error",
+        details:
+          "Check the Supabase storage bucket exists and credentials are valid",
+      },
       { status: 500 }
     );
   }

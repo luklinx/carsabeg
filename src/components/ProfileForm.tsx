@@ -69,7 +69,15 @@ export default function ProfileForm({ user }: ProfileFormProps) {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || "Failed to upload photo");
+        const errorMsg = data.error || "Failed to upload photo";
+        const details = data.details ? ` (${data.details})` : "";
+        console.error("Upload failed:", {
+          status: response.status,
+          error: errorMsg,
+          details: data.details,
+          fullResponse: data,
+        });
+        setError(errorMsg + details);
         setPhotoPreview(photoUrl); // Reset preview to previous
         return;
       }
