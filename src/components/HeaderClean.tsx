@@ -117,7 +117,7 @@ export default function HeaderClean() {
       </header>
 
       <div className="lg:hidden">
-        <div className="fixed top-0 left-0 right-0 bg-white z-50 border-b border-gray-100">
+        <div className="fixed top-0 left-0 right-0 bg-white z-50 border-b border-gray-100 overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between">
             <Link href="/" className="flex items-center">
               <Logo logoSrc="/logo.webp" alt="CarsAbeg" size="sm" />
@@ -127,14 +127,17 @@ export default function HeaderClean() {
           <div className="px-4 pb-2">
             <form
               action="/inventory"
-              className="flex items-center gap-2 w-full"
+              className="flex items-center gap-2 w-full max-w-full box-border"
             >
               <input
                 name="q"
-                className="min-w-0 flex-1 px-3 py-2 rounded-lg border border-gray-200 text-sm"
+                className="min-w-0 flex-1 px-3 py-2 rounded-lg border border-gray-200 text-sm max-w-full overflow-hidden"
                 placeholder="Search cars, makes, models..."
               />
-              <button className="btn btn-sm btn-primary">
+              <button
+                type="submit"
+                className="flex-none btn btn-sm btn-primary"
+              >
                 <Search size={16} />
               </button>
             </form>
