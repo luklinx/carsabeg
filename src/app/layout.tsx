@@ -1,5 +1,5 @@
 // src/app/layout.tsx
-import Link from "next/link";
+// import Link from "next/link";
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";

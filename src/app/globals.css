@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 /* ==================================================================
    ROOT & THEME
@@ -8,10 +6,13 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --font-geist-sans: system-ui, -apple-system, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, "Noto Sans", sans-serif;
-  --font-geist-mono: ui-monospace, Menlo, Monaco, "Roboto Mono", "Courier New",
-    monospace;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -21,42 +22,56 @@
   }
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 /* ==================================================================
-   SELECTION & FOCUS STATES
+   TYPOGRAPHY — ALWAYS BOLD, ALWAYS PROUD
    ================================================================== */
-::selection {
-  background-color: #16a34a;
-  color: white;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply text-gray-900 font-black;
 }
 
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+.section-heading {
+  @apply text-2xl md:text-4xl font-black text-center mb-12 text-gray-800;
 }
 
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
+.sub-heading {
+  @apply text-xl md:text-2xl font-bold text-gray-700 mb-6;
 }
 
-::-webkit-scrollbar-thumb {
-  background: #16a34a;
-  border-radius: 5px;
+/* ==================================================================
+   FORM INPUTS — NIGERIAN BOLD
+   ================================================================== */
+::placeholder {
+  @apply text-gray-600 font-bold opacity-100;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #15803d;
+input,
+textarea,
+select {
+  @apply text-gray-900 font-bold placeholder-gray-600;
+}
+
+input::placeholder,
+select {
+  @apply text-gray-600 font-bold;
+}
+
+/* ==================================================================
+   NAVIGATION — ALWAYS DARK & STRONG
+   ================================================================== */
+nav a,
+nav button {
+  @apply text-gray-900 font-black hover:text-green-600 transition;
 }
 
 /* ==================================================================
