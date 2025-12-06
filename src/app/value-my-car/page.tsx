@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, ChangeEvent, ReactNode } from "react";
-import { Zap, ArrowRight, CheckCircle, AlertCircle, Brain } from "lucide-react";
+import { ArrowRight, CheckCircle, AlertCircle, Brain } from "lucide-react";
 
 interface FormData {
   make: string;
@@ -126,7 +126,7 @@ export default function ValueMyCar() {
       } else {
         throw new Error("AI failed");
       }
-    } catch (err) {
+    } catch {
       setError("AI is thinking... Try again or chat us on WhatsApp");
     } finally {
       setLoading(false);
