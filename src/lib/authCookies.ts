@@ -18,5 +18,5 @@ export async function setUserCookie(userId: string) {
 
 export async function clearUserCookie() {
   const cookieStore = await cookies();
-  cookieStore.delete("user_id", { path: "/" });
+  cookieStore.delete("user_id");
 }
