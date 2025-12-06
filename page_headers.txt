@@ -1,0 +1,12 @@
+
+Key               Value
+---               -----
+Vary              {rsc, next-router-state-tree, next-router-prefetch, nex…
+Link              {</_next/static/media/83afe278b6a6bb3c-s.p.3a6ba036.wof…
+Cache-Control     {no-store, must-revalidate, no-cache, max-age=0, privat…
+Date              {Sat, 06 Dec 2025 13:26:08 GMT}
+Connection        {keep-alive}
+Keep-Alive        {timeout=5}
+Transfer-Encoding {chunked}
+Content-Type      {text/html; charset=utf-8}
+

@@ -1,4 +1,6 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* ==================================================================
    ROOT & THEME
@@ -6,13 +8,10 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-geist-sans: system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-geist-mono: ui-monospace, Menlo, Monaco, "Roboto Mono", "Courier New",
+    monospace;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,56 +21,42 @@
   }
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* ==================================================================
-   TYPOGRAPHY — ALWAYS BOLD, ALWAYS PROUD
+   SELECTION & FOCUS STATES
    ================================================================== */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  @apply text-gray-900 font-black;
+::selection {
+  background-color: #16a34a;
+  color: white;
 }
 
-.section-heading {
-  @apply text-2xl md:text-4xl font-black text-center mb-12 text-gray-800;
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
 }
 
-.sub-heading {
-  @apply text-xl md:text-2xl font-bold text-gray-700 mb-6;
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
 }
 
-/* ==================================================================
-   FORM INPUTS — NIGERIAN BOLD
-   ================================================================== */
-::placeholder {
-  @apply text-gray-600 font-bold opacity-100;
+::-webkit-scrollbar-thumb {
+  background: #16a34a;
+  border-radius: 5px;
 }
 
-input,
-textarea,
-select {
-  @apply text-gray-900 font-bold placeholder-gray-600;
-}
-
-input::placeholder,
-select {
-  @apply text-gray-600 font-bold;
-}
-
-/* ==================================================================
-   NAVIGATION — ALWAYS DARK & STRONG
-   ================================================================== */
-nav a,
-nav button {
-  @apply text-gray-900 font-black hover:text-green-600 transition;
+::-webkit-scrollbar-thumb:hover {
+  background: #15803d;
 }
 
 /* ==================================================================
