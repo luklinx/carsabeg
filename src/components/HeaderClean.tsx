@@ -125,13 +125,16 @@ export default function HeaderClean() {
             <UserNav />
           </div>
           <div className="px-4 pb-2">
-            <form action="/inventory" className="flex items-center gap-2">
+            <form
+              action="/inventory"
+              className="flex items-center gap-2 w-full"
+            >
               <input
                 name="q"
-                className="flex-1 px-3 py-2 rounded-lg border border-gray-200 text-sm"
+                className="min-w-0 flex-1 px-3 py-2 rounded-lg border border-gray-200 text-sm"
                 placeholder="Search cars, makes, models..."
               />
-              <button className="bg-green-600 text-white px-3 py-2 rounded-lg">
+              <button className="btn btn-sm btn-primary">
                 <Search size={16} />
               </button>
             </form>

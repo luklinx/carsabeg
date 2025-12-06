@@ -75,41 +75,28 @@ nav button {
 }
 
 /* ==================================================================
-   BUTTON RESIZE REVOLUTION — 50% SMALLER, 200% CLASSIER
+   BUTTONS — compact, consistent utilities
    ================================================================== */
-/* Kill all the old fat button classes globally */
-button,
-a[class*="bg-"],
-button[class*="px-"],
-button[class*="py-"],
-a[class*="rounded"],
-button[class*="text-"] {
-  /* Text size — 50% smaller */
-  @apply text-xl md:text-2xl; /* was text-3xl to text-9xl */
-
-  /* Padding — slim & sexy */
-  @apply px-8 md:px-10 py-5 md:py-6; /* was px-20+, py-12+ */
-
-  /* Border radius — modern */
-  @apply rounded-3xl;
-
-  /* Shadow — refined */
-  @apply shadow-xl hover:shadow-2xl;
-
-  /* Scale — subtle */
-  @apply transition-all duration-300 hover:scale-105 active:scale-95;
+/* Define a small, modern button utility used site-wide. */
+.btn {
+  @apply inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-all duration-150;
 }
 
-/* Special override for the few CTA kings that deserve to stay big */
-.btn-hero,
-.btn-mega {
-  @apply text-3xl md:text-5xl px-12 md:px-20 py-8 md:py-10;
+.btn-sm {
+  @apply text-sm px-2 py-1 rounded-md;
 }
 
-/* WhatsApp floating button — keep it big but not ridiculous */
-button[class*="fixed"][class*="bottom-"],
-a[class*="fixed"][class*="bottom-"] {
-  @apply p-5 md:p-6;
+.btn-primary {
+  @apply bg-green-600 text-white hover:bg-green-700 active:bg-green-800;
+}
+
+.btn-ghost {
+  @apply bg-transparent text-gray-700 hover:bg-gray-100;
+}
+
+/* Floating CTA exceptions keep moderate size */
+.btn-floating {
+  @apply p-3 rounded-full shadow-lg;
 }
 
 /* ==================================================================
