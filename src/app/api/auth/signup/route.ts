@@ -18,14 +18,13 @@ export async function POST(req: NextRequest) {
 
     const supabase = getSupabaseServer();
 
-    // Check if user exists
+    // Check if user exists (don't use .single() as it throws on no results)
     const { data: existingUser } = await supabase
       .from("users")
-      .select("*")
-      .eq("email", email)
-      .single();
+      .select("id")
+      .eq("email", email);
 
-    if (existingUser) {
+    if (existingUser && existingUser.length > 0) {
       return NextResponse.json(
         { error: "Email already registered" },
         { status: 400 }
@@ -50,8 +49,9 @@ export async function POST(req: NextRequest) {
       .select();
 
     if (error) {
+      console.error("Database insert error:", error);
       return NextResponse.json(
-        { error: "Failed to create account" },
+        { error: error.message || "Failed to create account" },
         { status: 500 }
       );
     }
