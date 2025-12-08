@@ -19,7 +19,7 @@ export default function Home() {
         </div>
         <div className="relative z-10 max-w-7xl mx-auto text-center">
           {/* MAIN HEADLINE — SHORT, LOUD, PROUD */}
-          <h1 className="text-3xl md:text-2xl lg:text-3xl font-black text-white drop-shadow-2xl leading-tight">
+          <h1 className="text-3xl md:text-4xl lg:text-7xl font-black text-white drop-shadow-4xl leading-tight">
             FIND YOUR <span className="text-yellow-400">DREAM CAR</span>
           </h1>
 

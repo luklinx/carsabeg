@@ -196,7 +196,7 @@ export default async function CarDetails({
                 rel="noopener noreferrer"
                 className="block text-center bg-black hover:bg-gray-900 text-white py-5 sm:py-6 md:py-8 rounded-2xl sm:rounded-3xl font-black text-xl sm:text-2xl md:text-3xl flex items-center justify-center gap-3 sm:gap-4 transition-all hover:scale-105 shadow-2xl"
               >
-                <Phone size={32} /> Call Seller Now
+                <Phone size={28} /> Call Seller Now
               </Link>
             </div>
 
