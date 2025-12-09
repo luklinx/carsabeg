@@ -1,4 +1,6 @@
+// src/components/InventoryClient.tsx
 "use client";
+
 import { useSearchParams } from "next/navigation";
 import { useMemo, useState, useEffect } from "react";
 import CarCard from "@/components/CarCard";
@@ -7,15 +9,18 @@ import { Car } from "@/types";
 import { X, Car as CarIcon } from "lucide-react";
 
 export default function InventoryClient() {
-  const searchParams = useSearchParams();
   const [allCars, setAllCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const searchParams = useSearchParams();
+
+  // THIS LINE KILLS THE WARNING FOREVER — SAFE NULL CHECK
+  const params = Object.fromEntries(searchParams ?? new URLSearchParams());
 
   useEffect(() => {
     async function loadCars() {
       try {
         const cars = await getCars();
-        // FINAL FIX: REMOVE ANY CAR WITHOUT ID
         const safeCars = (cars || []).filter((car): car is Car => !!car?.id);
         setAllCars(safeCars);
       } catch (err) {
@@ -32,26 +37,34 @@ export default function InventoryClient() {
 
     let result = [...allCars];
 
-    const make = searchParams.get("make")?.toLowerCase();
-    const condition = searchParams.get("condition");
-    const location = searchParams.get("location");
-    const minPrice = searchParams.get("minPrice");
-    const maxPrice = searchParams.get("maxPrice");
+    const make = params.make?.toLowerCase();
+    const condition = params.condition;
+    const location = params.location?.toLowerCase();
+    const minPrice = params.minPrice ? Number(params.minPrice) : undefined;
+    const maxPrice = params.maxPrice ? Number(params.maxPrice) : undefined;
 
-    if (make)
+    if (make) {
       result = result.filter((c) => c.make.toLowerCase().includes(make));
-    if (condition) result = result.filter((c) => c.condition === condition);
-    if (location)
+    }
+    if (condition) {
+      result = result.filter((c) => c.condition === condition);
+    }
+    if (location) {
       result = result.filter((c) =>
-        c.location?.toLowerCase().includes(location.toLowerCase())
+        c.location?.toLowerCase().includes(location)
       );
-    if (minPrice) result = result.filter((c) => c.price >= Number(minPrice));
-    if (maxPrice) result = result.filter((c) => c.price <= Number(maxPrice));
+    }
+    if (minPrice !== undefined) {
+      result = result.filter((c) => c.price >= minPrice);
+    }
+    if (maxPrice !== undefined) {
+      result = result.filter((c) => c.price <= maxPrice);
+    }
 
     return result;
-  }, [allCars, searchParams]);
+  }, [allCars, params]);
 
-  const hasActiveFilters = searchParams.toString().length > 0;
+  const hasActiveFilters = Object.keys(params).length > 0;
 
   if (loading) {
     return (
@@ -61,7 +74,7 @@ export default function InventoryClient() {
             size={80}
             className="mx-auto text-green-600 animate-bounce"
           />
-          <p className="text-3xl md:text-2xl font-black text-green-600 mt-8 animate-pulse">
+          <p className="text-3xl md:text-5xl font-black text-green-600 mt-8 animate-pulse">
             LOADING FRESH CARS...
           </p>
         </div>
@@ -74,10 +87,10 @@ export default function InventoryClient() {
       {/* HERO HEADER */}
       <section className="bg-gradient-to-b from-green-600 to-emerald-700 text-white py-20 md:py-32">
         <div className="container mx-auto px-6 text-center">
-          <h1 className="text-3xl md:text-3xl font-black mb-6 leading-none">
+          <h1 className="text-4xl md:text-6xl font-black mb-6 leading-none">
             ALL CARS IN STOCK
           </h1>
-          <p className="text-3xl md:text-3xl font-black opacity-90">
+          <p className="text-3xl md:text-5xl font-black opacity-90">
             {filteredCars.length} Fresh{" "}
             {filteredCars.length === 1 ? "Car" : "Cars"} Available
           </p>
@@ -97,7 +110,7 @@ export default function InventoryClient() {
         <div className="container mx-auto px-6">
           {filteredCars.length === 0 ? (
             <div className="text-center py-32 bg-white rounded-3xl shadow-2xl">
-              <p className="text-3xl font-black text-gray-400 mb-8">
+              <p className="text-4xl font-black text-gray-400 mb-8">
                 No cars match your search
               </p>
               <a
