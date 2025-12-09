@@ -1,4 +1,6 @@
 // src/app/api/auth/signin/route.ts
+export const dynamic = "force-dynamic"; // THIS LINE KILLS THE VERCEL ERROR FOREVER
+
 import { getSupabaseServer } from "@/lib/supabaseServer";
 import { NextRequest, NextResponse } from "next/server";
 import { compare } from "bcryptjs";
@@ -18,21 +20,19 @@ export async function POST(req: NextRequest) {
 
     const supabase = getSupabaseServer();
 
-    // Find user
     const { data: user, error } = await supabase
       .from("users")
-      .select("*")
-      .eq("email", email)
+      .select("id, email, full_name, phone, password_hash")
+      .eq("email", email.toLowerCase().trim())
       .single();
 
-    if (error || !user) {
+    if (error || !user || !user.password_hash) {
       return NextResponse.json(
         { error: "Invalid email or password" },
         { status: 401 }
       );
     }
 
-    // Compare password
     const passwordMatch = await compare(password, user.password_hash);
 
     if (!passwordMatch) {
@@ -42,19 +42,22 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Set session cookie
+    // Set secure session cookie
     await setUserCookie(user.id);
 
-    return NextResponse.json({
-      success: true,
-      message: "Signed in successfully",
-      user: {
-        id: user.id,
-        email: user.email,
-        full_name: user.full_name,
-        phone: user.phone,
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Signed in successfully",
+        user: {
+          id: user.id,
+          email: user.email,
+          full_name: user.full_name,
+          phone: user.phone,
+        },
       },
-    });
+      { status: 200 }
+    );
   } catch (err) {
     console.error("Signin error:", err);
     return NextResponse.json(
