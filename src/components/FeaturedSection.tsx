@@ -16,9 +16,12 @@ export default function FeaturedSection({ initialCars }: Props) {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  const make = (searchParams.get("make") || "").toLowerCase();
-  const minPrice = Number(searchParams.get("minPrice")) || 0;
-  const maxPrice = Number(searchParams.get("maxPrice")) || Infinity;
+  // THIS LINE KILLS THE WARNING FOREVER — SAFE NULL CHECK
+  const params = Object.fromEntries(searchParams ?? new URLSearchParams());
+
+  const make = (params.make || "").toLowerCase();
+  const minPrice = Number(params.minPrice) || 0;
+  const maxPrice = Number(params.maxPrice) || Infinity;
 
   // PREMIUM CARS — ONLY THE BEST
   const featuredCars = useMemo(() => {
@@ -27,7 +30,7 @@ export default function FeaturedSection({ initialCars }: Props) {
       if (make && car.make.toLowerCase() !== make) return false;
       if (minPrice > 0 && car.price < minPrice) return false;
       if (maxPrice !== Infinity && car.price > maxPrice) return false;
-      return !!car.id; // FINAL SAFETY
+      return !!car.id;
     });
   }, [initialCars, make, minPrice, maxPrice]);
 
@@ -65,7 +68,7 @@ export default function FeaturedSection({ initialCars }: Props) {
 
   return (
     <>
-      {/* HERO SEARCH BAR — MOBILE FIRST, BOLD, UNMISSABLE */}
+      {/* HERO SEARCH BAR */}
       <section className="sticky top-0 z-50 bg-gradient-to-r from-green-600 to-emerald-700 shadow-2xl">
         <div className="px-4 py-8 md:py-12">
           <form
@@ -123,7 +126,7 @@ export default function FeaturedSection({ initialCars }: Props) {
         </div>
       </section>
 
-      {/* PREMIUM SECTION — PURE FIRE */}
+      {/* PREMIUM SECTION */}
       <section className="py-16 md:py-24 bg-gradient-to-br from-orange-500 via-red-500 to-pink-600 text-white overflow-hidden relative">
         <div className="absolute inset-0 bg-black/30" />
         <div className="relative z-10 container mx-auto px-6 text-center">
@@ -132,15 +135,14 @@ export default function FeaturedSection({ initialCars }: Props) {
             PREMIUM LISTINGS — SELLING FAST
             <TrendingUp className="text-yellow-300" size={40} />
           </div>
-          <h2 className="text-3xl md:text-2xl font-black mb-6 drop-shadow-2xl">
+          <h2 className="text-3xl md:text-5xl font-black mb-6 drop-shadow-2xl">
             {featuredCars.length} Hot Deals Right Now
           </h2>
-          <p className="text-2xl md:text-2xl font-bold max-w-4xl mx-auto opacity-95">
+          <p className="text-xl md:text-2xl font-bold max-w-4xl mx-auto opacity-95">
             These cars move in days • Verified sellers • Direct contact
           </p>
         </div>
 
-        {/* MOBILE: CAROUSEL */}
         <div className="mt-12 md:hidden">
           {featuredCars.length > 0 ? (
             <CarCarousel cars={featuredCars} />
@@ -151,7 +153,6 @@ export default function FeaturedSection({ initialCars }: Props) {
           )}
         </div>
 
-        {/* DESKTOP: FULL GRID */}
         <div className="hidden md:block mt-16 max-w-7xl mx-auto px-6">
           {featuredCars.length > 0 ? (
             <CarGrid cars={featuredCars} />
@@ -163,14 +164,14 @@ export default function FeaturedSection({ initialCars }: Props) {
         </div>
       </section>
 
-      {/* TOKUNBO SECTION — GREEN ENERGY */}
+      {/* TOKUNBO SECTION */}
       <section className="py-20 md:py-28 bg-gradient-to-b from-green-50 to-white">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-3xl font-black text-green-600 mb-6">
+            <h2 className="text-4xl md:text-6xl font-black text-green-600 mb-6">
               FOREIGN USED
             </h2>
-            <p className="text-3xl md:text-3xl font-black text-gray-800">
+            <p className="text-3xl md:text-4xl font-black text-gray-800">
               Foreign Used • Clean Title • Zero Accidents
             </p>
             <div className="flex justify-center gap-6 mt-8">
@@ -192,14 +193,14 @@ export default function FeaturedSection({ initialCars }: Props) {
         </div>
       </section>
 
-      {/* NIGERIAN USED SECTION — NAIJA PRIDE */}
+      {/* NIGERIAN USED SECTION */}
       <section className="py-20 md:py-28 bg-gradient-to-b from-gray-100 to-gray-50">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-3xl font-black text-gray-900 mb-6">
+            <h2 className="text-4xl md:text-6xl font-black text-gray-900 mb-6">
               NIGERIAN USED
             </h2>
-            <p className="text-3xl md:text-3xl font-black text-gray-700">
+            <p className="text-3xl md:text-4xl font-black text-gray-700">
               Clean • Well Maintained • Lagos Registered
             </p>
             <div className="flex justify-center gap-8 mt-10">
