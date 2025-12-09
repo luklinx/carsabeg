@@ -15,15 +15,14 @@ export default function InventoryFilters({ initialCars }: Props) {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  // Extract current filters
-  const currentMake = (searchParams.get("make") || "").toLowerCase();
-  const currentMin = searchParams.get("minPrice")
-    ? Number(searchParams.get("minPrice"))
-    : 0;
-  const currentMax = searchParams.get("maxPrice")
-    ? Number(searchParams.get("maxPrice"))
-    : Infinity;
-  const currentCondition = searchParams.get("condition") || "";
+  // THIS LINE KILLS THE WARNING FOREVER — SAFE NULL CHECK
+  const params = Object.fromEntries(searchParams ?? new URLSearchParams());
+
+  // Extract current filters — now 100% safe
+  const currentMake = (params.make || "").toLowerCase();
+  const currentMin = params.minPrice ? Number(params.minPrice) : 0;
+  const currentMax = params.maxPrice ? Number(params.maxPrice) : Infinity;
+  const currentCondition = params.condition || "";
 
   // Filter cars with useMemo — blazing fast
   const filteredCars = useMemo(() => {
@@ -38,7 +37,7 @@ export default function InventoryFilters({ initialCars }: Props) {
 
   // Update URL on filter change
   const updateSearchParams = (key: string, value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(searchParams ?? new URLSearchParams());
     if (value) {
       params.set(key, value);
     } else {
@@ -67,11 +66,11 @@ export default function InventoryFilters({ initialCars }: Props) {
 
   return (
     <>
-      {/* STICKY MOBILE FILTER BAR — Nigerian Genius */}
+      {/* STICKY MOBILE FILTER BAR */}
       <div className="sticky top-0 z-40 bg-white border-b-4 border-green-600 shadow-xl">
         <div className="px-4 py-5">
           <div className="flex items-center justify-between mb-4">
-            <h1 className="text-3xl md:text-3xl font-black text-gray-900">
+            <h1 className="text-3xl md:text-4xl font-black text-gray-900">
               All Cars ({filteredCars.length})
             </h1>
             {hasActiveFilters && (
@@ -85,7 +84,7 @@ export default function InventoryFilters({ initialCars }: Props) {
             )}
           </div>
 
-          {/* FILTERS — Mobile: Full Width | Desktop: Compact */}
+          {/* FILTERS */}
           <form className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3">
             {/* Make */}
             <select
@@ -132,7 +131,7 @@ export default function InventoryFilters({ initialCars }: Props) {
               className="px-4 py-4 border-2 border-gray-800 rounded-2xl text-lg font-black placeholder-gray-500 focus:border-green-600 focus:ring-4 focus:ring-green-100"
             />
 
-            {/* Mobile Filter Button (hidden on large screens) */}
+            {/* Mobile Filter Button */}
             <div className="md:hidden col-span-2">
               <button
                 type="button"
@@ -157,7 +156,7 @@ export default function InventoryFilters({ initialCars }: Props) {
         id="results"
       >
         <div className="container mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-2xl font-black text-gray-900">
+          <h2 className="text-4xl md:text-6xl font-black text-gray-900">
             {filteredCars.length} {filteredCars.length === 1 ? "Car" : "Cars"}{" "}
             Found
           </h2>
@@ -174,7 +173,7 @@ export default function InventoryFilters({ initialCars }: Props) {
             <CarGrid cars={filteredCars} />
           ) : (
             <div className="text-center py-32 bg-gray-50 rounded-3xl">
-              <div className="text-3xl font-black text-gray-400 mb-8">
+              <div className="text-4xl font-black text-gray-400 mb-8">
                 No cars found
               </div>
               <p className="text-2xl text-gray-600 mb-10">
