@@ -3,8 +3,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 
 export default function SigninForm() {
   const [email, setEmail] = useState("");
@@ -13,12 +13,13 @@ export default function SigninForm() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Check for success message from signup
-  const signupSuccess = searchParams.get("success");
-  const redirectTo = searchParams.get("redirect");
+  // THIS KILLS THE WARNING — SAFE NULL CHECKING
+  const signupSuccess = searchParams?.get("success") === "true";
+  const redirectTo = searchParams?.get("redirect") || null;
 
   const handleSignin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,24 +61,28 @@ export default function SigninForm() {
 
   return (
     <form onSubmit={handleSignin} className="space-y-6">
+      {/* Success message from signup */}
       {signupSuccess && (
-        <div className="bg-green-100 text-green-800 p-4 rounded-lg font-bold text-sm">
-          ✓ Account created successfully! Please sign in with your credentials.
+        <div className="bg-green-100 text-green-800 p-4 rounded-lg font-bold text-sm text-center border border-green-300">
+          Account created successfully! Please sign in with your credentials.
         </div>
       )}
 
+      {/* Error message */}
       {error && (
-        <div className="bg-red-100 text-red-800 p-4 rounded-lg font-bold text-sm">
+        <div className="bg-red-100 text-red-800 p-4 rounded-lg font-bold text-sm text-center border border-red-300">
           {error}
         </div>
       )}
 
+      {/* Success message */}
       {success && (
-        <div className="bg-green-100 text-green-800 p-4 rounded-lg font-bold text-sm">
+        <div className="bg-green-100 text-green-800 p-4 rounded-lg font-bold text-sm text-center border border-green-300">
           {success}
         </div>
       )}
 
+      {/* Email Field */}
       <div>
         <label className="block text-sm font-bold text-gray-700 mb-2">
           Email Address
@@ -90,10 +95,12 @@ export default function SigninForm() {
             onChange={(e) => setEmail(e.target.value)}
             className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600"
             placeholder="your@email.com"
+            required
           />
         </div>
       </div>
 
+      {/* Password Field */}
       <div>
         <label className="block text-sm font-bold text-gray-700 mb-2">
           Password
@@ -106,6 +113,7 @@ export default function SigninForm() {
             onChange={(e) => setPassword(e.target.value)}
             className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600"
             placeholder="Enter your password"
+            required
           />
           <button
             type="button"
@@ -117,14 +125,16 @@ export default function SigninForm() {
         </div>
       </div>
 
+      {/* Submit Button */}
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 disabled:from-gray-400 disabled:to-gray-400 text-white py-3 rounded-lg font-black text-lg transition-all hover:shadow-xl"
+        className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 disabled:from-gray-400 disabled:to-gray-400 text-white py-4 rounded-xl font-black text-xl transition-all hover:shadow-2xl disabled:cursor-not-allowed"
       >
         {loading ? "Signing in..." : "Sign In"}
       </button>
 
+      {/* Signup Link */}
       <p className="text-center text-gray-700 font-medium">
         Don&apos;t have an account?{" "}
         <Link

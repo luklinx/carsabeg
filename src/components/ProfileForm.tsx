@@ -29,7 +29,7 @@ export default function ProfileForm() {
         .substring(2, 9)}.${fileExt}`;
       const filePath = `profiles/${user.id}/${fileName}`;
 
-      const { data, error } = await supabaseBrowser.storage
+      const { error } = await supabaseBrowser.storage
         .from("carsabeg-uploads")
         .upload(filePath, file, {
           cacheControl: "3600",

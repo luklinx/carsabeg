@@ -3,8 +3,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Mail, Lock, User, Phone, Eye, EyeOff } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Mail, Lock, User, Phone, Eye, EyeOff } from "lucide-react";
 
 export default function SignupForm() {
   const [fullName, setFullName] = useState("");
@@ -15,25 +15,25 @@ export default function SignupForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectTo = searchParams.get("redirect");
+
+  // THIS LINE KILLS THE WARNING FOREVER
+  const redirectTo = searchParams?.get("redirect") || null;
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
-    // Validation
     if (!fullName || !email || !phone || !password || !confirmPassword) {
       setError("All fields are required");
       return;
     }
-
     if (password !== confirmPassword) {
       setError("Passwords do not match");
       return;
     }
-
     if (password.length < 6) {
       setError("Password must be at least 6 characters");
       return;
@@ -56,28 +56,12 @@ export default function SignupForm() {
       const data = await res.json();
 
       if (!res.ok) {
-        // Show the actual error from the backend
-        const errorMsg = data.error || "Signup failed";
-        console.error("Signup error response:", {
-          status: res.status,
-          error: errorMsg,
-          data,
-        });
-        setError(errorMsg);
+        setError(data.error || "Signup failed");
         return;
       }
 
-      // If the API created a session (cookie), go straight to the destination.
-      // Otherwise fall back to signin page.
-      if (data?.user) {
-        router.push(redirectTo || "/dashboard/profile");
-      } else {
-        router.push(
-          `/auth/signin?success=true${
-            redirectTo ? `&redirect=${encodeURIComponent(redirectTo)}` : ""
-          }`
-        );
-      }
+      // Success — redirect
+      router.push(redirectTo || "/dashboard/profile");
     } catch (err) {
       setError("An error occurred. Please try again.");
       console.error(err);
@@ -89,7 +73,7 @@ export default function SignupForm() {
   return (
     <form onSubmit={handleSignup} className="space-y-6">
       {error && (
-        <div className="bg-red-100 text-red-800 p-4 rounded-lg font-bold text-sm">
+        <div className="bg-red-100 text-red-800 p-4 rounded-lg font-bold text-sm text-center">
           {error}
         </div>
       )}
@@ -106,6 +90,7 @@ export default function SignupForm() {
             onChange={(e) => setFullName(e.target.value)}
             className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600"
             placeholder="Your full name"
+            required
           />
         </div>
       </div>
@@ -122,6 +107,7 @@ export default function SignupForm() {
             onChange={(e) => setEmail(e.target.value)}
             className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600"
             placeholder="your@email.com"
+            required
           />
         </div>
       </div>
@@ -138,6 +124,7 @@ export default function SignupForm() {
             onChange={(e) => setPhone(e.target.value)}
             className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600"
             placeholder="+234 901 883 7909"
+            required
           />
         </div>
       </div>
@@ -154,6 +141,7 @@ export default function SignupForm() {
             onChange={(e) => setPassword(e.target.value)}
             className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600"
             placeholder="Minimum 6 characters"
+            required
           />
           <button
             type="button"
@@ -177,6 +165,7 @@ export default function SignupForm() {
             onChange={(e) => setConfirmPassword(e.target.value)}
             className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600"
             placeholder="Confirm your password"
+            required
           />
           <button
             type="button"
@@ -191,7 +180,7 @@ export default function SignupForm() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 disabled:from-gray-400 disabled:to-gray-400 text-white py-3 rounded-lg font-black text-lg transition-all hover:shadow-xl"
+        className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 disabled:from-gray-400 disabled:to-gray-400 text-white py-4 rounded-xl font-black text-xl transition-all hover:shadow-2xl disabled:cursor-not-allowed"
       >
         {loading ? "Creating Account..." : "Create Account"}
       </button>
