@@ -1,12 +1,10 @@
-// src/pages/_document.tsx
+// pages/_document.js  ← CREATE THIS FILE EXACTLY HERE
 import { Html, Head, Main, NextScript } from "next/document";
 
 export default function Document() {
   return (
-    <Html lang="en" className="scroll-smooth" style={{ colorScheme: "light" }}>
-      <Head>
-        <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-      </Head>
+    <Html lang="en">
+      <Head />
       <body>
         <Main />
         <NextScript />
