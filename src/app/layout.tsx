@@ -50,7 +50,7 @@ export default function RootLayout({
           <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
           <meta
             name="viewport"
-            content="width=device-width, initial-scale=1.0"
+            content="width=device-width, initial-scale=1.0 viewport-fit=cover"
           />
           <meta httpEquiv="Cache-Control" content="public, max-age=3600" />
           <link
@@ -64,7 +64,9 @@ export default function RootLayout({
           className={`${inter.className} bg-white text-gray-900 antialiased`}
         >
           <Header />
-          <main className="min-h-screen">{children}</main>
+          <main className="min-h-screen w-full overflow-x-hidden">
+            {children}
+          </main>
           <Footer />
         </body>
       </html>
