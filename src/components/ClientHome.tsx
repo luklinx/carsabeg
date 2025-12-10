@@ -47,9 +47,13 @@ export default function ClientHome() {
   const foreignUsed = cars.filter((c) => c.condition === "Foreign Used");
   const nigerianUsed = cars.filter((c) => c.condition === "Nigerian Used");
   const brandNew = cars.filter((c) => c.condition === "Brand New");
-  const lagosCars = cars.filter((c) => c.location?.toLowerCase().includes("lagos"));
+  const lagosCars = cars.filter((c) =>
+    c.location?.toLowerCase().includes("lagos")
+  );
   const below10m = cars.filter((c) => c.price <= 10_000_000);
-  const between10and20m = cars.filter((c) => c.price > 10_000_000 && c.price <= 20_000_000);
+  const between10and20m = cars.filter(
+    (c) => c.price > 10_000_000 && c.price <= 20_000_000
+  );
 
   // PREMIUM SECTION — AUTO SWIPE + "VIEW ALL" AFTER 8 CARS
   const PremiumSection = () => {
@@ -181,7 +185,9 @@ export default function ClientHome() {
                   <Link href={href} className="block h-full px-4">
                     <div className="bg-gradient-to-br from-green-600 to-emerald-700 rounded-2xl p-10 h-full flex flex-col items-center justify-center text-white shadow-2xl">
                       <ChevronRight size={64} className="mb-6" />
-                      <p className="text-3xl font-black text-center">View More</p>
+                      <p className="text-3xl font-black text-center">
+                        View More
+                      </p>
                       <p className="text-xl mt-3 text-center">
                         {sectionCars.length - 6}+ cars
                       </p>
@@ -209,7 +215,10 @@ export default function ClientHome() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-green-600 to-emerald-800 flex items-center justify-center">
         <div className="text-center text-white">
-          <Flame size={80} className="mx-auto animate-pulse text-yellow-400 mb-6" />
+          <Flame
+            size={80}
+            className="mx-auto animate-pulse text-yellow-400 mb-6"
+          />
           <h1 className="text-6xl font-black">CARS ABEG</h1>
           <p className="text-2xl font-bold mt-4">Loading fresh deals...</p>
         </div>
@@ -221,12 +230,47 @@ export default function ClientHome() {
     <>
       <PremiumSection />
 
-      <HomeSection title="Brand New Cars" cars={brandNew} href="/inventory?condition=Brand%20New" icon={Zap} gradient="bg-gradient-to-b from-purple-50 to-white" />
-      <HomeSection title="Foreign Used • Tokunbo" cars={foreignUsed} href="/inventory?condition=Foreign%20Used" icon={Shield} gradient="bg-gradient-to-b from-green-50 to-white" />
-      <HomeSection title="Nigerian Used • Clean" cars={nigerianUsed} href="/inventory?condition=Nigerian%20Used" icon={Phone} gradient="bg-gradient-to-b from-gray-100 to-white" />
-      <HomeSection title="Cars in Lagos" cars={lagosCars} href="/inventory?location=Lagos" icon={MapPin} />
-      <HomeSection title="Below ₦10 Million" cars={below10m} href="/inventory?maxPrice=10000000" icon={Zap} gradient="bg-gradient-to-b from-yellow-50 to-white" />
-      <HomeSection title="₦10M – ₦20M" cars={between10and20m} href="/inventory?minPrice=10000000&maxPrice=20000000" icon={Flame} gradient="bg-gradient-to-b from-orange-50 to-white" />
+      <HomeSection
+        title="Brand New Cars"
+        cars={brandNew}
+        href="/inventory?condition=Brand%20New"
+        icon={Zap}
+        gradient="bg-gradient-to-b from-purple-50 to-white"
+      />
+      <HomeSection
+        title="Foreign Used • Tokunbo"
+        cars={foreignUsed}
+        href="/inventory?condition=Foreign%20Used"
+        icon={Shield}
+        gradient="bg-gradient-to-b from-green-50 to-white"
+      />
+      <HomeSection
+        title="Nigerian Used • Clean"
+        cars={nigerianUsed}
+        href="/inventory?condition=Nigerian%20Used"
+        icon={Phone}
+        gradient="bg-gradient-to-b from-gray-100 to-white"
+      />
+      <HomeSection
+        title="Cars in Lagos"
+        cars={lagosCars}
+        href="/inventory?location=Lagos"
+        icon={MapPin}
+      />
+      <HomeSection
+        title="Below ₦10 Million"
+        cars={below10m}
+        href="/inventory?maxPrice=10000000"
+        icon={Zap}
+        gradient="bg-gradient-to-b from-yellow-50 to-white"
+      />
+      <HomeSection
+        title="₦10M – ₦20M"
+        cars={between10and20m}
+        href="/inventory?minPrice=10000000&maxPrice=20000000"
+        icon={Flame}
+        gradient="bg-gradient-to-b from-orange-50 to-white"
+      />
 
       {/* FINAL CTA */}
       <section className="py-24 bg-gradient-to-br from-green-600 to-emerald-700 text-white text-center">
