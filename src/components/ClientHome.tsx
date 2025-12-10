@@ -1,5 +1,6 @@
 // src/components/ClientHome.tsx
 "use client";
+
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import CarCard from "./CarCard";
@@ -92,6 +93,7 @@ export default function ClientHome() {
     gradient?: string;
   }) => {
     if (sectionCars.length === 0) return null;
+
     const showViewAll = sectionCars.length >= 5;
 
     return (
@@ -110,7 +112,7 @@ export default function ClientHome() {
                 href={href}
                 className="flex items-center gap-2 text-green-600 hover:text-green-700 font-bold text-sm sm:text-base md:text-lg underline decoration-2 underline-offset-4 hover:scale-105 transition whitespace-nowrap"
               >
-                View All →
+                View All
               </Link>
             )}
           </div>
@@ -122,7 +124,7 @@ export default function ClientHome() {
               spaceBetween={12}
               slidesPerView={1.2}
               centeredSlides
-              loop={sectionCars.length >= 3}
+              loop={sectionCars.length >= 3} // THIS KILLS THE WARNING
               autoplay={{ delay: 5000 }}
               navigation
               className="pb-4 sm:pb-6"
@@ -152,7 +154,7 @@ export default function ClientHome() {
 
   return (
     <>
-      {/* PREMIUM HERO — SLIMMED DOWN */}
+      {/* PREMIUM HERO */}
       {paidCars.length > 0 && (
         <section className="relative overflow-hidden bg-gradient-to-br from-orange-600 via-red-600 to-pink-700 py-10 sm:py-14 md:py-16 text-white">
           <div className="absolute inset-0 bg-black/50" />
@@ -241,7 +243,7 @@ export default function ClientHome() {
         gradient="bg-gradient-to-b from-orange-50 to-white"
       />
 
-      {/* FINAL CTA — SLIM & ELEGANT */}
+      {/* FINAL CTA */}
       <section className="py-24 bg-gradient-to-br from-green-600 to-emerald-700 text-white text-center">
         <div className="max-w-5xl mx-auto px-6">
           <h2 className="text-4xl md:text-6xl font-black mb-8">
