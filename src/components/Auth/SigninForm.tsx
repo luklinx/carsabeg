@@ -4,6 +4,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { supabaseBrowser } from "@/lib/supabaseClient";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 
 export default function SigninForm() {
@@ -11,44 +12,36 @@ export default function SigninForm() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // SAFE NULL CHECK — KILLS ALL WARNINGS
-  const signupSuccess = searchParams?.get("success") === "true";
   const redirectTo = searchParams?.get("redirect") || "/dashboard/profile";
 
   const handleSignin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    setSuccess("");
     setLoading(true);
 
     try {
-      const res = await fetch("/api/auth/signin", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email.toLowerCase().trim(), password }),
+      const { error } = await supabaseBrowser.auth.signInWithPassword({
+        email: email.toLowerCase().trim(),
+        password,
       });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        setError(data.error || "Invalid email or password");
+      if (error) {
+        setError(error.message);
         setLoading(false);
         return;
       }
 
-      setSuccess("Welcome back! Redirecting...");
-      setTimeout(() => {
-        router.push(redirectTo);
-        router.refresh(); // Force reload session
-      }, 1000);
-    } catch (err) {
-      setError("Network error. Check your connection.");
+      router.push(redirectTo);
+      router.refresh();
+    } catch (error) {
+      // THIS LINE WAS THE PROBLEM — NOW FIXED
+      const err = error as { message?: string };
+      setError(err.message || "Network error. Please try again.");
       console.error("Signin failed:", err);
     } finally {
       setLoading(false);
@@ -57,28 +50,12 @@ export default function SigninForm() {
 
   return (
     <form onSubmit={handleSignin} className="space-y-6 w-full max-w-md">
-      {/* Success from signup */}
-      {signupSuccess && (
-        <div className="bg-green-100 border border-green-300 text-green-800 p-4 rounded-xl font-bold text-center">
-          Account created! Now sign in below
-        </div>
-      )}
-
-      {/* Error */}
       {error && (
         <div className="bg-red-100 border border-red-300 text-red-800 p-4 rounded-xl font-bold text-center">
           {error}
         </div>
       )}
 
-      {/* Success */}
-      {success && (
-        <div className="bg-green-100 border border-green-300 text-green-800 p-4 rounded-xl font-bold text-center">
-          {success}
-        </div>
-      )}
-
-      {/* Email */}
       <div>
         <label className="block text-sm font-bold text-gray-700 mb-2">
           Email Address
@@ -92,11 +69,11 @@ export default function SigninForm() {
             className="w-full pl-10 pr-4 py-4 border-2 border-gray-300 rounded-xl focus:border-green-600 focus:ring-4 focus:ring-green-100 transition"
             placeholder="your@email.com"
             required
+            autoFocus
           />
         </div>
       </div>
 
-      {/* Password */}
       <div>
         <label className="block text-sm font-bold text-gray-700 mb-2">
           Password
@@ -121,7 +98,6 @@ export default function SigninForm() {
         </div>
       </div>
 
-      {/* Submit */}
       <button
         type="submit"
         disabled={loading}
@@ -130,7 +106,6 @@ export default function SigninForm() {
         {loading ? "Signing in..." : "Sign In"}
       </button>
 
-      {/* Signup Link */}
       <p className="text-center text-gray-600 font-medium">
         New here?{" "}
         <Link
