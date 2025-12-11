@@ -1,3 +1,4 @@
+// src/components/HeaderClean.tsx
 "use client";
 
 import Link from "next/link";
@@ -9,185 +10,129 @@ import {
   Search,
   MapPin,
   User as UserIcon,
+  Bell,
+  Heart,
+  Menu,
+  X,
+  ChevronDown,
+  PlusCircle,
 } from "lucide-react";
 import Logo from "@/components/Logo";
 import UserNav from "@/components/UserNav";
+import { useState } from "react";
 
 export default function HeaderClean() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   return (
     <>
-      <div className="hidden md:flex items-center justify-center bg-amber-50 text-amber-800 text-sm py-1 overflow-hidden">
-        Free listing for the first 30 days • Trusted sellers only
+      {/* VERIFICATION BAR — LINKS TO SIGNUP */}
+      <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black py-3 text-center font-black text-sm shadow-lg">
+        <Link
+          href="/auth/signup"
+          className="flex items-center justify-center gap-3 hover:underline"
+        >
+          <span>Verified sellers only • Join us and get verified now!</span>
+          <span className="bg-black text-yellow-400 px-3 py-1 rounded-full text-xs animate-pulse">
+            VERY NOW
+          </span>
+        </Link>
       </div>
-      <header className="bg-white shadow-sm sticky top-0 z-50 w-full overflow-x-hidden">
-        <div className="w-full px-3 sm:px-4 md:px-6 py-3">
-          <div className="max-w-7xl mx-auto flex items-center gap-3 sm:gap-4 min-w-0">
-            <div className="flex-shrink-0">
-              <Link href="/" className="flex items-center">
-                <Logo logoSrc="/logo.webp" alt="CarsAbeg" size="md" />
-              </Link>
-            </div>
 
-            <div className="hidden sm:flex flex-1 min-w-0">
-              <form
-                action="/inventory"
-                className="flex items-center gap-2 w-full min-w-0"
-              >
-                <div className="hidden sm:flex items-center gap-2 bg-gray-100 px-3 py-2 rounded-lg flex-shrink-0">
-                  <MapPin size={16} className="text-gray-500" />
-                  <select
-                    name="location"
-                    className="bg-transparent text-sm outline-none"
-                  >
-                    <option value="">All locations</option>
-                    <option value="lagos">Lagos</option>
-                    <option value="abuja">Abuja</option>
-                  </select>
-                </div>
+      {/* MAIN HEADER */}
+      <header className="bg-white shadow-md sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-3">
+              <Logo logoSrc="/logo.webp" alt="CarsAbeg" size="md" />
+            </Link>
 
-                <div className="flex-1 flex items-center bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden min-w-0">
-                  <div className="px-3 hidden sm:flex items-center text-gray-500">
-                    <Search size={18} />
-                  </div>
-                  <input
-                    name="q"
-                    className="flex-1 px-3 py-3 text-sm outline-none min-w-0"
-                    placeholder="Search cars, makes, models, registration..."
-                  />
-                  <button className="bg-green-600 text-white px-5 py-2 rounded-r-lg text-sm font-semibold flex-shrink-0">
-                    Search
-                  </button>
-                </div>
-              </form>
-            </div>
-
-            <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+            {/* Desktop Nav */}
+            <div className="hidden lg:flex items-center gap-8">
+              <button className="flex items-center gap-2 hover:text-green-600 font-bold transition">
+                All Cities <ChevronDown size={16} />
+              </button>
+              <button className="relative hover:text-green-600 transition">
+                <Bell size={24} />
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  3
+                </span>
+              </button>
               <Link
-                href="/sell"
-                className="hidden sm:inline-flex items-center gap-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-4 py-2 rounded-lg font-semibold shadow-md flex-shrink-0"
+                href="/favorites"
+                className="hover:text-green-600 font-bold flex items-center gap-2"
               >
-                <DollarSign size={16} />
-                Sell
+                <Heart size={20} /> Favorites
+              </Link>
+              <Link
+                href="/chats"
+                className="hover:text-green-600 font-bold flex items-center gap-2"
+              >
+                <MessageCircle size={20} /> Chats
+              </Link>
+              <Link href="/my-ads" className="hover:text-green-600 font-bold">
+                My Ads
               </Link>
               <UserNav />
+              <Link
+                href="/sell"
+                className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-full font-black flex items-center gap-3 shadow-lg hover:shadow-xl transition"
+              >
+                <PlusCircle size={24} />
+                PLACE YOUR AD
+              </Link>
             </div>
-          </div>
-        </div>
 
-        <div className="hidden lg:block border-t border-gray-100 w-full overflow-x-hidden">
-          <div className="max-w-7xl mx-auto px-4">
-            <nav className="flex items-center gap-6 py-3 text-sm text-gray-600 overflow-x-auto">
-              <Link
-                href="/inventory?category=suv"
-                className="hover:text-green-600 whitespace-nowrap"
-              >
-                SUVs
-              </Link>
-              <Link
-                href="/inventory?category=sedan"
-                className="hover:text-green-600 whitespace-nowrap"
-              >
-                Sedans
-              </Link>
-              <Link
-                href="/inventory?category=pickup"
-                className="hover:text-green-600 whitespace-nowrap"
-              >
-                Pickups
-              </Link>
-              <Link
-                href="/inventory?category=foreign"
-                className="hover:text-green-600 whitespace-nowrap"
-              >
-                Foreign Used
-              </Link>
-              <Link
-                href="/inventory?category=nigerian"
-                className="hover:text-green-600 whitespace-nowrap"
-              >
-                Nigerian Used
-              </Link>
-              <Link
-                href="/inventory?category=commercial"
-                className="hover:text-green-600 whitespace-nowrap"
-              >
-                Commercial
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </header>
-
-      <div className="lg:hidden">
-        <div className="fixed top-0 left-0 right-0 bg-white z-50 border-b border-gray-100 w-full overflow-x-hidden">
-          <div className="px-3 sm:px-4 py-2 flex items-center justify-between gap-2 w-full min-w-0">
-            <Link href="/" className="flex items-center flex-shrink-0">
-              <Logo logoSrc="/logo.webp" alt="CarsAbeg" size="sm" />
-            </Link>
-            <UserNav />
-          </div>
-          <div className="px-3 sm:px-4 pb-2 w-full">
-            <form
-              action="/inventory"
-              className="flex items-center gap-2 w-full min-w-0"
+            {/* Mobile Menu Toggle */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="lg:hidden"
             >
-              <input
-                name="q"
-                className="min-w-0 flex-1 px-3 py-2 rounded-lg border border-gray-200 text-sm"
-                placeholder="Search cars, makes, models..."
-              />
-              <button
-                type="submit"
-                className="flex-none p-2 rounded-lg bg-green-600 text-white hover:bg-green-700"
-              >
-                <Search size={16} />
-              </button>
-            </form>
+              {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+            </button>
           </div>
         </div>
 
-        <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 w-full overflow-x-hidden">
-          <div className="w-full px-3 sm:px-4">
-            <div className="flex items-center justify-between gap-1 py-2">
+        {/* Mobile Bottom Menu */}
+        {mobileMenuOpen && (
+          <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t-2 border-gray-200 shadow-2xl z-50">
+            <div className="grid grid-cols-5 gap-2 py-3">
               <Link
                 href="/"
-                className="flex-1 flex flex-col items-center text-center text-xs text-gray-700 hover:text-green-600 transition-colors min-w-0"
+                className="flex flex-col items-center text-green-600 font-bold"
               >
-                <Home size={20} />
-                <span className="truncate w-full">Home</span>
+                <Home size={24} />
+                <span className="text-xs">Home</span>
               </Link>
               <Link
                 href="/inventory"
-                className="flex-1 flex flex-col items-center text-center text-xs text-gray-700 hover:text-green-600 transition-colors min-w-0"
+                className="flex flex-col items-center text-gray-700 font-bold"
               >
-                <Car size={20} />
-                <span className="truncate w-full">Cars</span>
+                <Car size={24} />
+                <span className="text-xs">Cars</span>
+              </Link>
+              <Link href="/sell" className="flex flex-col items-center">
+                <div className="bg-green-600 text-white p-4 rounded-full shadow-2xl">
+                  <PlusCircle size={32} />
+                </div>
+                <span className="text-xs font-black">Sell</span>
               </Link>
               <Link
-                href="/sell"
-                className="flex-1 flex flex-col items-center text-center text-xs text-gray-700 hover:text-green-600 transition-colors min-w-0"
+                href="/chats"
+                className="flex flex-col items-center text-gray-700 font-bold"
               >
-                <DollarSign size={20} />
-                <span className="truncate w-full">Sell</span>
+                <MessageCircle size={24} />
+                <span className="text-xs">Chat</span>
               </Link>
-              <Link
-                href="/contact"
-                className="flex-1 flex flex-col items-center text-center text-xs text-gray-700 hover:text-green-600 transition-colors min-w-0"
-              >
-                <MessageCircle size={20} />
-                <span className="truncate w-full">Chat</span>
-              </Link>
-              <Link
-                href="/dashboard/profile"
-                className="flex-1 flex flex-col items-center text-center text-xs text-gray-700 hover:text-green-600 transition-colors min-w-0"
-              >
-                <UserIcon size={20} />
-                <span className="truncate w-full">Me</span>
-              </Link>
+              <div className="flex flex-col items-center">
+                <UserNav />
+                <span className="text-xs font-bold">Me</span>
+              </div>
             </div>
           </div>
-        </nav>
-      </div>
+        )}
+      </header>
     </>
   );
 }
