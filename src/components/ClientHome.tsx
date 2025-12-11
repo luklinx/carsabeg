@@ -7,18 +7,17 @@ import CarCard from "./CarCard";
 import { getCars, getPaidFeaturedCars } from "@/lib/cars";
 import type { Car } from "@/types";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Autoplay } from "swiper/modules";
+import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
-import "swiper/css/navigation";
+import "swiper/css/pagination";
 import {
-  Zap,
   Flame,
   TrendingUp,
+  Zap,
   Shield,
-  MessageCircle,
   Phone,
   MapPin,
-  ChevronRight,
+  MessageCircle,
 } from "lucide-react";
 
 export default function ClientHome() {
@@ -55,56 +54,94 @@ export default function ClientHome() {
     (c) => c.price > 10_000_000 && c.price <= 20_000_000
   );
 
-  // PREMIUM SECTION — AUTO SWIPE + "VIEW ALL" AFTER 8 CARS
+  // PREMIUM SECTION — MULTIPLE IMAGE SWIPE + DOTS (NO ARROWS)
   const PremiumSection = () => {
     if (paidCars.length === 0) return null;
 
-    const showViewAll = paidCars.length > 8;
-
     return (
-      <section className="relative overflow-hidden bg-gradient-to-br from-orange-600 via-red-600 to-pink-700 py-16 text-white">
-        <div className="absolute inset-0 bg-black/50" />
-        <div className="relative z-10 text-center px-6 mb-10">
-          <div className="inline-flex items-center gap-4 bg-black/70 backdrop-blur-xl px-8 py-4 rounded-full text-2xl font-black shadow-2xl border-4 border-yellow-400">
-            <Flame className="text-yellow-400" />
+      <section className="py-16 md:py-20 bg-gradient-to-br from-orange-600 via-red-600 to-pink-700 text-white overflow-hidden">
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center gap-4 bg-black/70 backdrop-blur-xl px-8 py-4 rounded-full text-2xl md:text-3xl font-black shadow-2xl border-4 border-yellow-400">
+            <Flame className="text-yellow-400" size={36} />
             PREMIUM • SELLING FAST
-            <TrendingUp className="text-yellow-300" />
+            <TrendingUp className="text-yellow-300" size={36} />
           </div>
           <h1 className="text-5xl md:text-7xl font-black mt-8">
             {paidCars.length} Hot Deals Live
           </h1>
         </div>
 
-        <div className="max-w-7xl mx-auto px-6">
+        <div className="max-w-7xl mx-auto px-4">
+          {/* MOBILE & DESKTOP — SAME SWIPER */}
           <Swiper
-            modules={[Autoplay, Navigation]}
-            spaceBetween={24}
-            slidesPerView={1.3}
+            modules={[Autoplay, Pagination]}
+            spaceBetween={20}
+            slidesPerView={1.1}
             centeredSlides
-            loop={paidCars.length >= 4}
-            autoplay={{ delay: 4000, disableOnInteraction: false }}
-            navigation
+            loop={paidCars.length >= 2}
+            autoplay={{ delay: 4000 }}
+            pagination={{ clickable: true, dynamicBullets: true }}
+            className="premium-swiper !pb-12"
             breakpoints={{
-              640: { slidesPerView: 2.2 },
-              768: { slidesPerView: 3 },
-              1024: { slidesPerView: 4 },
-              1280: { slidesPerView: 5 },
+              640: { slidesPerView: 1.3 },
+              768: { slidesPerView: 2 },
+              1024: { slidesPerView: 3 },
+              1280: { slidesPerView: 4 },
             }}
-            className="pb-12"
           >
             {paidCars.map((car) => (
               <SwiperSlide key={car.id}>
                 <div className="px-2">
-                  <div className="bg-white/10 backdrop-blur-xl rounded-3xl overflow-hidden shadow-2xl border-4 border-yellow-400 hover:scale-105 transition">
-                    <CarCard car={car} />
+                  {/* PREMIUM CARD WITH IMAGE SWIPER INSIDE */}
+                  <div className="bg-white/10 backdrop-blur-xl rounded-3xl overflow-hidden shadow-2xl border-4 border-yellow-400 shadow-2xl">
+                    {/* IMAGE SWIPER — INSIDE EACH CARD */}
+                    <Swiper
+                      modules={[Pagination]}
+                      spaceBetween={0}
+                      slidesPerView={1}
+                      pagination={{ clickable: true }}
+                      className="!pb-10"
+                    >
+                      {car.images.map((img, i) => (
+                        <SwiperSlide key={i}>
+                          <div className="relative aspect-[4/3] md:aspect-video">
+                            <img
+                              src={img}
+                              alt={`${car.make} ${car.model} image ${i + 1}`}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        </SwiperSlide>
+                      ))}
+                    </Swiper>
+
+                    {/* CARD CONTENT */}
+                    <div className="p-6 text-white">
+                      <h3 className="text-2xl md:text-3xl font-black">
+                        {car.year} {car.make} {car.model}
+                      </h3>
+                      <p className="text-3xl md:text-4xl font-black text-yellow-400 mt-2">
+                        ₦{(car.price / 1_000_000).toFixed(1)}M
+                      </p>
+                      <p className="text-lg opacity-90 mt-2">
+                        {car.location} • {car.condition}
+                      </p>
+                      <Link
+                        href={`/car/${car.id}`}
+                        className="inline-block mt-4 bg-yellow-400 hover:bg-yellow-300 text-black px-6 py-3 rounded-full font-black text-lg shadow-xl"
+                      >
+                        View Details
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </SwiperSlide>
             ))}
           </Swiper>
 
-          {showViewAll && (
-            <div className="text-center -mt-6">
+          {/* VIEW ALL — AFTER 8 CARS */}
+          {paidCars.length > 8 && (
+            <div className="text-center mt-10">
               <Link
                 href="/inventory?featured=true"
                 className="inline-block bg-yellow-400 hover:bg-yellow-300 text-black px-12 py-6 rounded-full font-black text-2xl shadow-2xl hover:scale-110 transition"
@@ -118,30 +155,25 @@ export default function ClientHome() {
     );
   };
 
-  // REGULAR SECTIONS — YOUR RULES EXACTLY
+  // REGULAR SECTIONS — NO ARROWS, FULL WIDTH CARDS ON MOBILE
   const HomeSection = ({
     title,
     cars: sectionCars,
     href,
     icon: Icon,
-    gradient,
   }: {
     title: string;
     cars: Car[];
     href: string;
     icon: React.ElementType;
-    gradient?: string;
   }) => {
     if (sectionCars.length === 0) return null;
 
-    const mobileCars = sectionCars.slice(0, 6);
     const showViewMoreMobile = sectionCars.length > 6;
-
-    const desktopCars = sectionCars.slice(0, 8);
     const showViewAllDesktop = sectionCars.length > 8;
 
     return (
-      <section className={`py-16 ${gradient || "bg-white"}`}>
+      <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex justify-between items-center mb-10">
             <div className="flex items-center gap-4">
@@ -150,62 +182,55 @@ export default function ClientHome() {
                 {title}
               </h2>
             </div>
-
-            {/* VIEW ALL ON DESKTOP — ONLY IF >8 CARS */}
             {showViewAllDesktop && (
               <Link
                 href={href}
-                className="hidden md:flex items-center gap-3 text-green-600 hover:text-green-700 font-black text-xl underline decoration-2 hover:scale-105 transition"
+                className="hidden md:block text-green-600 font-black text-xl hover:underline"
               >
                 View All →
               </Link>
             )}
           </div>
 
-          {/* MOBILE: Manual Swipe + View More Card */}
-          <div className="md:hidden">
-            <Swiper
-              modules={[Navigation]}
-              spaceBetween={16}
-              slidesPerView={1.25}
-              navigation
-              loop={false}
-            >
-              {mobileCars.map((car) => (
-                <SwiperSlide key={car.id}>
-                  <div className="px-2">
-                    <CarCard car={car} />
-                  </div>
-                </SwiperSlide>
-              ))}
-
-              {/* VIEW MORE CARD — MOBILE */}
-              {showViewMoreMobile && (
-                <SwiperSlide>
-                  <Link href={href} className="block h-full px-4">
-                    <div className="bg-gradient-to-br from-green-600 to-emerald-700 rounded-2xl p-10 h-full flex flex-col items-center justify-center text-white shadow-2xl">
-                      <ChevronRight size={64} className="mb-6" />
-                      <p className="text-3xl font-black text-center">
-                        View More
-                      </p>
-                      <p className="text-xl mt-3 text-center">
-                        {sectionCars.length - 6}+ cars
-                      </p>
-                    </div>
-                  </Link>
-                </SwiperSlide>
-              )}
-            </Swiper>
+          {/* MOBILE — FULL WIDTH CARDS, NO ARROWS */}
+          <div className="md:hidden space-y-6">
+            {sectionCars.slice(0, 6).map((car) => (
+              <div key={car.id}>
+                <CarCard car={car} />
+              </div>
+            ))}
+            {showViewMoreMobile && (
+              <Link href={href}>
+                <div className="bg-gradient-to-br from-green-600 to-emerald-700 rounded-2xl p-10 text-white text-center shadow-2xl">
+                  <p className="text-3xl font-black">View More</p>
+                  <p className="text-xl mt-2">
+                    {sectionCars.length - 6}+ cars available
+                  </p>
+                </div>
+              </Link>
+            )}
           </div>
 
-          {/* DESKTOP: Grid */}
+          {/* DESKTOP — GRID */}
           <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-8">
-            {desktopCars.map((car) => (
+            {sectionCars.slice(0, 8).map((car) => (
               <div key={car.id} className="hover:-translate-y-3 transition">
                 <CarCard car={car} />
               </div>
             ))}
           </div>
+
+          {/* LOAD MORE — DESKTOP */}
+          {showViewAllDesktop && (
+            <div className="text-center mt-12">
+              <Link
+                href={href}
+                className="inline-flex items-center gap-3 bg-green-600 hover:bg-green-700 text-white px-12 py-6 py-6 rounded-full font-black text-2xl shadow-2xl transition hover:scale-110"
+              >
+                Load More ({sectionCars.length - 8}+)
+              </Link>
+            </div>
+          )}
         </div>
       </section>
     );
@@ -235,21 +260,18 @@ export default function ClientHome() {
         cars={brandNew}
         href="/inventory?condition=Brand%20New"
         icon={Zap}
-        gradient="bg-gradient-to-b from-purple-50 to-white"
       />
       <HomeSection
         title="Foreign Used • Tokunbo"
         cars={foreignUsed}
         href="/inventory?condition=Foreign%20Used"
         icon={Shield}
-        gradient="bg-gradient-to-b from-green-50 to-white"
       />
       <HomeSection
         title="Nigerian Used • Clean"
         cars={nigerianUsed}
         href="/inventory?condition=Nigerian%20Used"
         icon={Phone}
-        gradient="bg-gradient-to-b from-gray-100 to-white"
       />
       <HomeSection
         title="Cars in Lagos"
@@ -262,14 +284,12 @@ export default function ClientHome() {
         cars={below10m}
         href="/inventory?maxPrice=10000000"
         icon={Zap}
-        gradient="bg-gradient-to-b from-yellow-50 to-white"
       />
       <HomeSection
         title="₦10M – ₦20M"
         cars={between10and20m}
         href="/inventory?minPrice=10000000&maxPrice=20000000"
         icon={Flame}
-        gradient="bg-gradient-to-b from-orange-50 to-white"
       />
 
       {/* FINAL CTA */}
@@ -278,7 +298,7 @@ export default function ClientHome() {
           <h2 className="text-4xl md:text-6xl font-black mb-8">
             CAN’T FIND YOUR DREAM CAR?
           </h2>
-          <p className="text-xl md:text-2xl font-bold mb-12">
+          <p className="text-xl md:text-2xl font-bold mb-12 mb-12">
             We source any car in 48hrs
           </p>
           <a
