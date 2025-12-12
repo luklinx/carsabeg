@@ -4,28 +4,37 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import CarCard from "./CarCard";
-import { getPaidFeaturedCars } from "@/lib/cars";
+import { getCars, getPaidFeaturedCars } from "@/lib/cars";
 import type { Car } from "@/types";
 import {
   Flame,
-  MapPin,
-  DollarSign,
+  Zap,
   Shield,
-  ChevronRight,
+  Phone,
+  Star,
   MessageCircle,
+  Download,
+  ChevronRight,
+  Search,
+  CheckCircle,
 } from "lucide-react";
 
 export default function ClientHome() {
+  const [cars, setCars] = useState<Car[]>([]);
   const [paidCars, setPaidCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function load() {
       try {
-        const premium = await getPaidFeaturedCars();
+        const [all, premium] = await Promise.all([
+          getCars(),
+          getPaidFeaturedCars(),
+        ]);
+        setCars((all || []).filter((c): c is Car => !!c?.id));
         setPaidCars((premium || []).filter((c): c is Car => !!c?.id));
       } catch (err) {
-        console.error("Failed to load premium cars:", err);
+        console.error("Failed to load cars:", err);
       } finally {
         setLoading(false);
       }
@@ -33,81 +42,59 @@ export default function ClientHome() {
     load();
   }, []);
 
-  // GROUP PREMIUM CARS
-  const byMake = paidCars.reduce((acc, car) => {
-    const key = car.make || "Other";
-    if (!acc[key]) acc[key] = [];
-    acc[key].push(car);
-    return acc;
-  }, {} as Record<string, Car[]>);
+  const foreignUsed = cars.filter((c) => c.condition === "Foreign Used").length;
+  const nigerianUsed = cars.filter(
+    (c) => c.condition === "Nigerian Used"
+  ).length;
+  const brandNew = cars.filter((c) => c.condition === "Brand New").length;
+  const totalCars = cars.length;
 
-  const byLocation = paidCars.reduce((acc, car) => {
-    const key = car.location || "Other";
-    if (!acc[key]) acc[key] = [];
-    acc[key].push(car);
-    return acc;
-  }, {} as Record<string, Car[]>);
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-50 to-white flex items-center justify-center">
+        <div className="text-center">
+          <Flame size={80} className="animate-pulse text-green-600 mb-6" />
+          <h1 className="text-6xl font-black text-gray-900">CARS ABEG</h1>
+          <p className="text-2xl font-bold text-gray-600 mt-4">
+            Loading fresh deals...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
-  const byPriceRange = {
-    "Below ₦10M": paidCars.filter((c) => c.price <= 10_000_000),
-    "₦10M – ₦20M": paidCars.filter(
-      (c) => c.price > 10_000_000 && c.price <= 20_000_000
-    ),
-    "Above ₦20M": paidCars.filter((c) => c.price > 20_000_000),
-  };
+  // GROUP FEATURED CARS
+  const lagosCars = paidCars.filter((c) =>
+    c.location?.toLowerCase().includes("lagos")
+  );
+  const kadunaCars = paidCars.filter((c) =>
+    c.location?.toLowerCase().includes("kaduna")
+  );
+  const kanoCars = paidCars.filter((c) =>
+    c.location?.toLowerCase().includes("kano")
+  );
+  const portharcourtCars = paidCars.filter((c) =>
+    c.location?.toLowerCase().includes("portharcourt")
+  );
+  const foreignUsedCars = paidCars.filter(
+    (c) => c.condition === "Foreign Used"
+  );
+  const nigerianUsedCars = paidCars.filter(
+    (c) => c.condition === "Nigerian Used"
+  );
 
-  const byCondition = {
-    "Foreign Used": paidCars.filter((c) => c.condition === "Foreign Used"),
-    "Nigerian Used": paidCars.filter((c) => c.condition === "Nigerian Used"),
-    "Brand New": paidCars.filter((c) => c.condition === "Brand New"),
-  };
-
-  const PremiumSection = ({
-    title,
-    cars,
-    href,
-  }: {
-    title: string;
-    cars: Car[];
-    href: string;
-  }) => {
+  const FeaturedRow = ({ title, cars }: { title: string; cars: Car[] }) => {
     if (cars.length === 0) return null;
 
     return (
-      <section className="py-20 bg-gradient-to-br from-orange-50 to-pink-50">
+      <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="flex justify-between items-center mb-12">
-            <h2 className="text-4xl md:text-6xl font-black text-gray-900">
-              Premium {title}
-            </h2>
-            {cars.length > 8 && (
-              <Link
-                href={href}
-                className="text-green-600 hover:text-green-700 font-bold text-xl flex items-center gap-2 transition"
-              >
-                View all <ChevronRight size={28} />
-              </Link>
-            )}
-          </div>
-
-          {/* MOBILE: Manual Swipe Carousel */}
-          <div className="md:hidden">
-            <div className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide gap-6 pb-6">
-              {cars.slice(0, 10).map((car) => (
-                <div key={car.id} className="snap-center flex-shrink-0 w-11/12">
-                  <CarCard car={car} />
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* DESKTOP: 4-Column Grid */}
-          <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-8">
-            {cars.slice(0, 8).map((car) => (
-              <div
-                key={car.id}
-                className="hover:-translate-y-4 transition-all duration-300"
-              >
+          <h3 className="text-3xl md:text-4xl font-black text-gray-900 mb-8">
+            {title}
+          </h3>
+          <div className="flex overflow-x-auto gap-6 pb-6 snap-x snap-mandatory scrollbar-hide">
+            {cars.map((car) => (
+              <div key={car.id} className="snap-center flex-shrink-0 w-80">
                 <CarCard car={car} />
               </div>
             ))}
@@ -117,67 +104,156 @@ export default function ClientHome() {
     );
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-white flex items-center justify-center">
-        <div className="text-center">
-          <Flame size={80} className="animate-pulse text-green-600 mb-6" />
-          <h1 className="text-6xl font-black text-gray-900">CARS ABEG</h1>
-          <p className="text-2xl font-bold text-gray-600 mt-4">
-            Loading premium deals...
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <>
-      {/* PREMIUM BY MAKE */}
-      {Object.entries(byMake).map(([make, cars]) => (
-        <PremiumSection
-          key={make}
-          title={`${make} Premium Cars`}
-          cars={cars}
-          href={`/inventory?make=${encodeURIComponent(make)}&featured=true`}
-        />
-      ))}
+      {/* HERO SECTION */}
+      <section className="relative bg-gradient-to-br from-green-600 to-emerald-700 py-32 text-white overflow-hidden">
+        <div className="absolute inset-0 bg-black/30" />
+        <div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
+          <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight">
+            Your Dream Car is Waiting!
+            <br />
+            <span className="text-yellow-400">
+              Best Prices • Verified Sellers • Instant Deals
+            </span>
+          </h1>
+          <p className="text-xl md:text-3xl font-bold mb-12 opacity-90">
+            Over 1,000+ verified cars sold weekly. Join 50,000+ happy buyers
+            today!
+          </p>
+          <Link
+            href="/inventory"
+            className="inline-block bg-yellow-400 hover:bg-yellow-300 text-black px-16 py-6 rounded-full font-black text-2xl shadow-2xl hover:scale-105 transition"
+          >
+            Start Browsing Now
+          </Link>
+        </div>
+      </section>
 
-      {/* PREMIUM BY LOCATION */}
-      {Object.entries(byLocation).map(([location, cars]) => (
-        <PremiumSection
-          key={location}
-          title={`Premium Cars in ${location}`}
-          cars={cars}
-          href={`/inventory?location=${encodeURIComponent(
-            location
-          )}&featured=true`}
-        />
-      ))}
+      {/* FEATURED LISTINGS HEADING */}
+      <section className="py-12 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-6">
+          <h2 className="text-4xl md:text-6xl font-black text-center text-gray-900">
+            Featured Listings
+          </h2>
+        </div>
+      </section>
 
-      {/* PREMIUM BY PRICE RANGE */}
-      {Object.entries(byPriceRange).map(([range, cars]) => (
-        <PremiumSection
-          key={range}
-          title={`Premium ${range}`}
-          cars={cars}
-          href={`/inventory?priceRange=${encodeURIComponent(
-            range
-          )}&featured=true`}
-        />
-      ))}
+      {/* FEATURED CARS CATEGORIES */}
+      <FeaturedRow title="Cars in Lagos" cars={lagosCars} />
+      <FeaturedRow title="Cars in Kaduna" cars={kadunaCars} />
+      <FeaturedRow title="Cars in Kano" cars={kanoCars} />
+      <FeaturedRow title="Cars in Portharcourt" cars={portharcourtCars} />
+      <FeaturedRow title="Foreign Used Cars" cars={foreignUsedCars} />
+      <FeaturedRow title="Nigerian Used Cars" cars={nigerianUsedCars} />
 
-      {/* PREMIUM BY CONDITION */}
-      {Object.entries(byCondition).map(([condition, cars]) => (
-        <PremiumSection
-          key={condition}
-          title={`Premium ${condition}`}
-          cars={cars}
-          href={`/inventory?condition=${encodeURIComponent(
-            condition
-          )}&featured=true`}
-        />
-      ))}
+      {/* VERIFICATION ADVOCATE */}
+      <section className="py-20 bg-gradient-to-br from-green-600 to-emerald-700 text-white text-center">
+        <div className="max-w-5xl mx-auto px-6">
+          <CheckCircle size={80} className="mx-auto mb-6 text-yellow-400" />
+          <h2 className="text-4xl md:text-6xl font-black mb-8">
+            Build a Safer Community
+          </h2>
+          <p className="text-xl md:text-2xl font-medium mb-12 opacity-90">
+            Get verified to boost your credibility and create trust among users.
+            Verified sellers sell 3x faster!
+          </p>
+          <Link
+            href="/auth/signup"
+            className="inline-flex items-center gap-4 bg-yellow-400 hover:bg-yellow-300 text-black px-12 py-6 rounded-3xl font-black text-2xl shadow-2xl hover:scale-105 transition"
+          >
+            <CheckCircle size={36} className="animate-pulse" />
+            Verify Now
+          </Link>
+        </div>
+      </section>
+
+      {/* TESTIMONIALS */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <h2 className="text-4xl md:text-6xl font-black text-center mb-16">
+            What Our Users Say
+          </h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                name: "Tunde A.",
+                text: "Sold my Toyota in 3 days! Best platform in Nigeria.",
+                stars: 5,
+              },
+              {
+                name: "Chioma O.",
+                text: "Bought a clean Tokunbo Camry. Smooth process!",
+                stars: 5,
+              },
+              {
+                name: "Ahmed K.",
+                text: "Instant WhatsApp chat saved me from scams. Thank you!",
+                stars: 5,
+              },
+            ].map((t) => (
+              <div
+                key={t.name}
+                className="bg-gray-50 rounded-3xl p-10 shadow-xl text-center"
+              >
+                <div className="flex justify-center mb-6">
+                  {[...Array(t.stars)].map((_, i) => (
+                    <Star
+                      key={i}
+                      size={32}
+                      className="text-yellow-400 fill-current"
+                    />
+                  ))}
+                </div>
+                <p className="text-xl font-medium text-gray-700 italic mb-8">
+                  {t.text}
+                </p>
+                <p className="font-black text-2xl text-gray-900">{t.name}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQs */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-5xl mx-auto px-6">
+          <h2 className="text-4xl md:text-6xl font-black text-center mb-16">
+            Frequently Asked Questions
+          </h2>
+          <div className="space-y-8">
+            {[
+              {
+                q: "How do I sell my car on CARS ABEG?",
+                a: "List your car for free in under 5 minutes. Upload photos, add details, and get buyers via WhatsApp.",
+              },
+              {
+                q: "Is CARS ABEG safe?",
+                a: "Yes! All sellers are verified. Use our secure chat and meet in public places.",
+              },
+              {
+                q: "What is verification?",
+                a: "Verification boosts trust. Get your badge by signing up and submitting ID - sell 3x faster!",
+              },
+              {
+                q: "How do I contact sellers?",
+                a: "Use instant WhatsApp chat on each listing. No emails, no delays.",
+              },
+              {
+                q: "Do you have an app?",
+                a: "Yes! Download from App Store or Google Play for deals on the go.",
+              },
+            ].map((faq, i) => (
+              <div key={i} className="bg-white rounded-3xl p-8 shadow-xl">
+                <h3 className="text-2xl font-black text-gray-900 mb-4">
+                  {faq.q}
+                </h3>
+                <p className="text-xl text-gray-700 font-medium">{faq.a}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* FINAL CTA */}
       <section className="py-24 bg-gradient-to-br from-green-600 to-emerald-700 text-white text-center">
@@ -188,13 +264,13 @@ export default function ClientHome() {
           <p className="text-xl md:text-2xl font-bold mb-12">
             We source any car in 48hrs
           </p>
-          <Link
-            href="https://wa.me/2348065481663?text=Hi%20CarsAbeg!%20Help%20me%20find%20my%20dream%20car"
+          <a
+            href="https://wa.me/2348022772234?text=Hi%20CarsAbeg!%20Help%20me%20find%20my%20dream%20car"
             className="inline-flex items-center gap-4 bg-yellow-400 hover:bg-yellow-300 text-black px-12 py-6 rounded-3xl font-black text-2xl shadow-2xl hover:scale-105 transition"
           >
             <MessageCircle size={36} className="animate-bounce" />
             REQUEST ANY CAR
-          </Link>
+          </a>
         </div>
       </section>
     </>
