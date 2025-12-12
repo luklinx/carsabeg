@@ -3,19 +3,19 @@
 
 import Link from "next/link";
 import {
-  Home,
-  Car,
-  DollarSign,
-  MessageCircle,
-  Search,
-  MapPin,
-  User as UserIcon,
   Bell,
   Heart,
+  MessageCircle,
+  User,
   Menu,
   X,
   ChevronDown,
   PlusCircle,
+  Search,
+  MapPin,
+  Home,
+  Car,
+  DollarSign,
 } from "lucide-react";
 import Logo from "@/components/Logo";
 import UserNav from "@/components/UserNav";
@@ -26,13 +26,16 @@ export default function HeaderClean() {
 
   return (
     <>
-      {/* VERIFICATION BAR — LINKS TO SIGNUP */}
+      {/* 1. VERIFICATION BAR — LINKS TO SIGNUP */}
       <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black py-3 text-center font-black text-sm shadow-lg">
         <Link
           href="/auth/signup"
           className="flex items-center justify-center gap-3 hover:underline"
         >
-          <span>Verified sellers only • Join us and get verified now!</span>
+          <span>
+            Join us in building a safer community. Get verified to boost your
+            credibility!
+          </span>
           <span className="bg-black text-yellow-400 px-3 py-1 rounded-full text-xs animate-pulse">
             VERY NOW
           </span>
