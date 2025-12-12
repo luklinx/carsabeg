@@ -92,7 +92,7 @@ export default function ClientHome() {
         </div>
       </section>
 
-      {/* CATEGORIES */}
+      {/* CATEGORY CARDS */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-6">
           <h2 className="text-4xl md:text-6xl font-black text-center mb-16">
@@ -169,6 +169,18 @@ export default function ClientHome() {
                 </div>
               ))}
             </div>
+
+            {paidCars.length > 8 && (
+              <div className="text-center mt-12">
+                <Link
+                  href="/inventory?featured=true"
+                  className="inline-flex items-center gap-3 bg-yellow-400 hover:bg-yellow-300 text-black px-16 py-6 rounded-full font-black text-2xl shadow-2xl hover:scale-105 transition"
+                >
+                  View All Premium ({paidCars.length - 8}+)
+                  <ChevronRight size={32} />
+                </Link>
+              </div>
+            )}
           </div>
         </section>
       )}
