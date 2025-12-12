@@ -11,7 +11,6 @@ import {
   Zap,
   Shield,
   Phone,
-  MapPin,
   Star,
   MessageCircle,
   Download,
@@ -65,7 +64,7 @@ export default function ClientHome() {
 
   return (
     <>
-      {/* HERO BANNER */}
+      {/* HERO */}
       <section className="relative bg-gradient-to-br from-green-600 to-emerald-700 py-32 text-white">
         <div className="absolute inset-0 bg-black/20" />
         <div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
@@ -146,7 +145,7 @@ export default function ClientHome() {
         </div>
       </section>
 
-      {/* PREMIUM LISTINGS */}
+      {/* PREMIUM */}
       {paidCars.length > 0 && (
         <section className="py-20 bg-gradient-to-br from-orange-600 to-pink-700 text-white">
           <div className="text-center mb-12">
@@ -173,92 +172,6 @@ export default function ClientHome() {
           </div>
         </section>
       )}
-
-      {/* TRUST SECTION */}
-      <section className="py-20 bg-gradient-to-br from-gray-900 to-black text-white">
-        <div className="max-w-5xl mx-auto px-6 text-center">
-          <Star size={80} className="mx-auto text-yellow-400 mb-6" />
-          <h2 className="text-4xl md:text-6xl font-black mb-8">
-            Trusted by 50,000+ Car Buyers in Nigeria
-          </h2>
-          <p className="text-xl md:text-2xl font-medium mb-12 opacity-90">
-            Verified sellers • Direct WhatsApp • No scams • Best prices
-          </p>
-          <Link
-            href="/auth/signup"
-            className="inline-flex items-center gap-4 bg-green-600 hover:bg-green-700 text-white px-12 py-6 rounded-full font-black text-2xl shadow-2xl hover:scale-105 transition"
-          >
-            <Shield size={36} />
-            Get Verified Now
-          </Link>
-        </div>
-      </section>
-
-      {/* TESTIMONIALS */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-4xl md:text-6xl font-black text-center mb-16">
-            What Our Users Say
-          </h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                name: "Tunde A.",
-                text: "Sold my Toyota in 3 days! Best platform in Nigeria.",
-              },
-              {
-                name: "Chioma O.",
-                text: "Bought a clean Tokunbo Camry. Smooth process!",
-              },
-              {
-                name: "Ahmed K.",
-                text: "Instant WhatsApp chat saved me from scams. Thank you!",
-              },
-            ].map((t, i) => (
-              <div
-                key={i}
-                className="bg-gray-50 rounded-3xl p-10 shadow-xl text-center"
-              >
-                <div className="flex justify-center mb-6">
-                  {[...Array(5)].map((_, j) => (
-                    <Star
-                      key={j}
-                      size={32}
-                      className="text-yellow-400 fill-current"
-                    />
-                  ))}
-                </div>
-                <p className="text-xl font-medium text-gray-700 italic mb-8">
-                  {t.text}
-                </p>
-                <p className="font-black text-2xl text-gray-900">{t.name}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* APP DOWNLOAD */}
-      <section className="py-20 bg-gradient-to-br from-green-600 to-emerald-700 text-white text-center">
-        <div className="max-w-4xl mx-auto px-6">
-          <h2 className="text-4xl md:text-6xl font-black mb-8">
-            Find Amazing Deals on the Go
-          </h2>
-          <p className="text-xl md:text-2xl mb-12">
-            Download the CARS ABEG app now!
-          </p>
-          <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <button className="bg-black hover:bg-gray-900 text-white px-12 py-6 rounded-2xl font-black text-xl flex items-center gap-4 shadow-2xl">
-              <Download size={36} />
-              App Store
-            </button>
-            <button className="bg-black hover:bg-gray-900 text-white px-12 py-6 rounded-2xl font-black text-xl flex items-center gap-4 shadow-2xl">
-              <Download size={36} />
-              Google Play
-            </button>
-          </div>
-        </div>
-      </section>
     </>
   );
 }

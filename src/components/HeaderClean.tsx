@@ -16,17 +16,40 @@ import {
   Home,
   Car,
   DollarSign,
+  Info,
+  FileText,
+  Headphones,
+  ChevronRight,
 } from "lucide-react";
 import Logo from "@/components/Logo";
 import UserNav from "@/components/UserNav";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 export default function HeaderClean() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [expandedMenu, setExpandedMenu] = useState<string | null>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setExpandedMenu(null);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const toggleSubmenu = (menu: string) => {
+    setExpandedMenu(expandedMenu === menu ? null : menu);
+  };
 
   return (
     <>
-      {/* 1. VERIFICATION BAR — LINKS TO SIGNUP */}
+      {/* VERIFICATION BAR */}
       <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black py-3 text-center font-black text-sm shadow-lg">
         <Link
           href="/auth/signup"
@@ -52,7 +75,7 @@ export default function HeaderClean() {
             </Link>
 
             {/* Desktop Nav */}
-            <div className="hidden lg:flex items-center gap-8">
+            <nav className="hidden lg:flex items-center gap-8">
               <button className="flex items-center gap-2 hover:text-green-600 font-bold transition">
                 All Cities <ChevronDown size={16} />
               </button>
@@ -77,6 +100,54 @@ export default function HeaderClean() {
               <Link href="/my-ads" className="hover:text-green-600 font-bold">
                 My Ads
               </Link>
+
+              {/* SELL DROPDOWN */}
+              <div className="relative" ref={dropdownRef}>
+                <button
+                  onClick={() => toggleSubmenu("sell")}
+                  className="flex items-center gap-2 hover:text-green-600 font-bold transition py-2"
+                >
+                  <DollarSign size={20} />
+                  Sell
+                  <ChevronDown
+                    size={16}
+                    className={`transition-transform ${
+                      expandedMenu === "sell" ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+                {expandedMenu === "sell" && (
+                  <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-2xl border border-gray-100 z-50">
+                    <Link
+                      href="/sell"
+                      onClick={() => setExpandedMenu(null)}
+                      className="flex items-center gap-3 px-6 py-4 hover:bg-green-50 transition"
+                    >
+                      <DollarSign size={20} className="text-green-600" />
+                      <div>
+                        <p className="font-bold">Sell Your Car</p>
+                        <p className="text-sm text-gray-600">
+                          List and sell quickly
+                        </p>
+                      </div>
+                    </Link>
+                    <Link
+                      href="/value-my-car"
+                      onClick={() => setExpandedMenu(null)}
+                      className="flex items-center gap-3 px-6 py-4 hover:bg-green-50 transition"
+                    >
+                      <Info size={20} className="text-green-600" />
+                      <div>
+                        <p className="font-bold">Value My Car</p>
+                        <p className="text-sm text-gray-600">
+                          Get instant valuation
+                        </p>
+                      </div>
+                    </Link>
+                  </div>
+                )}
+              </div>
+
               <UserNav />
               <Link
                 href="/sell"
@@ -85,7 +156,7 @@ export default function HeaderClean() {
                 <PlusCircle size={24} />
                 PLACE YOUR AD
               </Link>
-            </div>
+            </nav>
 
             {/* Mobile Menu Toggle */}
             <button
