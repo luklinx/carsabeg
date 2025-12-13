@@ -21,7 +21,7 @@ import UserNav from "@/components/UserNav";
 
 export default function HeaderClean() {
   const pathname = usePathname();
-  const isCarPage = pathname.startsWith("/car/");
+  const isCarPage = pathname?.startsWith("/car/") ?? false;
 
   const [scrollY, setScrollY] = useState(0);
   const [showBottomNav, setShowBottomNav] = useState(true);
@@ -45,9 +45,9 @@ export default function HeaderClean() {
 
   const isScrolled = scrollY > 80;
 
-  // Extract car info from pathname or use placeholder (you can enhance later)
-  const carTitle = isCarPage && isScrolled ? "2023 Toyota Camry" : null; // Replace with real data if needed
-  const carPrice = isCarPage && isScrolled ? "₦25.5M" : null;
+  // Placeholder car info — you can enhance with real data later
+  const carTitle = isCarPage && isScrolled ? "2023 Toyota Camry XSE" : null;
+  const carPrice = isCarPage && isScrolled ? "₦32.5M" : null;
 
   return (
     <>
@@ -71,20 +71,20 @@ export default function HeaderClean() {
           <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
             {/* LEFT: Back Arrow or Logo */}
             {isCarPage && isScrolled ? (
-              <Link href="/" className="flex items-center text-gray-800">
-                <ArrowLeft size={24} />
+              <Link href="/" className="text-gray-800">
+                <ArrowLeft size={28} />
               </Link>
             ) : (
-              <Link href="/" className="flex items-center">
-                <Logo logoSrc="/logo.webp" alt="CarsAbeg" size="sm" /> {/* Smaller logo */}
+              <Link href="/">
+                <Logo logoSrc="/logo.webp" alt="CarsAbeg" size="sm" />
               </Link>
             )}
 
             {/* CENTER: Car Info on scroll (Car Page Only) */}
             {isCarPage && isScrolled && (
               <div className="hidden md:block text-center flex-1">
-                <h2 className="font-black text-lg truncate max-w-md mx-auto">
-                  {carTitle || "Loading car..."}
+                <h2 className="font-black text-lg truncate">
+                  {carTitle || "Loading..."}
                 </h2>
                 <p className="text-green-600 font-black text-xl">
                   {carPrice || ""}
@@ -126,8 +126,8 @@ export default function HeaderClean() {
                 Sell
               </Link>
 
-              {/* CLEAN USER ICON — NO TEXT */}
-              <div className="p-2">
+              {/* CLEAN USER ICON */}
+              <div className="p-1">
                 <UserNav />
               </div>
             </div>
@@ -169,7 +169,7 @@ export default function HeaderClean() {
           </div>
         )}
 
-        {/* CAR PAGE BOTTOM NAV — CALL, WHATSAPP, SMS */}
+        {/* CAR PAGE BOTTOM NAV */}
         {isCarPage && (
           <div className="grid grid-cols-3 gap-4 py-3 px-6">
             <button className="flex flex-col items-center bg-blue-600 text-white py-4 rounded-2xl font-black shadow-lg">
