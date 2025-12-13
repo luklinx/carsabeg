@@ -43,23 +43,51 @@ export default function ClientHome() {
   }, []);
 
   // ALL CARS COUNTS
-  const lagosCount = cars.filter(c => c.location?.toLowerCase().includes("lagos")).length;
-  const abujaCount = cars.filter(c => c.location?.toLowerCase().includes("abuja")).length;
-  const kadunaCount = cars.filter(c => c.location?.toLowerCase().includes("kaduna")).length;
-  const kanoCount = cars.filter(c => c.location?.toLowerCase().includes("kano")).length;
-  const portharcourtCount = cars.filter(c => c.location?.toLowerCase().includes("portharcourt")).length;
-  const foreignUsedCount = cars.filter(c => c.condition === "Foreign Used").length;
-  const nigerianUsedCount = cars.filter(c => c.condition === "Nigerian Used").length;
+  const lagosCount = cars.filter((c) =>
+    c.location?.toLowerCase().includes("lagos")
+  ).length;
+  const abujaCount = cars.filter((c) =>
+    c.location?.toLowerCase().includes("abuja")
+  ).length;
+  const kadunaCount = cars.filter((c) =>
+    c.location?.toLowerCase().includes("kaduna")
+  ).length;
+  const kanoCount = cars.filter((c) =>
+    c.location?.toLowerCase().includes("kano")
+  ).length;
+  const portharcourtCount = cars.filter((c) =>
+    c.location?.toLowerCase().includes("portharcourt")
+  ).length;
+  const foreignUsedCount = cars.filter(
+    (c) => c.condition === "Foreign Used"
+  ).length;
+  const nigerianUsedCount = cars.filter(
+    (c) => c.condition === "Nigerian Used"
+  ).length;
   const totalCars = cars.length;
 
   // FEATURED CARS CATEGORIES
-  const lagosFeatured = paidCars.filter(c => c.location?.toLowerCase().includes("lagos"));
-  const abujaFeatured = paidCars.filter(c => c.location?.toLowerCase().includes("abuja"));
-  const kadunaFeatured = paidCars.filter(c => c.location?.toLowerCase().includes("kaduna"));
-  const kanoFeatured = paidCars.filter(c => c.location?.toLowerCase().includes("kano"));
-  const portharcourtFeatured = paidCars.filter(c => c.location?.toLowerCase().includes("portharcourt"));
-  const foreignFeatured = paidCars.filter(c => c.condition === "Foreign Used");
-  const nigerianFeatured = paidCars.filter(c => c.condition === "Nigerian Used");
+  const lagosFeatured = paidCars.filter((c) =>
+    c.location?.toLowerCase().includes("lagos")
+  );
+  const abujaFeatured = paidCars.filter((c) =>
+    c.location?.toLowerCase().includes("abuja")
+  );
+  const kadunaFeatured = paidCars.filter((c) =>
+    c.location?.toLowerCase().includes("kaduna")
+  );
+  const kanoFeatured = paidCars.filter((c) =>
+    c.location?.toLowerCase().includes("kano")
+  );
+  const portharcourtFeatured = paidCars.filter((c) =>
+    c.location?.toLowerCase().includes("portharcourt")
+  );
+  const foreignFeatured = paidCars.filter(
+    (c) => c.condition === "Foreign Used"
+  );
+  const nigerianFeatured = paidCars.filter(
+    (c) => c.condition === "Nigerian Used"
+  );
 
   const FeaturedRow = ({ title, cars }: { title: string; cars: Car[] }) => {
     if (cars.length === 0) return null;
@@ -123,21 +151,71 @@ export default function ClientHome() {
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { name: "All Cars", count: totalCars, icon: Flame, color: "bg-green-600" },
-              { name: "Lagos", count: lagosCount, icon: MapPin, color: "bg-blue-600" },
-              { name: "Abuja", count: abujaCount, icon: MapPin, color: "bg-purple-600" },
-              { name: "Kaduna", count: kadunaCount, icon: MapPin, color: "bg-orange-600" },
-              { name: "Kano", count: kanoCount, icon: MapPin, color: "bg-red-600" },
-              { name: "Portharcourt", count: portharcourtCount, icon: MapPin, color: "bg-teal-600" },
-              { name: "Tokunbo", count: foreignUsedCount, icon: Shield, color: "bg-cyan-600" },
-              { name: "Nigerian Used", count: nigerianUsedCount, icon: Phone, color: "bg-indigo-600" },
+              {
+                name: "All Cars",
+                count: totalCars,
+                icon: Flame,
+                color: "bg-green-600",
+              },
+              {
+                name: "Lagos",
+                count: lagosCount,
+                icon: MapPin,
+                color: "bg-blue-600",
+              },
+              {
+                name: "Abuja",
+                count: abujaCount,
+                icon: MapPin,
+                color: "bg-purple-600",
+              },
+              {
+                name: "Kaduna",
+                count: kadunaCount,
+                icon: MapPin,
+                color: "bg-orange-600",
+              },
+              {
+                name: "Kano",
+                count: kanoCount,
+                icon: MapPin,
+                color: "bg-red-600",
+              },
+              {
+                name: "Portharcourt",
+                count: portharcourtCount,
+                icon: MapPin,
+                color: "bg-teal-600",
+              },
+              {
+                name: "Tokunbo",
+                count: foreignUsedCount,
+                icon: Shield,
+                color: "bg-cyan-600",
+              },
+              {
+                name: "Nigerian Used",
+                count: nigerianUsedCount,
+                icon: Phone,
+                color: "bg-indigo-600",
+              },
             ].map((cat) => (
-              <Link key={cat.name} href="/inventory" className="group block bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all p-6 text-center">
-                <div className={`w-16 h-16 ${cat.color} rounded-full mx-auto mb-4 flex items-center justify-center`}>
+              <Link
+                key={cat.name}
+                href="/inventory"
+                className="group block bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all p-6 text-center"
+              >
+                <div
+                  className={`w-16 h-16 ${cat.color} rounded-full mx-auto mb-4 flex items-center justify-center`}
+                >
                   <cat.icon size={32} className="text-white" />
                 </div>
-                <p className="text-3xl font-black text-gray-900">{cat.count.toLocaleString()}</p>
-                <p className="text-lg font-bold text-gray-700 mt-2">{cat.name}</p>
+                <p className="text-3xl font-black text-gray-900">
+                  {cat.count.toLocaleString()}
+                </p>
+                <p className="text-lg font-bold text-gray-700 mt-2">
+                  {cat.name}
+                </p>
               </Link>
             ))}
           </div>
@@ -157,7 +235,10 @@ export default function ClientHome() {
       <FeaturedRow title="Premium in Abuja" cars={abujaFeatured} />
       <FeaturedRow title="Premium in Kaduna" cars={kadunaFeatured} />
       <FeaturedRow title="Premium in Kano" cars={kanoFeatured} />
-      <FeaturedRow title="PREMIUM in Portharcourt" cars={portharcourtFeatured} />
+      <FeaturedRow
+        title="Premium in Portharcourt"
+        cars={portharcourtFeatured}
+      />
       <FeaturedRow title="Premium Foreign Used" cars={foreignFeatured} />
       <FeaturedRow title="Premium Nigerian Used" cars={nigerianFeatured} />
 
@@ -169,7 +250,8 @@ export default function ClientHome() {
             Sell Faster. Build Trust.
           </h2>
           <p className="text-lg md:text-xl mb-8 opacity-90">
-            Verified sellers get 3x more inquiries. Join thousands of trusted sellers today.
+            Verified sellers get 3x more inquiries. Join thousands of trusted
+            sellers today.
           </p>
           <Link
             href="/auth/signup"
@@ -189,18 +271,34 @@ export default function ClientHome() {
           </h2>
           <div className="grid md:grid-cols-3 gap-6">
             {[
-              { name: "Tunde A.", text: "Sold my Toyota in 3 days! Best platform in Nigeria." },
-              { name: "Chioma O.", text: "Bought a clean Tokunbo Camry. Smooth process!" },
-              { name: "Ahmed K.", text: "Instant WhatsApp chat saved me from scams. Thank you!" },
+              {
+                name: "Tunde A.",
+                text: "Sold my Toyota in 3 days! Best platform in Nigeria.",
+              },
+              {
+                name: "Chioma O.",
+                text: "Bought a clean Tokunbo Camry. Smooth process!",
+              },
+              {
+                name: "Ahmed K.",
+                text: "Instant WhatsApp chat saved me from scams. Thank you!",
+              },
             ].map((t) => (
-              <div key={t.name} className="bg-gray-50 rounded-2xl p-8 shadow-lg text-center">
+              <div
+                key={t.name}
+                className="bg-gray-50 rounded-2xl p-8 shadow-lg text-center"
+              >
                 <div className="flex justify-center mb-4">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={24} className="text-yellow-400 fill-current" />
+                    <Star
+                      key={i}
+                      size={24}
+                      className="text-yellow-400 fill-current"
+                    />
                   ))}
                 </div>
                 <p className="text-lg font-medium text-gray-700 italic mb-6">
-                  "{t.text}"
+                  {t.text}
                 </p>
                 <p className="font-black text-xl text-gray-900">{t.name}</p>
               </div>
@@ -215,58 +313,6 @@ export default function ClientHome() {
           <h2 className="text-3xl md:text-5xl font-black mb-6">
             Deals on the Go
           </h2>
-<<<<<<< HEAD
-          <div className="space-y-8">
-            {[
-              {
-                q: "How do I sell my car on CARS ABEG?",
-                a: "List your car for free in under 5 minutes. Upload photos, add details, and get buyers via WhatsApp.",
-              },
-              {
-                q: "Is CARS ABEG safe?",
-                a: "Yes! All sellers are verified. Use our secure chat and meet in public places.",
-              },
-              {
-                q: "What is verification?",
-                a: "Verification boosts trust. Get your badge by signing up and submitting ID - sell 3x faster!",
-              },
-              {
-                q: "How do I contact sellers?",
-                a: "Use instant WhatsApp chat on each listing. No emails, no delays.",
-              },
-              // {
-              //   q: "Do you have an app?",
-              //   a: "Yes! Download from App Store or Google Play for deals on the go.",
-              // },
-            ].map((faq, i) => (
-              <div key={i} className="bg-white rounded-3xl p-8 shadow-xl">
-                <h3 className="text-2xl font-black text-gray-900 mb-4">
-                  {faq.q}
-                </h3>
-                <p className="text-xl text-gray-700 font-medium">{faq.a}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* FINAL CTA */}
-      <section className="py-24 bg-gradient-to-br from-green-600 to-emerald-700 text-white text-center">
-        <div className="max-w-5xl mx-auto px-6">
-          <h2 className="text-4xl md:text-6xl font-black mb-8">
-            CAN’T FIND YOUR DREAM CAR?
-          </h2>
-          <p className="text-xl md:text-2xl font-bold mb-12">
-            We source any car in 48hrs
-          </p>
-          <a
-            href="https://wa.me/2348065481663?text=Hi%20CarsAbeg!%20Help%20me%20find%20my%20dream%20car"
-            className="inline-flex items-center gap-4 bg-yellow-400 hover:bg-yellow-300 text-black px-12 py-6 rounded-3xl font-black text-2xl shadow-2xl hover:scale-105 transition"
-          >
-            <MessageCircle size={36} className="animate-bounce" />
-            REQUEST ANY CAR
-          </a>
-=======
           <p className="text-lg md:text-xl mb-8">
             Get notifications, chat faster, browse anywhere
           </p>
@@ -278,7 +324,6 @@ export default function ClientHome() {
               Google Play
             </button>
           </div>
->>>>>>> 32e8aeb2612b11c879a39370e4b1a48995e1794f
         </div>
       </section>
     </>
