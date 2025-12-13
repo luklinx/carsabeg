@@ -12,6 +12,7 @@ import {
   Shield,
   Phone,
   Star,
+  MapPin,
   MessageCircle,
   ChevronRight,
   Search,
