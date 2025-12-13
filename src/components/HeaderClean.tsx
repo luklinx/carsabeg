@@ -15,17 +15,13 @@ import {
   Phone,
   MessageCircle as WhatsAppIcon,
   ArrowLeft,
-  ChevronLeft,
 } from "lucide-react";
 import Logo from "@/components/Logo";
 import UserNav from "@/components/UserNav";
-import { useCar } from "@/hooks/useCar"; // Assume you have a hook to get current car on /car/[id]
 
 export default function HeaderClean() {
   const pathname = usePathname();
   const isCarPage = pathname.startsWith("/car/");
-  const carId = isCarPage ? pathname.split("/")[2] : null;
-  const { car } = useCar(carId); // Fetch current car data if on car page
 
   const [scrollY, setScrollY] = useState(0);
   const [showBottomNav, setShowBottomNav] = useState(true);
@@ -48,6 +44,10 @@ export default function HeaderClean() {
   }, [lastScrollY]);
 
   const isScrolled = scrollY > 80;
+
+  // Extract car info from pathname or use placeholder (you can enhance later)
+  const carTitle = isCarPage && isScrolled ? "2023 Toyota Camry" : null; // Replace with real data if needed
+  const carPrice = isCarPage && isScrolled ? "₦25.5M" : null;
 
   return (
     <>
@@ -76,18 +76,18 @@ export default function HeaderClean() {
               </Link>
             ) : (
               <Link href="/" className="flex items-center">
-                <Logo logoSrc="/logo.webp" alt="CarsAbeg" size="sm" /> {/* Reduced size */}
+                <Logo logoSrc="/logo.webp" alt="CarsAbeg" size="sm" /> {/* Smaller logo */}
               </Link>
             )}
 
             {/* CENTER: Car Info on scroll (Car Page Only) */}
-            {isCarPage && isScrolled && car && (
-              <div className="hidden md:block text-center">
-                <h2 className="font-black text-lg">
-                  {car.year} {car.make} {car.model}
+            {isCarPage && isScrolled && (
+              <div className="hidden md:block text-center flex-1">
+                <h2 className="font-black text-lg truncate max-w-md mx-auto">
+                  {carTitle || "Loading car..."}
                 </h2>
                 <p className="text-green-600 font-black text-xl">
-                  ₦{(car.price / 1_000_000).toFixed(1)}M
+                  {carPrice || ""}
                 </p>
               </div>
             )}
@@ -126,14 +126,16 @@ export default function HeaderClean() {
                 Sell
               </Link>
 
-              {/* USER ICON — CLEAN, NO SIGN IN TEXT */}
-              <UserNav />
+              {/* CLEAN USER ICON — NO TEXT */}
+              <div className="p-2">
+                <UserNav />
+              </div>
             </div>
           </div>
         </div>
       </header>
 
-      {/* BOTTOM NAV — HIDE ON SCROLL UP, SHOW ON SCROLL DOWN */}
+      {/* BOTTOM NAV — HIDE ON SCROLL UP */}
       <nav
         className={`lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 transition-transform duration-300 ${
           showBottomNav ? "translate-y-0" : "translate-y-full"
@@ -167,32 +169,21 @@ export default function HeaderClean() {
           </div>
         )}
 
-        {/* CAR PAGE BOTTOM NAV — SPACED CALL, WHATSAPP, SMS */}
-        {isCarPage && car && (
+        {/* CAR PAGE BOTTOM NAV — CALL, WHATSAPP, SMS */}
+        {isCarPage && (
           <div className="grid grid-cols-3 gap-4 py-3 px-6">
-            <a
-              href={`tel:${car.dealer_phone}`}
-              className="flex flex-col items-center bg-blue-600 text-white py-4 rounded-2xl font-black shadow-lg"
-            >
+            <button className="flex flex-col items-center bg-blue-600 text-white py-4 rounded-2xl font-black shadow-lg">
               <Phone size={28} />
               <span className="text-sm mt-1">Call</span>
-            </a>
-            <a
-              href={`https://wa.me/${car.dealer_phone?.replace(/\D/g, "").replace(/^0/, "234")}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex flex-col items-center bg-green-600 text-white py-4 rounded-2xl font-black shadow-lg"
-            >
+            </button>
+            <button className="flex flex-col items-center bg-green-600 text-white py-4 rounded-2xl font-black shadow-lg">
               <WhatsAppIcon size={28} />
               <span className="text-sm mt-1">WhatsApp</span>
-            </a>
-            <a
-              href={`sms:${car.dealer_phone}`}
-              className="flex flex-col items-center bg-gray-700 text-white py-4 rounded-2xl font-black shadow-lg"
-            >
+            </button>
+            <button className="flex flex-col items-center bg-gray-700 text-white py-4 rounded-2xl font-black shadow-lg">
               <MessageCircle size={28} />
               <span className="text-sm mt-1">SMS</span>
-            </a>
+            </button>
           </div>
         )}
       </nav>
