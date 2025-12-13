@@ -89,7 +89,7 @@ export default function HeaderClean() {
               </Link>
             ) : (
               <Link href="/">
-                <Logo logoSrc="/logo.webp" alt="CarsAbeg" size="xs" />
+                <Logo logoSrc="/logo.webp" alt="CarsAbeg" size="sm" />
               </Link>
             )}
 
