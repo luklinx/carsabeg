@@ -5,16 +5,18 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
+  ArrowLeft,
+  Share2,
+  Heart,
+  Phone,
+  MessageCircle as WhatsAppIcon,
+  MessageCircle,
   Home,
   Car,
   DollarSign,
-  MessageCircle,
   Search,
   MapPin,
   User as UserIcon,
-  Phone,
-  MessageCircle as WhatsAppIcon,
-  ArrowLeft,
 } from "lucide-react";
 import Logo from "@/components/Logo";
 import UserNav from "@/components/UserNav";
@@ -24,38 +26,45 @@ export default function HeaderClean() {
   const isCarPage = pathname?.startsWith("/car/") ?? false;
 
   const [scrollY, setScrollY] = useState(0);
-  const [showBottomNav, setShowBottomNav] = useState(true);
+  const [showBottomNav, setShowBottomNav] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [isAtBottom, setIsAtBottom] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      if (currentScrollY > lastScrollY && currentScrollY > 100) {
-        setShowBottomNav(false);
-      } else if (currentScrollY < lastScrollY) {
-        setShowBottomNav(true);
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.body.scrollHeight;
+      const scrollPosition = currentScrollY + windowHeight;
+
+      // Show bottom nav only when near bottom on car page
+      if (isCarPage) {
+        setIsAtBottom(scrollPosition > documentHeight - 200);
       }
-      setLastScrollY(currentScrollY);
+
       setScrollY(currentScrollY);
+      setLastScrollY(currentScrollY);
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY]);
+  }, [isCarPage]);
 
   const isScrolled = scrollY > 80;
 
-  // Placeholder car info — you can enhance with real data later
+  // Placeholder car info (replace with real data if needed)
   const carTitle = isCarPage && isScrolled ? "2023 Toyota Camry XSE" : null;
   const carPrice = isCarPage && isScrolled ? "₦32.5M" : null;
+  const carLocation = isCarPage && isScrolled ? "Lagos" : null;
+  const carCondition = isCarPage && isScrolled ? "Tokunbo" : null;
 
   return (
     <>
       {/* VERIFICATION BAR */}
-      <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black py-3 text-center font-black text-sm shadow-lg">
+      <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black py-2 text-center font-black text-xs shadow-lg">
         <Link href="/auth/signup" className="hover:underline">
-          Join us in building a safer community. Get verified to boost your credibility!
-          <span className="ml-2 bg-black text-yellow-400 px-3 py-1 rounded-full text-xs animate-pulse">
+          Get verified to boost credibility!
+          <span className="ml-2 bg-black text-yellow-400 px-2 py-0.5 rounded text-xs animate-pulse">
             VERY NOW
           </span>
         </Link>
@@ -63,126 +72,116 @@ export default function HeaderClean() {
 
       {/* MAIN HEADER */}
       <header
-        className={`bg-white shadow-sm sticky top-0 z-50 transition-all duration-300 ${
-          isScrolled && isCarPage ? "bg-white/95 backdrop-blur-md shadow-md" : ""
+        className={`bg-white sticky top-0 z-50 transition-all duration-300 ${
+          isScrolled && isCarPage ? "bg-white/95 backdrop-blur-sm shadow-md" : "shadow-sm"
         }`}
       >
-        <div className="px-3 sm:px-4 md:px-6 py-3">
-          <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
+        <div className="px-3 py-2.5">
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
             {/* LEFT: Back Arrow or Logo */}
-            {isCarPage && isScrolled ? (
+            {isCarPage ? (
               <Link href="/" className="text-gray-800">
-                <ArrowLeft size={28} />
+                <ArrowLeft size={24} />
               </Link>
             ) : (
               <Link href="/">
-                <Logo logoSrc="/logo.webp" alt="CarsAbeg" size="sm" />
+                <Logo logoSrc="/logo.webp" alt="CarsAbeg" size="xs" /> {/* Tiny logo */}
               </Link>
             )}
 
-            {/* CENTER: Car Info on scroll (Car Page Only) */}
+            {/* CENTER: Car Info on Car Page */}
             {isCarPage && isScrolled && (
-              <div className="hidden md:block text-center flex-1">
-                <h2 className="font-black text-lg truncate">
+              <div className="flex-1 text-center px-2">
+                <h2 className="font-black text-sm truncate">
                   {carTitle || "Loading..."}
                 </h2>
-                <p className="text-green-600 font-black text-xl">
-                  {carPrice || ""}
-                </p>
+                <div className="flex items-center justify-center gap-2 text-xs text-gray-600 mt-1">
+                  <span className="text-green-600 font-black">{carPrice}</span>
+                  <span>•</span>
+                  <span>{carLocation}</span>
+                  <span>•</span>
+                  <span className="text-yellow-600 font-bold">{carCondition}</span>
+                </div>
               </div>
             )}
 
-            {/* RIGHT: Search + Sell + User */}
-            <div className="flex items-center gap-2 sm:gap-4">
-              <div className="hidden sm:flex flex-1 max-w-md">
-                <form action="/inventory" className="flex items-center w-full">
-                  <div className="flex items-center bg-gray-100 rounded-l-lg px-3 py-2">
-                    <MapPin size={16} className="text-gray-500" />
-                    <select name="location" className="bg-transparent text-sm outline-none">
-                      <option value="">All</option>
-                      <option value="lagos">Lagos</option>
-                      <option value="abuja">Abuja</option>
-                    </select>
-                  </div>
-                  <div className="flex flex-1 items-center bg-white border border-gray-200 rounded-r-lg shadow-sm">
-                    <Search size={18} className="mx-3 text-gray-500" />
-                    <input
-                      name="q"
-                      className="w-full py-2 pr-3 text-sm outline-none"
-                      placeholder="Search cars..."
-                    />
-                    <button className="bg-green-600 text-white px-4 py-2 rounded-r-lg font-bold">
-                      Go
-                    </button>
-                  </div>
-                </form>
+            {/* RIGHT: Share + Favorite + User (Mobile Only) */}
+            {isCarPage ? (
+              <div className="flex items-center gap-3">
+                <button className="text-gray-700 hover:text-green-600 transition">
+                  <Share2 size={20} />
+                </button>
+                <button className="text-gray-700 hover:text-green-600 transition">
+                  <Heart size={20} />
+                </button>
+                <div className="p-1">
+                  <UserNav />
+                </div>
               </div>
-
-              <Link
-                href="/sell"
-                className="hidden sm:flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg font-bold shadow-md"
-              >
-                <DollarSign size={16} />
-                Sell
-              </Link>
-
-              {/* CLEAN USER ICON */}
-              <div className="p-1">
-                <UserNav />
+            ) : (
+              <div className="flex items-center gap-3">
+                <Link
+                  href="/sell"
+                  className="hidden sm:flex items-center gap-1 bg-green-600 text-white px-3 py-1.5 rounded-lg font-bold text-sm shadow-md"
+                >
+                  <DollarSign size={14} />
+                  Sell
+                </Link>
+                <div className="p-1">
+                  <UserNav />
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </header>
 
-      {/* BOTTOM NAV — HIDE ON SCROLL UP */}
+      {/* BOTTOM NAV — SHOW ONLY AT BOTTOM ON CAR PAGE */}
       <nav
-        className={`lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 transition-transform duration-300 ${
-          showBottomNav ? "translate-y-0" : "translate-y-full"
+        className={`lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 transition-all duration-300 ${
+          isAtBottom && isCarPage ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
         }`}
       >
-        {/* NORMAL BOTTOM NAV */}
-        {!isCarPage && (
+        {!isCarPage ? (
+          // NORMAL BOTTOM NAV
           <div className="grid grid-cols-5 gap-1 py-2">
             <Link href="/" className="flex flex-col items-center text-green-600 font-bold">
-              <Home size={24} />
+              <Home size={22} />
               <span className="text-xs">Home</span>
             </Link>
             <Link href="/inventory" className="flex flex-col items-center text-gray-700 font-bold">
-              <Car size={24} />
+              <Car size={22} />
               <span className="text-xs">Cars</span>
             </Link>
             <Link href="/sell" className="flex flex-col items-center">
-              <div className="bg-green-600 text-white p-4 rounded-full shadow-2xl -mt-8">
-                <DollarSign size={32} />
+              <div className="bg-green-600 text-white p-3.5 rounded-full shadow-2xl -mt-6">
+                <DollarSign size={28} />
               </div>
               <span className="text-xs font-black">Sell</span>
             </Link>
             <Link href="/contact" className="flex flex-col items-center text-gray-700 font-bold">
-              <MessageCircle size={24} />
+              <MessageCircle size={22} />
               <span className="text-xs">Chat</span>
             </Link>
             <div className="flex flex-col items-center text-gray-700 font-bold">
-              <UserIcon size={24} />
+              <UserIcon size={22} />
               <span className="text-xs">Me</span>
             </div>
           </div>
-        )}
-
-        {/* CAR PAGE BOTTOM NAV */}
-        {isCarPage && (
-          <div className="grid grid-cols-3 gap-4 py-3 px-6">
-            <button className="flex flex-col items-center bg-blue-600 text-white py-4 rounded-2xl font-black shadow-lg">
-              <Phone size={28} />
-              <span className="text-sm mt-1">Call</span>
+        ) : (
+          // CAR PAGE BOTTOM NAV — TINY, CLEAN, GREEN & GOLD
+          <div className="grid grid-cols-3 gap-2 py-2 px-4">
+            <button className="flex flex-col items-center bg-green-600 text-white py-3 rounded-xl font-black text-xs shadow-lg">
+              <Phone size={22} />
+              <span className="mt-1">Call</span>
             </button>
-            <button className="flex flex-col items-center bg-green-600 text-white py-4 rounded-2xl font-black shadow-lg">
-              <WhatsAppIcon size={28} />
-              <span className="text-sm mt-1">WhatsApp</span>
+            <button className="flex flex-col items-center bg-green-600 text-white py-3 rounded-xl font-black text-xs shadow-lg">
+              <WhatsAppIcon size={22} />
+              <span className="mt-1">WhatsApp</span>
             </button>
-            <button className="flex flex-col items-center bg-gray-700 text-white py-4 rounded-2xl font-black shadow-lg">
-              <MessageCircle size={28} />
-              <span className="text-sm mt-1">SMS</span>
+            <button className="flex flex-col items-center bg-yellow-400 text-black py-3 rounded-xl font-black text-xs shadow-lg">
+              <MessageCircle size={22} />
+              <span className="mt-1">SMS</span>
             </button>
           </div>
         )}
