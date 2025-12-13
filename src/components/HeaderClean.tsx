@@ -20,43 +20,44 @@ import {
 } from "lucide-react";
 import Logo from "@/components/Logo";
 import UserNav from "@/components/UserNav";
+import { useCar } from "@/hooks/useCar"; // Your existing hook for fetching car by ID
 
 export default function HeaderClean() {
   const pathname = usePathname();
   const isCarPage = pathname?.startsWith("/car/") ?? false;
+  const carId = isCarPage ? pathname.split("/")[2] : null;
+  const { car } = useCar(carId); // Dynamic car data
 
   const [scrollY, setScrollY] = useState(0);
-  const [showBottomNav, setShowBottomNav] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
-  const [isAtBottom, setIsAtBottom] = useState(false);
+  const [showBottomNav, setShowBottomNav] = useState(true);
+  const [showTopNav, setShowTopNav] = useState(!isCarPage); // Show normal top nav unless on car page
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      const windowHeight = window.innerHeight;
-      const documentHeight = document.body.scrollHeight;
-      const scrollPosition = currentScrollY + windowHeight;
 
-      // Show bottom nav only when near bottom on car page
+      // For car page: show top nav only after scrolling past images (~500px)
       if (isCarPage) {
-        setIsAtBottom(scrollPosition > documentHeight - 200);
+        setShowTopNav(currentScrollY > 500);
       }
 
-      setScrollY(currentScrollY);
+      // Bottom nav: hide on scroll down, show on scroll up (normal pages)
+      if (!isCarPage) {
+        if (currentScrollY > lastScrollY && currentScrollY > 100) {
+          setShowBottomNav(false);
+        } else if (currentScrollY < lastScrollY) {
+          setShowBottomNav(true);
+        }
+      }
+
       setLastScrollY(currentScrollY);
+      setScrollY(currentScrollY);
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [isCarPage]);
-
-  const isScrolled = scrollY > 80;
-
-  // Placeholder car info (replace with real data if needed)
-  const carTitle = isCarPage && isScrolled ? "2023 Toyota Camry XSE" : null;
-  const carPrice = isCarPage && isScrolled ? "₦32.5M" : null;
-  const carLocation = isCarPage && isScrolled ? "Lagos" : null;
-  const carCondition = isCarPage && isScrolled ? "Tokunbo" : null;
+  }, [lastScrollY, isCarPage]);
 
   return (
     <>
@@ -70,13 +71,13 @@ export default function HeaderClean() {
         </Link>
       </div>
 
-      {/* MAIN HEADER */}
+      {/* MAIN HEADER — SHOW/HIDE ON CAR PAGE */}
       <header
         className={`bg-white sticky top-0 z-50 transition-all duration-300 ${
-          isScrolled && isCarPage ? "bg-white/95 backdrop-blur-sm shadow-md" : "shadow-sm"
-        }`}
+          showTopNav ? "translate-y-0" : "-translate-y-full"
+        } ${showTopNav ? "shadow-md" : ""}`}
       >
-        <div className="px-3 py-2.5">
+        <div className="px-3 py-2">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             {/* LEFT: Back Arrow or Logo */}
             {isCarPage ? (
@@ -85,27 +86,31 @@ export default function HeaderClean() {
               </Link>
             ) : (
               <Link href="/">
-                <Logo logoSrc="/logo.webp" alt="CarsAbeg" size="sm" /> {/* Tiny logo */}
+                <Logo logoSrc="/logo.webp" alt="CarsAbeg" size="xs" />
               </Link>
             )}
 
-            {/* CENTER: Car Info on Car Page */}
-            {isCarPage && isScrolled && (
+            {/* CENTER: Dynamic Car Info on Car Page */}
+            {isCarPage && showTopNav && car && (
               <div className="flex-1 text-center px-2">
                 <h2 className="font-black text-sm truncate">
-                  {carTitle || "Loading..."}
+                  {car.year} {car.make} {car.model}
                 </h2>
-                <div className="flex items-center justify-center gap-2 text-xs text-gray-600 mt-1">
-                  <span className="text-green-600 font-black">{carPrice}</span>
+                <div className="flex items-center justify-center gap-1 text-xs text-gray-600 mt-1">
+                  <span className="text-green-600 font-black">
+                    ₦{(car.price / 1_000_000).toFixed(1)}M
+                  </span>
                   <span>•</span>
-                  <span>{carLocation}</span>
+                  <span>{car.location}</span>
                   <span>•</span>
-                  <span className="text-yellow-600 font-bold">{carCondition}</span>
+                  <span className="text-yellow-600 font-bold">
+                    {car.condition === "Foreign Used" ? "Tokunbo" : car.condition}
+                  </span>
                 </div>
               </div>
             )}
 
-            {/* RIGHT: Share + Favorite + User (Mobile Only) */}
+            {/* RIGHT: Icons on Car Page, Normal on Others */}
             {isCarPage ? (
               <div className="flex items-center gap-3">
                 <button className="text-gray-700 hover:text-green-600 transition">
@@ -136,14 +141,14 @@ export default function HeaderClean() {
         </div>
       </header>
 
-      {/* BOTTOM NAV — SHOW ONLY AT BOTTOM ON CAR PAGE */}
+      {/* BOTTOM NAV */}
       <nav
-        className={`lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 transition-all duration-300 ${
-          isAtBottom && isCarPage ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
+        className={`lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 transition-transform duration-300 ${
+          showBottomNav ? "translate-y-0" : "translate-y-full"
         }`}
       >
-        {!isCarPage ? (
-          // NORMAL BOTTOM NAV
+        {/* NORMAL BOTTOM NAV — NON-CAR PAGES */}
+        {!isCarPage && (
           <div className="grid grid-cols-5 gap-1 py-2">
             <Link href="/" className="flex flex-col items-center text-green-600 font-bold">
               <Home size={22} />
@@ -168,21 +173,34 @@ export default function HeaderClean() {
               <span className="text-xs">Me</span>
             </div>
           </div>
-        ) : (
-          // CAR PAGE BOTTOM NAV — TINY, CLEAN, GREEN & GOLD
+        )}
+
+        {/* CAR PAGE BOTTOM NAV — APPEARS AT BOTTOM */}
+        {isCarPage && car && (
           <div className="grid grid-cols-3 gap-2 py-2 px-4">
-            <button className="flex flex-col items-center bg-green-600 text-white py-3 rounded-xl font-black text-xs shadow-lg">
+            <a
+              href={`tel:${car.dealer_phone}`}
+              className="flex flex-col items-center bg-green-600 text-white py-3 rounded-xl font-black text-xs shadow-lg"
+            >
               <Phone size={22} />
               <span className="mt-1">Call</span>
-            </button>
-            <button className="flex flex-col items-center bg-green-600 text-white py-3 rounded-xl font-black text-xs shadow-lg">
+            </a>
+            <a
+              href={`https://wa.me/${car.dealer_phone?.replace(/\D/g, "").replace(/^0/, "234")}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-col items-center bg-green-600 text-white py-3 rounded-xl font-black text-xs shadow-lg"
+            >
               <WhatsAppIcon size={22} />
               <span className="mt-1">WhatsApp</span>
-            </button>
-            <button className="flex flex-col items-center bg-yellow-400 text-black py-3 rounded-xl font-black text-xs shadow-lg">
+            </a>
+            <a
+              href={`sms:${car.dealer_phone}`}
+              className="flex flex-col items-center bg-yellow-400 text-black py-3 rounded-xl font-black text-xs shadow-lg"
+            >
               <MessageCircle size={22} />
               <span className="mt-1">SMS</span>
-            </button>
+            </a>
           </div>
         )}
       </nav>
