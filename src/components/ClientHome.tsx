@@ -239,10 +239,10 @@ export default function ClientHome() {
                 q: "How do I contact sellers?",
                 a: "Use instant WhatsApp chat on each listing. No emails, no delays.",
               },
-              {
-                q: "Do you have an app?",
-                a: "Yes! Download from App Store or Google Play for deals on the go.",
-              },
+              // {
+              //   q: "Do you have an app?",
+              //   a: "Yes! Download from App Store or Google Play for deals on the go.",
+              // },
             ].map((faq, i) => (
               <div key={i} className="bg-white rounded-3xl p-8 shadow-xl">
                 <h3 className="text-2xl font-black text-gray-900 mb-4">
@@ -265,7 +265,7 @@ export default function ClientHome() {
             We source any car in 48hrs
           </p>
           <a
-            href="https://wa.me/2348022772234?text=Hi%20CarsAbeg!%20Help%20me%20find%20my%20dream%20car"
+            href="https://wa.me/2348065481663?text=Hi%20CarsAbeg!%20Help%20me%20find%20my%20dream%20car"
             className="inline-flex items-center gap-4 bg-yellow-400 hover:bg-yellow-300 text-black px-12 py-6 rounded-3xl font-black text-2xl shadow-2xl hover:scale-105 transition"
           >
             <MessageCircle size={36} className="animate-bounce" />

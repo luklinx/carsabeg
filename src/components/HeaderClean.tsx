@@ -2,11 +2,18 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import {
+  ArrowLeft,
+  Share2,
+  Heart,
+  Phone,
+  MessageCircle as WhatsAppIcon,
+  MessageCircle,
   Home,
   Car,
   DollarSign,
-  MessageCircle,
   Search,
   MapPin,
   User as UserIcon,
@@ -15,122 +22,181 @@ import Logo from "@/components/Logo";
 import UserNav from "@/components/UserNav";
 
 export default function HeaderClean() {
+  const pathname = usePathname();
+  const isCarPage = pathname ? pathname.startsWith("/car/") : false;
+
+  const [scrollY, setScrollY] = useState(0);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const [showBottomNav, setShowBottomNav] = useState(true);
+  const [showTopNav, setShowTopNav] = useState(!isCarPage);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (isCarPage) {
+        setShowTopNav(currentScrollY > 500);
+      }
+
+      if (!isCarPage) {
+        if (currentScrollY > lastScrollY && currentScrollY > 100) {
+          setShowBottomNav(false);
+        } else if (currentScrollY < lastScrollY) {
+          setShowBottomNav(true);
+        }
+      }
+
+      setLastScrollY(currentScrollY);
+      setScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY, isCarPage]);
+
+  // Placeholder car info
+  const carTitle = isCarPage && showTopNav ? "2023 Toyota Camry XSE" : null;
+  const carPrice = isCarPage && showTopNav ? "₦32.5M" : null;
+  const carLocation = isCarPage && showTopNav ? "Lagos" : null;
+  const carCondition = isCarPage && showTopNav ? "Tokunbo" : null;
+
   return (
     <>
-      {/* VERIFICATION BAR — DUBIZZLE STYLE */}
-      <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black py-3 text-center font-black text-sm shadow-lg">
-        <Link
-          href="/auth/signup"
-          className="flex items-center justify-center gap-3 hover:underline"
-        >
-          <span>
-            Join us in building a safer community. Get verified to boost your
-            credibility!
-          </span>
-          <span className="bg-black text-yellow-400 px-3 py-1 rounded-full text-xs animate-pulse">
+      {/* VERIFICATION BAR */}
+      <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black py-2 text-center font-black text-sm shadow-lg">
+        <Link href="/auth/signup" className="hover:underline">
+          Get verified to boost credibility!
+          <span className="ml-2 bg-black text-yellow-400 px-2 py-0.5 rounded text-sm animate-pulse">
             VERY NOW
           </span>
         </Link>
       </div>
 
-      {/* YOUR ORIGINAL HEADER — 100% UNTOUCHED */}
-      <header className="bg-white shadow-sm sticky top-0 z-50 w-full overflow-x-hidden">
-        <div className="w-full px-3 sm:px-4 md:px-6 py-3">
-          <div className="max-w-7xl mx-auto flex items-center gap-3 sm:gap-4 min-w-0">
-            <div className="flex-shrink-0">
-              <Link href="/" className="flex items-center">
-                <Logo logoSrc="/logo.webp" alt="CarsAbeg" size="md" />
+      {/* MAIN HEADER */}
+      <header
+        className={`bg-white sticky top-0 z-50 transition-all duration-300 ${
+          showTopNav ? "translate-y-0 shadow-md" : "-translate-y-full"
+        }`}
+      >
+        <div className="px-3 py-2">
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+            {/* LEFT */}
+            {isCarPage ? (
+              <Link href="/" className="text-gray-800">
+                <ArrowLeft size={24} />
               </Link>
-            </div>
-
-            <div className="hidden sm:flex flex-1 min-w-0">
-              <form
-                action="/inventory"
-                className="flex items-center gap-2 w-full min-w-0"
-              >
-                <div className="hidden sm:flex items-center gap-2 bg-gray-100 px-3 py-2 rounded-lg flex-shrink-0">
-                  <MapPin size={16} className="text-gray-500" />
-                  <select
-                    name="location"
-                    className="bg-transparent text-sm outline-none"
-                  >
-                    <option value="">All locations</option>
-                    <option value="lagos">Lagos</option>
-                    <option value="abuja">Abuja</option>
-                  </select>
-                </div>
-
-                <div className="flex-1 flex items-center bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden min-w-0">
-                  <div className="px-3 hidden sm:flex items-center text-gray-500">
-                    <Search size={18} />
-                  </div>
-                  <input
-                    name="q"
-                    className="flex-1 px-3 py-3 text-sm outline-none min-w-0"
-                    placeholder="Search cars, makes, models, registration..."
-                  />
-                  <button className="bg-green-600 text-white px-5 py-2 rounded-r-lg text-sm font-semibold flex-shrink-0">
-                    Search
-                  </button>
-                </div>
-              </form>
-            </div>
-
-            <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
-              <Link
-                href="/sell"
-                className="hidden sm:inline-flex items-center gap-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-4 py-2 rounded-lg font-semibold shadow-md flex-shrink-0"
-              >
-                <DollarSign size={16} />
-                Sell
+            ) : (
+              <Link href="/">
+                <Logo logoSrc="/logo.webp" alt="CarsAbeg" size="sm" />
               </Link>
-              <UserNav />
-            </div>
+            )}
+
+            {/* CENTER: Car Info */}
+            {isCarPage && showTopNav && (
+              <div className="flex-1 text-center px-2">
+                <h2 className="font-black text-sm truncate">
+                  {carTitle || "Loading..."}
+                </h2>
+                <div className="flex items-center justify-center gap-1 text-sm text-gray-600 mt-1">
+                  <span className="text-green-600 font-black">{carPrice}</span>
+                  <span>•</span>
+                  <span>{carLocation}</span>
+                  <span>•</span>
+                  <span className="text-yellow-600 font-bold">
+                    {carCondition}
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {/* RIGHT */}
+            {isCarPage ? (
+              <div className="flex items-center gap-3">
+                <button className="text-gray-700 hover:text-green-600">
+                  <Share2 size={20} />
+                </button>
+                <button className="text-gray-700 hover:text-green-600">
+                  <Heart size={20} />
+                </button>
+                <div className="p-1">
+                  <UserNav />
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center gap-3">
+                <Link
+                  href="/sell"
+                  className="hidden sm:flex items-center gap-1 bg-green-600 text-white px-3 py-1.5 rounded-lg font-bold text-sm"
+                >
+                  <DollarSign size={14} />
+                  Sell
+                </Link>
+                <div className="p-1">
+                  <UserNav />
+                </div>
+              </div>
+            )}
           </div>
         </div>
-
-        {/* BOTTOM NAV — YOUR ORIGINAL MOBILE NAV */}
-        <div className="lg:hidden">
-          <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
-            <div className="grid grid-cols-5 gap-1 py-2">
-              <Link
-                href="/"
-                className="flex flex-col items-center text-green-600 font-bold"
-              >
-                <Home size={24} />
-                <span className="text-xs">Home</span>
-              </Link>
-              <Link
-                href="/inventory"
-                className="flex flex-col items-center text-gray-700 font-bold"
-              >
-                <Car size={24} />
-                <span className="text-xs">Cars</span>
-              </Link>
-              <Link href="/sell" className="flex flex-col items-center">
-                <div className="bg-green-600 text-white p-4 rounded-full shadow-2xl -mt-8">
-                  <DollarSign size={32} />
-                </div>
-                <span className="text-xs font-black">Sell</span>
-              </Link>
-              <Link
-                href="/contact"
-                className="flex flex-col items-center text-gray-700 font-bold"
-              >
-                <MessageCircle size={24} />
-                <span className="text-xs">Chat</span>
-              </Link>
-              <Link
-                href="/dashboard/profile"
-                className="flex flex-col items-center text-gray-700 font-bold"
-              >
-                <UserIcon size={24} />
-                <span className="text-xs">Me</span>
-              </Link>
-            </div>
-          </nav>
-        </div>
       </header>
+
+      {/* BOTTOM NAV */}
+      <nav
+        className={`lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 transition-transform duration-300 ${
+          showBottomNav ? "translate-y-0" : "translate-y-full"
+        }`}
+      >
+        {!isCarPage ? (
+          <div className="grid grid-cols-5 gap-1 py-2">
+            <Link
+              href="/"
+              className="flex flex-col items-center text-green-600 font-bold"
+            >
+              <Home size={22} />
+              <span className="text-sm">Home</span>
+            </Link>
+            <Link
+              href="/inventory"
+              className="flex flex-col items-center text-gray-700 font-bold"
+            >
+              <Car size={22} />
+              <span className="text-sm">Cars</span>
+            </Link>
+            <Link href="/sell" className="flex flex-col items-center">
+              <div className="bg-green-600 text-white p-3.5 rounded-full shadow-2xl -mt-6">
+                <DollarSign size={28} />
+              </div>
+              <span className="text-sm font-black">Sell</span>
+            </Link>
+            <Link
+              href="/contact"
+              className="flex flex-col items-center text-gray-700 font-bold"
+            >
+              <MessageCircle size={22} />
+              <span className="text-sm">Chat</span>
+            </Link>
+            <div className="flex flex-col items-center text-gray-700 font-bold">
+              <UserIcon size={22} />
+              <span className="text-sm">Me</span>
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-3 gap-2 py-2 px-4">
+            <button className="flex flex-col items-center bg-green-600 text-white py-3 rounded-xl font-black text-sm shadow-lg">
+              <Phone size={22} />
+              <span className="mt-1">Call</span>
+            </button>
+            <button className="flex flex-col items-center bg-green-600 text-white py-3 rounded-xl font-black text-sm shadow-lg">
+              <WhatsAppIcon size={22} />
+              <span className="mt-1">WhatsApp</span>
+            </button>
+            <button className="flex flex-col items-center bg-yellow-400 text-black py-3 rounded-xl font-black text-sm shadow-lg">
+              <MessageCircle size={22} />
+              <span className="mt-1">SMS</span>
+            </button>
+          </div>
+        )}
+      </nav>
     </>
   );
 }
