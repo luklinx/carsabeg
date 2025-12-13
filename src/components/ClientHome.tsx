@@ -12,8 +12,8 @@ import {
   Shield,
   Phone,
   Star,
+  MapPin,
   MessageCircle,
-  Download,
   ChevronRight,
   Search,
   CheckCircle,
@@ -42,59 +42,37 @@ export default function ClientHome() {
     load();
   }, []);
 
-  const foreignUsed = cars.filter((c) => c.condition === "Foreign Used").length;
-  const nigerianUsed = cars.filter(
-    (c) => c.condition === "Nigerian Used"
-  ).length;
-  const brandNew = cars.filter((c) => c.condition === "Brand New").length;
+  // ALL CARS COUNTS
+  const lagosCount = cars.filter(c => c.location?.toLowerCase().includes("lagos")).length;
+  const abujaCount = cars.filter(c => c.location?.toLowerCase().includes("abuja")).length;
+  const kadunaCount = cars.filter(c => c.location?.toLowerCase().includes("kaduna")).length;
+  const kanoCount = cars.filter(c => c.location?.toLowerCase().includes("kano")).length;
+  const portharcourtCount = cars.filter(c => c.location?.toLowerCase().includes("portharcourt")).length;
+  const foreignUsedCount = cars.filter(c => c.condition === "Foreign Used").length;
+  const nigerianUsedCount = cars.filter(c => c.condition === "Nigerian Used").length;
   const totalCars = cars.length;
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-white flex items-center justify-center">
-        <div className="text-center">
-          <Flame size={80} className="animate-pulse text-green-600 mb-6" />
-          <h1 className="text-6xl font-black text-gray-900">CARS ABEG</h1>
-          <p className="text-2xl font-bold text-gray-600 mt-4">
-            Loading fresh deals...
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  // GROUP FEATURED CARS
-  const lagosCars = paidCars.filter((c) =>
-    c.location?.toLowerCase().includes("lagos")
-  );
-  const kadunaCars = paidCars.filter((c) =>
-    c.location?.toLowerCase().includes("kaduna")
-  );
-  const kanoCars = paidCars.filter((c) =>
-    c.location?.toLowerCase().includes("kano")
-  );
-  const portharcourtCars = paidCars.filter((c) =>
-    c.location?.toLowerCase().includes("portharcourt")
-  );
-  const foreignUsedCars = paidCars.filter(
-    (c) => c.condition === "Foreign Used"
-  );
-  const nigerianUsedCars = paidCars.filter(
-    (c) => c.condition === "Nigerian Used"
-  );
+  // FEATURED CARS CATEGORIES
+  const lagosFeatured = paidCars.filter(c => c.location?.toLowerCase().includes("lagos"));
+  const abujaFeatured = paidCars.filter(c => c.location?.toLowerCase().includes("abuja"));
+  const kadunaFeatured = paidCars.filter(c => c.location?.toLowerCase().includes("kaduna"));
+  const kanoFeatured = paidCars.filter(c => c.location?.toLowerCase().includes("kano"));
+  const portharcourtFeatured = paidCars.filter(c => c.location?.toLowerCase().includes("portharcourt"));
+  const foreignFeatured = paidCars.filter(c => c.condition === "Foreign Used");
+  const nigerianFeatured = paidCars.filter(c => c.condition === "Nigerian Used");
 
   const FeaturedRow = ({ title, cars }: { title: string; cars: Car[] }) => {
     if (cars.length === 0) return null;
 
     return (
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <h3 className="text-3xl md:text-4xl font-black text-gray-900 mb-8">
+      <section className="py-12 bg-white">
+        <div className="max-w-7xl mx-auto px-4">
+          <h3 className="text-2xl md:text-4xl font-black text-gray-900 mb-6">
             {title}
           </h3>
-          <div className="flex overflow-x-auto gap-6 pb-6 snap-x snap-mandatory scrollbar-hide">
+          <div className="flex overflow-x-auto gap-4 pb-4 snap-x snap-mandatory scrollbar-hide">
             {cars.map((car) => (
-              <div key={car.id} className="snap-center flex-shrink-0 w-80">
+              <div key={car.id} className="snap-center flex-shrink-0 w-72">
                 <CarCard car={car} />
               </div>
             ))}
@@ -104,123 +82,140 @@ export default function ClientHome() {
     );
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-white">
+        <div className="text-center">
+          <Flame size={64} className="animate-pulse text-green-600 mb-4" />
+          <h1 className="text-5xl font-black text-gray-900">CARS ABEG</h1>
+          <p className="text-xl font-bold text-gray-600 mt-4">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
-      {/* HERO SECTION */}
-      <section className="relative bg-gradient-to-br from-green-600 to-emerald-700 py-32 text-white overflow-hidden">
-        <div className="absolute inset-0 bg-black/30" />
-        <div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
-          <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight">
-            Your Dream Car is Waiting!
-            <br />
-            <span className="text-yellow-400">
-              Best Prices • Verified Sellers • Instant Deals
-            </span>
+      {/* CLEAN HERO — MOBILE-FIRST */}
+      <section className="bg-gradient-to-br from-green-600 to-emerald-700 py-20 text-white">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <h1 className="text-4xl md:text-6xl font-black mb-4 leading-tight">
+            Your Dream Car is Just a Click Away
           </h1>
-          <p className="text-xl md:text-3xl font-bold mb-12 opacity-90">
-            Over 1,000+ verified cars sold weekly. Join 50,000+ happy buyers
-            today!
+          <p className="text-lg md:text-2xl font-medium mb-8 opacity-90">
+            Verified sellers • Instant WhatsApp • No hidden fees
           </p>
           <Link
             href="/inventory"
-            className="inline-block bg-yellow-400 hover:bg-yellow-300 text-black px-16 py-6 rounded-full font-black text-2xl shadow-2xl hover:scale-105 transition"
+            className="inline-flex items-center gap-3 bg-yellow-400 hover:bg-yellow-300 text-black px-8 py-4 rounded-full font-black text-xl shadow-xl hover:scale-105 transition"
           >
-            Start Browsing Now
+            <Search size={24} />
+            Browse Cars
           </Link>
         </div>
       </section>
 
-      {/* FEATURED LISTINGS HEADING */}
+      {/* CATEGORY CARDS — MOBILE: 2 COL, DESKTOP: 4 COL */}
       <section className="py-12 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-4xl md:text-6xl font-black text-center text-gray-900">
+        <div className="max-w-7xl mx-auto px-4">
+          <h2 className="text-3xl md:text-5xl font-black text-center mb-8">
+            Shop by Category
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              { name: "All Cars", count: totalCars, icon: Flame, color: "bg-green-600" },
+              { name: "Lagos", count: lagosCount, icon: MapPin, color: "bg-blue-600" },
+              { name: "Abuja", count: abujaCount, icon: MapPin, color: "bg-purple-600" },
+              { name: "Kaduna", count: kadunaCount, icon: MapPin, color: "bg-orange-600" },
+              { name: "Kano", count: kanoCount, icon: MapPin, color: "bg-red-600" },
+              { name: "Portharcourt", count: portharcourtCount, icon: MapPin, color: "bg-teal-600" },
+              { name: "Tokunbo", count: foreignUsedCount, icon: Shield, color: "bg-cyan-600" },
+              { name: "Nigerian Used", count: nigerianUsedCount, icon: Phone, color: "bg-indigo-600" },
+            ].map((cat) => (
+              <Link key={cat.name} href="/inventory" className="group block bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all p-6 text-center">
+                <div className={`w-16 h-16 ${cat.color} rounded-full mx-auto mb-4 flex items-center justify-center`}>
+                  <cat.icon size={32} className="text-white" />
+                </div>
+                <p className="text-3xl font-black text-gray-900">{cat.count.toLocaleString()}</p>
+                <p className="text-lg font-bold text-gray-700 mt-2">{cat.name}</p>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FEATURED LISTINGS */}
+      <section className="py-12 bg-gray-100">
+        <div className="max-w-7xl mx-auto px-4">
+          <h2 className="text-3xl md:text-5xl font-black text-center mb-8">
             Featured Listings
           </h2>
         </div>
       </section>
 
-      {/* FEATURED CARS CATEGORIES */}
-      <FeaturedRow title="Cars in Lagos" cars={lagosCars} />
-      <FeaturedRow title="Cars in Kaduna" cars={kadunaCars} />
-      <FeaturedRow title="Cars in Kano" cars={kanoCars} />
-      <FeaturedRow title="Cars in Portharcourt" cars={portharcourtCars} />
-      <FeaturedRow title="Foreign Used Cars" cars={foreignUsedCars} />
-      <FeaturedRow title="Nigerian Used Cars" cars={nigerianUsedCars} />
+      <FeaturedRow title="Premium in Lagos" cars={lagosFeatured} />
+      <FeaturedRow title="Premium in Abuja" cars={abujaFeatured} />
+      <FeaturedRow title="Premium in Kaduna" cars={kadunaFeatured} />
+      <FeaturedRow title="Premium in Kano" cars={kanoFeatured} />
+      <FeaturedRow title="PREMIUM in Portharcourt" cars={portharcourtFeatured} />
+      <FeaturedRow title="Premium Foreign Used" cars={foreignFeatured} />
+      <FeaturedRow title="Premium Nigerian Used" cars={nigerianFeatured} />
 
       {/* VERIFICATION ADVOCATE */}
-      <section className="py-20 bg-gradient-to-br from-green-600 to-emerald-700 text-white text-center">
-        <div className="max-w-5xl mx-auto px-6">
-          <CheckCircle size={80} className="mx-auto mb-6 text-yellow-400" />
-          <h2 className="text-4xl md:text-6xl font-black mb-8">
-            Build a Safer Community
+      <section className="py-16 bg-gradient-to-br from-green-600 to-emerald-700 text-white text-center">
+        <div className="max-w-4xl mx-auto px-4">
+          <CheckCircle size={64} className="mx-auto mb-4 text-yellow-400" />
+          <h2 className="text-3xl md:text-5xl font-black mb-6">
+            Sell Faster. Build Trust.
           </h2>
-          <p className="text-xl md:text-2xl font-medium mb-12 opacity-90">
-            Get verified to boost your credibility and create trust among users.
-            Verified sellers sell 3x faster!
+          <p className="text-lg md:text-xl mb-8 opacity-90">
+            Verified sellers get 3x more inquiries. Join thousands of trusted sellers today.
           </p>
           <Link
             href="/auth/signup"
-            className="inline-flex items-center gap-4 bg-yellow-400 hover:bg-yellow-300 text-black px-12 py-6 rounded-3xl font-black text-2xl shadow-2xl hover:scale-105 transition"
+            className="inline-flex items-center gap-3 bg-yellow-400 hover:bg-yellow-300 text-black px-8 py-4 rounded-full font-black text-xl shadow-xl hover:scale-105 transition"
           >
-            <CheckCircle size={36} className="animate-pulse" />
             Verify Now
+            <ChevronRight size={24} />
           </Link>
         </div>
       </section>
 
       {/* TESTIMONIALS */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-4xl md:text-6xl font-black text-center mb-16">
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4">
+          <h2 className="text-3xl md:text-5xl font-black text-center mb-12">
             What Our Users Say
           </h2>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-6">
             {[
-              {
-                name: "Tunde A.",
-                text: "Sold my Toyota in 3 days! Best platform in Nigeria.",
-                stars: 5,
-              },
-              {
-                name: "Chioma O.",
-                text: "Bought a clean Tokunbo Camry. Smooth process!",
-                stars: 5,
-              },
-              {
-                name: "Ahmed K.",
-                text: "Instant WhatsApp chat saved me from scams. Thank you!",
-                stars: 5,
-              },
+              { name: "Tunde A.", text: "Sold my Toyota in 3 days! Best platform in Nigeria." },
+              { name: "Chioma O.", text: "Bought a clean Tokunbo Camry. Smooth process!" },
+              { name: "Ahmed K.", text: "Instant WhatsApp chat saved me from scams. Thank you!" },
             ].map((t) => (
-              <div
-                key={t.name}
-                className="bg-gray-50 rounded-3xl p-10 shadow-xl text-center"
-              >
-                <div className="flex justify-center mb-6">
-                  {[...Array(t.stars)].map((_, i) => (
-                    <Star
-                      key={i}
-                      size={32}
-                      className="text-yellow-400 fill-current"
-                    />
+              <div key={t.name} className="bg-gray-50 rounded-2xl p-8 shadow-lg text-center">
+                <div className="flex justify-center mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} size={24} className="text-yellow-400 fill-current" />
                   ))}
                 </div>
-                <p className="text-xl font-medium text-gray-700 italic mb-8">
-                  {t.text}
+                <p className="text-lg font-medium text-gray-700 italic mb-6">
+                  "{t.text}"
                 </p>
-                <p className="font-black text-2xl text-gray-900">{t.name}</p>
+                <p className="font-black text-xl text-gray-900">{t.name}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* FAQs */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-5xl mx-auto px-6">
-          <h2 className="text-4xl md:text-6xl font-black text-center mb-16">
-            Frequently Asked Questions
+      {/* APP DOWNLOAD — MODERN & SPACE-EFFICIENT */}
+      <section className="py-16 bg-gradient-to-br from-green-600 to-emerald-700 text-white text-center">
+        <div className="max-w-4xl mx-auto px-4">
+          <h2 className="text-3xl md:text-5xl font-black mb-6">
+            Deals on the Go
           </h2>
+<<<<<<< HEAD
           <div className="space-y-8">
             {[
               {
@@ -271,6 +266,19 @@ export default function ClientHome() {
             <MessageCircle size={36} className="animate-bounce" />
             REQUEST ANY CAR
           </a>
+=======
+          <p className="text-lg md:text-xl mb-8">
+            Get notifications, chat faster, browse anywhere
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button className="bg-black hover:bg-gray-900 text-white px-8 py-4 rounded-2xl font-black text-lg flex items-center gap-3 shadow-xl mx-auto sm:mx-0">
+              App Store
+            </button>
+            <button className="bg-black hover:bg-gray-900 text-white px-8 py-4 rounded-2xl font-black text-lg flex items-center gap-3 shadow-xl mx-auto sm:mx-0">
+              Google Play
+            </button>
+          </div>
+>>>>>>> 32e8aeb2612b11c879a39370e4b1a48995e1794f
         </div>
       </section>
     </>
