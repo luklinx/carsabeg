@@ -20,29 +20,26 @@ import {
 } from "lucide-react";
 import Logo from "@/components/Logo";
 import UserNav from "@/components/UserNav";
-import { useCar } from "@/hooks/useCar"; // Your existing hook for fetching car by ID
 
 export default function HeaderClean() {
   const pathname = usePathname();
   const isCarPage = pathname?.startsWith("/car/") ?? false;
-  const carId = isCarPage ? pathname.split("/")[2] : null;
-  const { car } = useCar(carId); // Dynamic car data
 
   const [scrollY, setScrollY] = useState(0);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [showBottomNav, setShowBottomNav] = useState(true);
-  const [showTopNav, setShowTopNav] = useState(!isCarPage); // Show normal top nav unless on car page
+  const [showTopNav, setShowTopNav] = useState(!isCarPage);
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
-      // For car page: show top nav only after scrolling past images (~500px)
+      // Car page: show top nav only after scrolling past images (~500px)
       if (isCarPage) {
         setShowTopNav(currentScrollY > 500);
       }
 
-      // Bottom nav: hide on scroll down, show on scroll up (normal pages)
+      // Normal pages: hide bottom nav on scroll down
       if (!isCarPage) {
         if (currentScrollY > lastScrollY && currentScrollY > 100) {
           setShowBottomNav(false);
@@ -59,6 +56,12 @@ export default function HeaderClean() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY, isCarPage]);
 
+  // Placeholder dynamic car info — replace with real data if you have a way
+  const carTitle = isCarPage && showTopNav ? "2023 Toyota Camry XSE" : null;
+  const carPrice = isCarPage && showTopNav ? "₦32.5M" : null;
+  const carLocation = isCarPage && showTopNav ? "Lagos" : null;
+  const carCondition = isCarPage && showTopNav ? "Tokunbo" : null;
+
   return (
     <>
       {/* VERIFICATION BAR */}
@@ -71,15 +74,15 @@ export default function HeaderClean() {
         </Link>
       </div>
 
-      {/* MAIN HEADER — SHOW/HIDE ON CAR PAGE */}
+      {/* MAIN HEADER */}
       <header
         className={`bg-white sticky top-0 z-50 transition-all duration-300 ${
-          showTopNav ? "translate-y-0" : "-translate-y-full"
-        } ${showTopNav ? "shadow-md" : ""}`}
+          showTopNav ? "translate-y-0 shadow-md" : "-translate-y-full"
+        }`}
       >
         <div className="px-3 py-2">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
-            {/* LEFT: Back Arrow or Logo */}
+            {/* LEFT */}
             {isCarPage ? (
               <Link href="/" className="text-gray-800">
                 <ArrowLeft size={24} />
@@ -90,33 +93,29 @@ export default function HeaderClean() {
               </Link>
             )}
 
-            {/* CENTER: Dynamic Car Info on Car Page */}
-            {isCarPage && showTopNav && car && (
+            {/* CENTER: Car Info */}
+            {isCarPage && showTopNav && (
               <div className="flex-1 text-center px-2">
                 <h2 className="font-black text-sm truncate">
-                  {car.year} {car.make} {car.model}
+                  {carTitle || "Loading..."}
                 </h2>
                 <div className="flex items-center justify-center gap-1 text-xs text-gray-600 mt-1">
-                  <span className="text-green-600 font-black">
-                    ₦{(car.price / 1_000_000).toFixed(1)}M
-                  </span>
+                  <span className="text-green-600 font-black">{carPrice}</span>
                   <span>•</span>
-                  <span>{car.location}</span>
+                  <span>{carLocation}</span>
                   <span>•</span>
-                  <span className="text-yellow-600 font-bold">
-                    {car.condition === "Foreign Used" ? "Tokunbo" : car.condition}
-                  </span>
+                  <span className="text-yellow-600 font-bold">{carCondition}</span>
                 </div>
               </div>
             )}
 
-            {/* RIGHT: Icons on Car Page, Normal on Others */}
+            {/* RIGHT */}
             {isCarPage ? (
               <div className="flex items-center gap-3">
-                <button className="text-gray-700 hover:text-green-600 transition">
+                <button className="text-gray-700 hover:text-green-600">
                   <Share2 size={20} />
                 </button>
-                <button className="text-gray-700 hover:text-green-600 transition">
+                <button className="text-gray-700 hover:text-green-600">
                   <Heart size={20} />
                 </button>
                 <div className="p-1">
@@ -127,7 +126,7 @@ export default function HeaderClean() {
               <div className="flex items-center gap-3">
                 <Link
                   href="/sell"
-                  className="hidden sm:flex items-center gap-1 bg-green-600 text-white px-3 py-1.5 rounded-lg font-bold text-sm shadow-md"
+                  className="hidden sm:flex items-center gap-1 bg-green-600 text-white px-3 py-1.5 rounded-lg font-bold text-sm"
                 >
                   <DollarSign size={14} />
                   Sell
@@ -147,8 +146,7 @@ export default function HeaderClean() {
           showBottomNav ? "translate-y-0" : "translate-y-full"
         }`}
       >
-        {/* NORMAL BOTTOM NAV — NON-CAR PAGES */}
-        {!isCarPage && (
+        {!isCarPage ? (
           <div className="grid grid-cols-5 gap-1 py-2">
             <Link href="/" className="flex flex-col items-center text-green-600 font-bold">
               <Home size={22} />
@@ -173,34 +171,20 @@ export default function HeaderClean() {
               <span className="text-xs">Me</span>
             </div>
           </div>
-        )}
-
-        {/* CAR PAGE BOTTOM NAV — APPEARS AT BOTTOM */}
-        {isCarPage && car && (
+        ) : (
           <div className="grid grid-cols-3 gap-2 py-2 px-4">
-            <a
-              href={`tel:${car.dealer_phone}`}
-              className="flex flex-col items-center bg-green-600 text-white py-3 rounded-xl font-black text-xs shadow-lg"
-            >
+            <button className="flex flex-col items-center bg-green-600 text-white py-3 rounded-xl font-black text-xs shadow-lg">
               <Phone size={22} />
               <span className="mt-1">Call</span>
-            </a>
-            <a
-              href={`https://wa.me/${car.dealer_phone?.replace(/\D/g, "").replace(/^0/, "234")}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex flex-col items-center bg-green-600 text-white py-3 rounded-xl font-black text-xs shadow-lg"
-            >
+            </button>
+            <button className="flex flex-col items-center bg-green-600 text-white py-3 rounded-xl font-black text-xs shadow-lg">
               <WhatsAppIcon size={22} />
               <span className="mt-1">WhatsApp</span>
-            </a>
-            <a
-              href={`sms:${car.dealer_phone}`}
-              className="flex flex-col items-center bg-yellow-400 text-black py-3 rounded-xl font-black text-xs shadow-lg"
-            >
+            </button>
+            <button className="flex flex-col items-center bg-yellow-400 text-black py-3 rounded-xl font-black text-xs shadow-lg">
               <MessageCircle size={22} />
               <span className="mt-1">SMS</span>
-            </a>
+            </button>
           </div>
         )}
       </nav>
