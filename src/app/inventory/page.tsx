@@ -1,50 +1,82 @@
-import { redirect } from "next/navigation";
-import { getSupabaseServer } from "@/lib/supabaseServer";
-import Link from "next/link";
+// src/app/inventory/page.tsx
+"use client";
+
+import { Suspense } from "react";
 import InventoryClient from "./InventoryClient";
+import { Car, Zap, Shield, MessageCircle } from "lucide-react";
 
-export default async function DashboardInventoryPage() {
-  const supabase = getSupabaseServer();
+// MAIN CONTENT WRAPPER
+function InventoryContent() {
+  return <InventoryClient />;
+}
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/auth/signin");
-  }
-
-  // Try common owner fields; if none match, result will be empty and user can create listings
-  const { data: cars } = await supabase
-    .from("cars")
-    .select("*")
-    .or(`user_id.eq.${user.id},owner_id.eq.${user.id},seller_id.eq.${user.id}`)
-    .order("created_at", { ascending: false });
-
-  const myCars = (cars || []) as never[];
-
+// EPIC LOADING SKELETON — Nigerian Power
+function LoadingSkeleton() {
   return (
-    <main className="min-h-screen bg-slate-50 p-8">
-      <div className="max-w-6xl mx-auto">
-        <header className="mb-8">
-          <h1 className="text-4xl font-black">My Inventory</h1>
-          <p className="text-gray-600 mt-2">Manage your listed cars and drafts.</p>
-        </header>
-
-        {myCars.length === 0 ? (
-          <div className="bg-white rounded-2xl shadow p-8 text-center">
-            <p className="text-lg font-bold">You have no listings yet.</p>
-            <p className="text-sm text-gray-600 mt-2">Create your first car listing to get started.</p>
-            <div className="mt-6">
-              <Link href="/sell" className="inline-block bg-green-600 text-white px-6 py-3 rounded-xl font-bold">
-                Create Listing
-              </Link>
-            </div>
+    <div className="min-h-screen bg-gradient-to-b from-green-50 via-white to-green-50 flex items-center justify-center px-6">
+      <div className="text-center max-w-4xl">
+        {/* Animated Logo */}
+        <div className="mb-16">
+          <div className="flex justify-center gap-8 mb-12">
+            <Car size={100} className="text-green-600 animate-bounce" />
+            <Zap size={100} className="text-yellow-400 animate-pulse" />
+            <Car
+              size={100}
+              className="text-green-600 animate-bounce delay-150"
+            />
           </div>
-        ) : (
-          <InventoryClient initialCars={myCars} />
-        )}
+        </div>
+
+        {/* Title */}
+        <h1 className="text-2xl md:text-3xl font-black text-green-600 mb-8 leading-none">
+          LOADING FRESH CARS
+        </h1>
+        <p className="text-3xl md:text-3xl font-black text-gray-700 mb-12">
+          From Lagos to Abuja — The Best Deals Are Coming...
+        </p>
+
+        {/* Animated Dots */}
+        <div className="flex justify-center gap-6 mb-16">
+          <div className="w-12 h-12 bg-green-600 rounded-full animate-ping" />
+          <div className="w-12 h-12 bg-yellow-400 rounded-full animate-ping delay-150" />
+          <div className="w-12 h-12 bg-green-600 rounded-full animate-ping delay-300" />
+        </div>
+
+        {/* Trust Badges */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20">
+          <div className="bg-white/90 backdrop-blur-md rounded-3xl p-8 shadow-2xl">
+            <Shield size={60} className="mx-auto mb-4 text-green-600" />
+            <p className="text-2xl font-black text-gray-800">100% Verified</p>
+          </div>
+          <div className="bg-white/90 backdrop-blur-md rounded-3xl p-8 shadow-2xl">
+            <MessageCircle size={60} className="mx-auto mb-4 text-green-600" />
+            <p className="text-2xl font-black text-gray-800">
+              Direct Owner Contact
+            </p>
+          </div>
+          <div className="bg-white/90 backdrop-blur-md rounded-3xl p-8 shadow-2xl">
+            <Zap size={60} className="mx-auto mb-4 text-yellow-400" />
+            <p className="text-2xl font-black text-gray-800">
+              Fastest Deals in Nigeria
+            </p>
+          </div>
+        </div>
+
+        <p className="text-xl text-gray-600 mt-16 font-bold">
+          Made in Nigeria • For Nigerians • With Love
+        </p>
       </div>
-    </main>
+    </div>
+  );
+}
+
+// MAIN PAGE — CLEAN & POWERFUL
+export default function InventoryPage() {
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
+      <Suspense fallback={<LoadingSkeleton />}>
+        <InventoryContent />
+      </Suspense>
+    </div>
   );
 }
