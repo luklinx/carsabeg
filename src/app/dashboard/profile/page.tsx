@@ -58,15 +58,30 @@ export default async function ProfilePage() {
 
   // CREATE PROFILE — WITH SAFE DEFAULTS
   const fallbackName = authUser.email?.split("@")[0] || "User";
-  const { error: insertError } = await supabase.from("users").insert({
-    id: authUser.id,
-    email: authUser.email || "",
-    full_name: authUser.user_metadata?.full_name || fallbackName,
-    phone: authUser.user_metadata?.phone || "", // ← ALLOW EMPTY (we'll let user fill later)
-  });
+  // Use upsert to avoid duplicate-key race conditions if the user record already exists
+  const insertRes = await supabase.from("users").upsert(
+    {
+      id: authUser.id,
+      email: authUser.email || "",
+      full_name: authUser.user_metadata?.full_name || fallbackName,
+      phone: authUser.user_metadata?.phone || "", // ← ALLOW EMPTY (we'll let user fill later)
+    },
+    { onConflict: "id" }
+  );
+
+  const insertError = (insertRes as { error: Error | null }).error;
 
   if (insertError) {
-    console.error("INSERT FAILED:", insertError);
+    console.error("UPSERT FAILED (raw):", insertRes);
+    console.error("UPSERT FAILED:", insertError);
+    try {
+      console.error(
+        "UPSERT FAILED (json):",
+        JSON.stringify(insertError, Object.getOwnPropertyNames(insertError), 2)
+      );
+    } catch (e) {
+      console.error("Failed to stringify insertError:", e);
+    }
     return (
       <main className="min-h-screen flex items-center justify-center bg-red-50">
         <div className="text-center p-10 bg-white rounded-3xl shadow-2xl">
