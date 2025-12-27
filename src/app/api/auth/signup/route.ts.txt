@@ -1,0 +1,80 @@
+// src/app/api/auth/signup/route.ts
+import { getSupabaseServer } from "@/lib/supabaseServer";
+import { NextRequest, NextResponse } from "next/server";
+import { hash } from "bcryptjs";
+import { setUserCookie } from "@/lib/authCookies";
+
+export async function POST(req: NextRequest) {
+  try {
+    const body = await req.json();
+    const { full_name, email, phone, password } = body;
+
+    if (!full_name || !email || !phone || !password) {
+      return NextResponse.json(
+        { error: "All fields are required" },
+        { status: 400 }
+      );
+    }
+
+    const supabase = getSupabaseServer();
+
+    // Check if user exists (don't use .single() as it throws on no results)
+    const { data: existingUser } = await supabase
+      .from("users")
+      .select("id")
+      .eq("email", email);
+
+    if (existingUser && existingUser.length > 0) {
+      return NextResponse.json(
+        { error: "Email already registered" },
+        { status: 400 }
+      );
+    }
+
+    // Hash password
+    const hashedPassword = await hash(password, 10);
+
+    // Create user in users table
+    const { data: newUser, error } = await supabase
+      .from("users")
+      .insert([
+        {
+          full_name,
+          email,
+          phone,
+          password_hash: hashedPassword,
+          created_at: new Date().toISOString(),
+        },
+      ])
+      .select();
+
+    if (error) {
+      console.error("Database insert error:", error);
+      return NextResponse.json(
+        { error: error.message || "Failed to create account" },
+        { status: 500 }
+      );
+    }
+
+    // Optionally sign the user in by setting the cookie
+    const createdUser = newUser?.[0];
+    if (createdUser?.id) {
+      await setUserCookie(createdUser.id);
+    }
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Account created successfully",
+        user: createdUser,
+      },
+      { status: 201 }
+    );
+  } catch (err) {
+    console.error("Signup error:", err);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}

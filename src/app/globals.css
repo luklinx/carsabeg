@@ -1,0 +1,511 @@
+@import url("https://fonts.googleapis.com/css2?family=Geist+Sans:wght@400;700;900&family=Geist+Mono:wght@400;700;900&display=swap");
+@import "tailwindcss";
+@import "yet-another-react-lightbox/styles.css";
+
+/* ==================================================================
+   ROOT & THEME (Green / Gold)
+   ================================================================== */
+:root {
+  /* base */
+  --background: #ffffff;
+  --foreground: #0f1720; /* darker for better contrast */
+  --heading-color: #000000;
+
+  /* brand */
+  --brand-green: #107f46; /* primary */
+  --brand-green-dark: #0b5a34; /* darker hover */
+  --brand-gold: #c59b1f; /* accent / gold */
+
+  /* muted */
+  --muted: #6b7280;
+  --muted-2: #9ca3af;
+
+  /* tables */
+  --table-head-bg: #f8faf9;
+  --table-head-color: var(--brand-green-dark);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #ffffff;
+    --foreground: #0f1720;
+    --brand-green: #1aa96f;
+    --brand-green-dark: #157a53;
+    --brand-gold: #bfa03d;
+    --heading-color: #000000;
+  }
+}
+
+html,
+body {
+  overflow-x: hidden;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Manrope, Arial, Helvetica, sans-serif;
+}
+
+/* Use border-box to avoid sizing surprises that can cause overflow */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Prevent media elements from overflowing their containers on small viewports */
+img,
+picture,
+video,
+canvas,
+svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ==================================================================
+   TYPOGRAPHY — BOLDER, HIGH-CONTRAST, BRAND AWARE
+   ================================================================== */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply font-black;
+  color: var(--heading-color);
+}
+
+.section-heading {
+  @apply text-2xl md:text-4xl font-black text-center mb-12;
+  color: var(--heading-color);
+}
+
+.sub-heading {
+  @apply text-xl md:text-2xl font-bold mb-6;
+  color: var(--muted);
+}
+
+/* ==================================================================
+   FORM INPUTS — NIGERIAN BOLD
+   ================================================================== */
+::placeholder {
+  @apply text-gray-600 font-bold opacity-100;
+}
+
+input,
+textarea,
+select {
+  @apply text-gray-900 font-bold placeholder-gray-600;
+}
+
+input::placeholder,
+select {
+  @apply text-gray-600 font-bold;
+}
+
+/* ==================================================================
+   NAVIGATION — BRANDED
+   ================================================================== */
+nav a,
+nav button {
+  @apply font-black transition;
+  color: var(--brand-green-dark);
+}
+nav a:hover,
+nav button:hover {
+  color: var(--brand-green);
+}
+
+/* Second-row nav links (desktop) — force black text for clarity */
+.nav-row-links a,
+.nav-row-links button {
+  color: #000 !important;
+}
+
+/* ==================================================================
+   BUTTONS — BRAND COLORS
+   ================================================================== */
+/* Define a small, modern button utility used site-wide. */
+.btn {
+  @apply inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-all duration-150;
+}
+
+.btn-sm {
+  @apply text-sm px-2 py-1 rounded-md;
+}
+
+.btn-primary {
+  background: var(--brand-green);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--brand-green-dark);
+}
+
+.btn-ghost {
+  @apply bg-transparent;
+  color: var(--muted);
+}
+
+/* Floating CTA exceptions keep moderate size */
+.btn-floating {
+  @apply p-3 rounded-full shadow-lg;
+  background: linear-gradient(90deg, var(--brand-green), var(--brand-gold));
+  color: white;
+}
+
+/* ==================================================================
+   FINAL TOUCH — CLEAN FOCUS STATES (GOLD RING)
+   ================================================================== */
+input:focus,
+textarea:focus,
+select:focus {
+  @apply outline-none border-green-600;
+  box-shadow: 0 0 0 6px rgb(197 155 31 / 0.16); /* gold ring */
+}
+
+/* Hide site chrome when body has .hide-shell (used on full-screen forms) */
+.hide-shell header,
+.hide-shell footer {
+  display: none !important;
+}
+
+/* Floating label pattern for form fields using .field wrapper */
+.field {
+  position: relative;
+}
+.field label {
+  position: absolute;
+  left: 12px;
+  top: 14px;
+  pointer-events: none;
+  transition: transform 0.12s ease, font-size 0.12s ease, top 0.12s ease;
+  transform-origin: left top;
+  color: rgba(55, 65, 81, 0.9); /* gray-700 */
+}
+.field input::placeholder {
+  opacity: 0;
+}
+.field.filled label,
+.field.focused label {
+  transform: translateY(-12px) scale(0.82);
+  top: 6px;
+  font-weight: 700;
+}
+.field input,
+.field select,
+.field textarea {
+  padding-top: 18px; /* room for label */
+}
+
+/* Floating label fields */
+.field {
+  position: relative;
+}
+.field label {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  transition: all 0.18s ease;
+  pointer-events: none;
+  color: #2a2c31;
+}
+.field input:focus + label,
+.field textarea:focus + label,
+.field select:focus + label,
+.field input:not(:placeholder-shown) + label,
+.field textarea:not(:placeholder-shown) + label {
+  transform: translateY(-18px) scale(0.85);
+  color: #374151;
+}
+.field input,
+.field textarea,
+.field select {
+  padding-top: 20px;
+}
+
+/* ==================================================================
+   THEME OVERRIDES — map common low-contrast Tailwind gray utilities
+   to our theme tokens so the site uses consistent color tokens.
+   ================================================================== */
+.text-gray-600 {
+  color: var(--muted) !important;
+}
+.text-gray-500 {
+  color: var(--muted) !important;
+}
+.text-gray-400 {
+  color: var(--muted) !important;
+}
+.text-gray-700 {
+  /* Use the primary foreground for important labels instead of brand green */
+  color: var(--foreground) !important;
+}
+.bg-gray-100 {
+  background: var(--table-head-bg) !important;
+}
+.text-gray-800 {
+  color: var(--foreground) !important;
+}
+
+/* ==================================================================
+   COLLAGE / GALLERY STYLES
+   - Implements the requested style model for the main collage wrapper
+   - Outer wrapper keeps rounded corners and overflow clipping
+   - Inner tiles/images intentionally have no border-radius (external-only)
+   ================================================================== */
+.collage-root {
+  font-family: proxima-nova, ProximaNova, noto, GESS, "GE-SS", "Helvetica Neue",
+    Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  color: rgb(35, 38, 42);
+
+  /* sizing */
+  width: 100%;
+  max-width: 1128px; /* recommended max width */
+  height: 524px; /* default desktop height */
+  box-sizing: border-box;
+
+  /* spacing */
+  padding: 24px 0 0 24px;
+
+  /* visual */
+  transition: all 200ms ease;
+  border-radius: 4px; /* outer radius */
+  box-shadow: 0 8px 24px rgba(12, 15, 18, 0.06); /* subtle shadow so radius is visible */
+}
+
+/* responsive adjustments */
+@media (max-width: 1024px) {
+  .collage-root {
+    height: 420px;
+    padding-left: 16px;
+    padding-top: 16px;
+  }
+}
+@media (max-width: 640px) {
+  .collage-root {
+    height: auto; /* allow natural height on small screens */
+    padding-left: 12px;
+    padding-top: 12px;
+  }
+}
+
+/* force inner tiles to have no rounding so only the outer wrapper shows radius */
+.collage-root .no-radius,
+.collage-root img,
+.collage-root picture,
+.collage-root video {
+  border-radius: 0 !important;
+}
+
+/* optional debug outline (disabled by default) */
+/* .collage-root.debug { outline: 0.8px dashed rgba(255,0,0,0.95); outline-offset: 0; } */
+
+/* Main image specific rules (matches requested style model) */
+.collage-root .main-collage-img {
+  font-family: proxima-nova, ProximaNova, noto, GESS, "GE-SS", "Helvetica Neue",
+    Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  color: rgba(0, 0, 0, 0);
+  background-color: transparent;
+
+  /* The Next/Image with fill positions the image absolutely; keep that behaviour */
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  cursor: pointer;
+  overflow: clip;
+  transition: filter 0.2s ease-in-out;
+  box-sizing: content-box;
+
+  /* no static border radii here — overlay containers apply radii visually */
+  border-radius: 0 !important;
+
+  /* Optional debug outline (disabled) */
+  /* outline: 0.8px dashed rgba(255, 0, 0, 0.8); */
+}
+
+/* Small right-side image rules */
+.collage-root .small-collage-img {
+  font-family: proxima-nova, ProximaNova, noto, GESS, "GE-SS", "Helvetica Neue",
+    Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  color: rgba(0, 0, 0, 0);
+  background-color: transparent;
+
+  /* Next/Image fill positioning */
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  cursor: pointer;
+  overflow: clip;
+  transition: filter 0.18s ease, box-shadow 0.18s ease;
+  box-sizing: content-box;
+
+  /* Asymmetric corner: bottom-right radius requested (default for bottom tile, overridden on hover for top tile)
+     We keep the base as neutral (no rounding) and apply hover radii to provide the visual effect. */
+  border-radius: 0 !important;
+
+  /* Optional debug outline (disabled) */
+  /* outline: 0.8px dashed rgba(255, 0, 0, 0.8); */
+}
+
+/* Hover overlays & per-image radii (via container pseudo-elements) */
+.collage-root .main-image-container::after,
+.collage-root .small-top-container::after,
+.collage-root .small-bottom-container::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  transition: background 0.18s ease, box-shadow 0.18s ease;
+  background: transparent;
+  border-radius: 0; /* default */
+}
+
+.collage-root .main-image-container:hover::after {
+  background: rgba(0, 0, 0, 0.12);
+  box-shadow: 0 12px 24px rgba(15, 20, 20, 0.14);
+  border-top-left-radius: 16px;
+  border-bottom-left-radius: 16px;
+}
+
+.collage-root .small-top-container:hover::after {
+  background: rgba(0, 0, 0, 0.12);
+  box-shadow: 0 6px 18px rgba(15, 20, 20, 0.12);
+  border-top-right-radius: 16px;
+}
+
+.collage-root .small-bottom-container:hover::after {
+  background: rgba(0, 0, 0, 0.12);
+  box-shadow: 0 6px 18px rgba(15, 20, 20, 0.12);
+  border-bottom-right-radius: 16px;
+}
+
+/* ==================================================================
+   LISTING PANELS — LEFT & RIGHT column boxes (below collage)
+   Matches the MUI box style provided for a consistent visual frame
+   ================================================================== */
+.listing-left {
+  /* Font & Text */
+  font-family: proxima-nova, ProximaNova, noto, GESS, "GE-SS", "Helvetica Neue",
+    Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 400;
+  letter-spacing: normal;
+  line-height: 24px;
+  text-decoration: none;
+  text-align: start;
+  text-indent: 0px;
+  text-transform: none;
+  vertical-align: baseline;
+  white-space: normal;
+  word-spacing: 0px;
+
+  /* Color & Background */
+  background-color: transparent;
+  color: rgb(35, 38, 42);
+
+  /* Box */
+  width: 100%;
+  max-width: 66.6667%;
+  padding: 24px 0 0 24px;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+.listing-right {
+  /* Font & Text */
+  font-family: proxima-nova, ProximaNova, noto, GESS, "GE-SS", "Helvetica Neue",
+    Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  color: rgb(35, 38, 42);
+
+  /* Box */
+  width: 100%;
+  max-width: 33.3333%;
+  padding: 24px;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+/* Right-side inner stack that holds seller card, promo banner etc. */
+.listing-right-stack {
+  /* Font & Text */
+  font-family: proxima-nova, ProximaNova, noto, GESS, "GE-SS", "Helvetica Neue",
+    Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  color: rgb(35, 38, 42);
+
+  /* Box */
+  width: 352px; /* target width from provided model */
+  max-width: 100%;
+  padding: 0px;
+  box-sizing: border-box;
+
+  /* Layout */
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: stretch;
+  overflow: visible;
+}
+
+/* Responsive: allow full width on small viewports */
+@media (max-width: 768px) {
+  /* Ensure the right-side stack doesn't reserve desktop width on mobile */
+  .listing-right-stack {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Make listing panels occupy full mobile width for a single-column flow
+     and ensure flex children do not shrink / reserve space */
+  .listing-left,
+  .listing-right {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+    padding: 0 !important;
+    box-sizing: border-box;
+    min-width: 0; /* prevents flex children from overflowing */
+  }
+
+  .listing-right {
+    padding-top: 12px !important;
+  }
+
+  /* Section-level safety: make sure direct children don't preserve inline widths */
+  section.flex > .listing-left,
+  section.flex > aside.listing-right {
+    min-width: 0 !important;
+  }
+}
