@@ -29,8 +29,8 @@ export default function Footer() {
   const [openSupport, setOpenSupport] = useState(false);
 
   const policiesRef = useRef<HTMLUListElement | null>(null);
-  const resourcesRef = useRef<HTMLDivElement | null>(null);
-  const supportRef = useRef<HTMLDivElement | null>(null);
+  const resourcesRef = useRef<HTMLUListElement | null>(null);
+  const supportRef = useRef<HTMLUListElement | null>(null);
 
   useEffect(() => {
     if (openPolicies) {

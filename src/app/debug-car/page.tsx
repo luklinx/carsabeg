@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 // src/app/debug-car/page.tsx   ← NEW FILE
 import { getSupabaseServer } from "@/lib/supabaseServer";
 

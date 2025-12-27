@@ -1,4 +1,6 @@
 // src/app/dashboard/layout.tsx
+export const dynamic = "force-dynamic";
+
 import { ReactNode } from "react";
 import { redirect } from "next/navigation";
 import { getSupabaseServer } from "@/lib/supabaseServer";
@@ -17,5 +19,5 @@ export default async function DashboardLayout({
     redirect("/auth/signin");
   }
 
-  return <>{children}</>; 
+  return <>{children}</>;
 }

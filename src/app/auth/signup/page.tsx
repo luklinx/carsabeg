@@ -5,6 +5,8 @@ import SignupForm from "@/components/Auth/SignupForm";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Create Account | Cars Abeg",
   description: "Sign up for Cars Abeg to buy and sell cars easily",

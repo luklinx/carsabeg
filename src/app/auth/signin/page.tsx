@@ -1,4 +1,6 @@
 // src/app/auth/signin/page.tsx
+export const dynamic = "force-dynamic";
+
 import SigninForm from "@/components/Auth/SigninForm";
 import ClientRedirectIfAuthed from "@/components/Auth/ClientRedirectIfAuthed";
 import { ArrowLeft } from "lucide-react";

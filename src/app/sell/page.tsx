@@ -1,4 +1,6 @@
 // src/app/sell/page.tsx
+export const dynamic = "force-dynamic";
+
 import { redirect } from "next/navigation";
 import { getServerAuth } from "@/lib/serverAuth";
 import SellClient from "./SellClient";
